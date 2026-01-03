@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="snow_dance">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>snow_dance</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      background-color: #050505; /* Match AppTheme.darkBgColor */
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .loading-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .logo-pulse {
+      width: 64px;
+      height: 64px;
+      background-color: #00DC82; /* AppTheme.primaryColor */
+      border-radius: 50%;
+      animation: pulse 2s infinite ease-in-out;
+      box-shadow: 0 0 20px rgba(0, 220, 130, 0.4);
+    }
+    .loading-text {
+      margin-top: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: fadeIn 2s ease-out;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.85); box-shadow: 0 0 0 0 rgba(0, 220, 130, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(0, 220, 130, 0); }
+      100% { transform: scale(0.85); box-shadow: 0 0 0 0 rgba(0, 220, 130, 0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-container">
+    <div class="logo-pulse"></div>
+    <div class="loading-text">SnowDance</div>
+  </div>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+name: Deploy & Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  web:
+    name: 🌐 Web Build & Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Install Dependencies
+        run: flutter pub get
+
+      # 构建 Web 版本
+      # 注意：如果发布到非根目录（如 username.github.io/repo/），请取消注释下方 lines 并设置正确的 base-href
+      - name: 🔨 Build Web
+        run: flutter build web --release --base-href "/$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')/"
+        # run: flutter build web --release
+
+      # 1. 部署到 GitHub Pages
+      - name: 📤 Upload Pages Artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+      - name: 🚀 Deploy to GitHub Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/deploy-pages@v4
+
+      # 2. 打包 Web 产物并发布到 Release
+      - name: 🗜️ Archive Web
+        run: tar -czvf web.tar.gz -C build/web .
+
+      - name: ☁️ Upload Initial Release
+        if: github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: web.tar.gz
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  android:
+    name: 🤖 Android Release
+    runs-on: ubuntu-latest
+    needs: web # 让 Web 先跑，创建 Release 占位
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      
+      - uses: subosito/flutter-action@v2
+        with:
+          cache: true
+      
+      - run: flutter pub get
+      
+      - name: 🔨 Build APK
+        run: flutter build apk --release
+      
+      - name: 🔄 Rename APK
+        run: mv build/app/outputs/flutter-apk/app-release.apk snow_dance_android.apk
+      
+      - name: ☁️ Upload to Release
+        if: github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: snow_dance_android.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  linux:
+    name: 🐧 Linux Release
+    runs-on: ubuntu-latest
+    needs: web
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: 📦 Install Linux Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libgtk-3-dev curl
+          
+      - uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          
+      - run: flutter pub get
+      
+      - name: 🔨 Build Linux
+        run: flutter build linux --release
+        
+      - name: 🗜️ Archive Linux
+        run: tar -czvf snow_dance_linux.tar.gz -C build/linux/x64/release/bundle .
+        
+      - name: ☁️ Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: snow_dance_linux.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  windows:
+    name: 🪟 Windows Release
+    runs-on: windows-latest
+    needs: web
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          
+      - run: flutter pub get
+      
+      - name: 🔨 Build Windows
+        run: flutter build windows --release
+        
+      - name: 🗜️ Archive Windows
+        run: Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath snow_dance_windows.zip
+        
+      - name: ☁️ Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: snow_dance_windows.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  macos:
+    name: 🍎 macOS Release
+    runs-on: macos-latest
+    needs: web
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          
+      - run: flutter pub get
+      
+      - name: 🔨 Build macOS
+        run: flutter build macos --release
+        
+      - name: 🗜️ Archive macOS
+        run: tar -czvf snow_dance_macos.tar.gz -C build/macos/Build/Products/Release snow_dance.app
+        
+      - name: ☁️ Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: snow_dance_macos.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  ios:
+    name: 📱 iOS Release (Unsigned)
+    runs-on: macos-latest
+    needs: web
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          
+      - run: flutter pub get
+      
+      - name: 🔨 Build iOS (No Codesign)
+        run: flutter build ios --release --no-codesign
+        
+      - name: 🗜️ Archive iOS
+        run: tar -czvf snow_dance_ios.tar.gz -C build/ios/iphoneos Runner.app
+        
+      - name: ☁️ Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: snow_dance_ios.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
