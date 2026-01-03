@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:snow_dance/widgets/responsive_layout.dart';
@@ -17,14 +19,14 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
           height: 64,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background.withOpacity(0.7),
+            color: Theme.of(context).colorScheme.background.withOpacity(0.2),
             border: Border(
               bottom: BorderSide(
-                color: Theme.of(context).dividerColor.withOpacity(0.1),
+                color: Theme.of(context).dividerColor.withOpacity(0.05),
               ),
             ),
           ),
@@ -44,26 +46,28 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                   // Logo
                   InkWell(
                     onTap: () => context.go('/'),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                            shape: BoxShape.circle,
+                    child: ShaderMask(
+                      shaderCallback: (bounds) => const LinearGradient(
+                        colors: [Color(0xFF2563EB), Color(0xFF9333EA)], // Blue to Purple
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ).createShader(bounds),
+                      child: Row(
+                        children: [
+                          const FaIcon(FontAwesomeIcons.snowflake, size: 24, color: Colors.white),
+                          const SizedBox(width: 8),
+                          Text(
+                            'SnowDance',
+                            style: GoogleFonts.outfit(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              height: 1.0,
+                              letterSpacing: -0.5,
+                              color: Colors.white,
+                            ),
                           ),
-                          child: const Icon(Icons.bolt, color: Colors.black, size: 20),
-                        ),
-                        const SizedBox(width: 12),
-                        const Text(
-                          'SnowDance',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   const Spacer(),
@@ -104,8 +108,8 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
         onTap: () => context.go(route),
         child: Text(
           title,
-          style: const TextStyle(
-            fontSize: 14,
+          style: GoogleFonts.outfit(
+            fontSize: 15,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -118,17 +122,17 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
     
     return InkWell(
       onTap: () => showSearchOverlay(context),
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(20),
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: isMobile ? 8 : 12, 
+          horizontal: isMobile ? 8 : 16, 
           vertical: 8
         ),
         decoration: BoxDecoration(
           border: Border.all(
             color: Theme.of(context).dividerColor.withOpacity(0.1),
           ),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(20),
           color: Theme.of(context).dividerColor.withOpacity(0.05),
         ),
         child: Row(
@@ -137,9 +141,9 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
             const Icon(Icons.search, size: 18),
             if (!isMobile) ...[
               const SizedBox(width: 8),
-              const Text(
+              Text(
                 'Search',
-                style: TextStyle(fontSize: 13),
+                style: GoogleFonts.outfit(fontSize: 14),
               ),
               const SizedBox(width: 16),
               const Text(

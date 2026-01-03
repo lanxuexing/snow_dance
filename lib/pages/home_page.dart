@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:snow_dance/core/article_provider.dart';
@@ -35,30 +36,61 @@ class HomePage extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.all(1.5), // Border width
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+              gradient: const LinearGradient(
+                colors: [Color(0xFF42D392), Color(0xFF647EFF)],
               ),
+              borderRadius: BorderRadius.circular(50),
             ),
-            child: Text(
-              'Introducing SnowDance v1.0',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                   ShaderMask(
+                    blendMode: BlendMode.srcIn,
+                    shaderCallback: (bounds) => const LinearGradient(
+                      colors: [Color(0xFF42D392), Color(0xFF647EFF)],
+                    ).createShader(bounds),
+                    child: const Icon(Icons.rocket_launch_rounded, size: 16, color: Colors.white),
+                   ),
+                   const SizedBox(width: 8),
+                   Text(
+                    'Introducing SnowDance v1.0',
+                    style: GoogleFonts.outfit(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
           const SizedBox(height: 24),
-          Text(
-            'Build Beautiful Blogs\nwith Flutter Web',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  height: 1.1,
-                ),
+          ShaderMask(
+            blendMode: BlendMode.srcIn,
+            shaderCallback: (bounds) => const LinearGradient(
+              colors: [Color(0xFF42D392), Color(0xFF647EFF)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ).createShader(bounds),
+            child: Text(
+              'Build Beautiful Blogs\nwith Flutter Web',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.outfit(
+                fontSize: 56, // Increased size for impact
+                fontWeight: FontWeight.w900,
+                height: 1.1,
+                letterSpacing: -1.5,
+                color: Colors.white, // Required for ShaderMask
+              ),
+            ),
           ),
           const SizedBox(height: 24),
           const Text(

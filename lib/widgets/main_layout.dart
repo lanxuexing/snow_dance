@@ -4,6 +4,7 @@ import 'package:snow_dance/widgets/app_header.dart';
 import 'package:snow_dance/widgets/app_drawer.dart';
 import 'package:snow_dance/widgets/responsive_layout.dart';
 import 'package:snow_dance/widgets/search_overlay.dart';
+import 'package:snow_dance/widgets/frosted_background.dart';
 
 class MainLayout extends StatelessWidget {
   final Widget child;
@@ -22,19 +23,22 @@ class MainLayout extends StatelessWidget {
       },
       child: Focus(
         autofocus: true,
-        child: ResponsiveLayout(
-          mobile: Scaffold(
-            appBar: const AppHeader(),
-            drawer: const AppDrawer(),
-            body: child,
-          ),
-          desktop: Scaffold(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            body: Column(
-              children: [
-                const AppHeader(),
-                Expanded(child: child),
-              ],
+        child: FrostedBackground(
+          child: ResponsiveLayout(
+            mobile: Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: const AppHeader(),
+              drawer: const AppDrawer(),
+              body: child,
+            ),
+            desktop: Scaffold(
+              backgroundColor: Colors.transparent,
+              body: Column(
+                children: [
+                  const AppHeader(),
+                  Expanded(child: child),
+                ],
+              ),
             ),
           ),
         ),
