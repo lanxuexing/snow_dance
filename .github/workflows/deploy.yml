@@ -126,6 +126,7 @@ jobs:
         run: tar -czvf snow_dance_linux.tar.gz -C build/linux/x64/release/bundle .
         
       - name: ☁️ Upload to Release
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: snow_dance_linux.tar.gz
@@ -152,6 +153,7 @@ jobs:
         run: Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath snow_dance_windows.zip
         
       - name: ☁️ Upload to Release
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: snow_dance_windows.zip
@@ -178,6 +180,7 @@ jobs:
         run: tar -czvf snow_dance_macos.tar.gz -C build/macos/Build/Products/Release snow_dance.app
         
       - name: ☁️ Upload to Release
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: snow_dance_macos.tar.gz
@@ -204,6 +207,7 @@ jobs:
         run: tar -czvf snow_dance_ios.tar.gz -C build/ios/iphoneos Runner.app
         
       - name: ☁️ Upload to Release
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: snow_dance_ios.tar.gz
