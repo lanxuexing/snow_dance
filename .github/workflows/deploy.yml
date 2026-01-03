@@ -61,9 +61,7 @@ jobs:
           files: web.tar.gz
           make_latest: true
           # 当不是 tag 触发时，tag_name 可能会导致错误，但由于有了 if 条件，这里就安全了
-        with:
-          files: web.tar.gz
-          make_latest: true
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
