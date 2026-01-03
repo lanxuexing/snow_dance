@@ -1,8 +1,25 @@
+<div align="center">
+
 # ❄️ SnowDance
 
-**English** | [简体中文](./README.zh-CN.md)
+A premium, high-performance blog engine built with Flutter Web.
+Featuring glassmorphism UI, advanced Markdown rendering, and fully automated GitHub Pages deployment.
 
-**SnowDance** is a premium, high-performance blog engine built with **Flutter Web**. It features a modern glassmorphism aesthetic, responsive design, and a powerful Markdown rendering engine optimized for technical writing.
+[![GitHub Release Date](https://img.shields.io/github/release-date/lanxuexing/snow_dance.svg?style=flat-square)](https://github.com/lanxuexing/snow_dance/releases)
+[![GitHub repo size](https://img.shields.io/github/repo-size/lanxuexing/snow_dance.svg?style=flat-square)](https://github.com/lanxuexing/snow_dance)
+[![GitHub Stars](https://img.shields.io/github/stars/lanxuexing/snow_dance.svg?style=flat-square)](https://github.com/lanxuexing/snow_dance/stargazers)
+[![CI/CD](https://github.com/lanxuexing/snow_dance/actions/workflows/deploy.yml/badge.svg)](https://github.com/lanxuexing/snow_dance/actions)
+[![GitHub license](https://img.shields.io/github/license/lanxuexing/snow_dance.svg?style=flat-square)](https://github.com/lanxuexing/snow_dance/blob/main/LICENSE)
+[![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=flat-square&logo=Flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-%230175C2.svg?style=flat-square&logo=dart&logoColor=white)](https://dart.dev)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
+[**简体中文**](./README.zh-CN.md) | English
+
+## 🔗 Live Demo
+Check out the live site: **[https://lanxuexing.github.io/snow_dance/](https://lanxuexing.github.io/snow_dance/)**
+
+</div>
 
 ## ✨ Features
 

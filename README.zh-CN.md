@@ -1,8 +1,25 @@
+<div align="center">
+
 # ❄️ SnowDance
+
+基于 Flutter Web 构建的高性能、高级感博客引擎。
+拥有玻璃拟态 UI、强大的 Markdown 渲染及全自动 GitHub Pages 部署流程。
+
+[![GitHub Release Date](https://img.shields.io/github/release-date/lanxuexing/snow_dance.svg?style=flat-square)](https://github.com/lanxuexing/snow_dance/releases)
+[![GitHub repo size](https://img.shields.io/github/repo-size/lanxuexing/snow_dance.svg?style=flat-square)](https://github.com/lanxuexing/snow_dance)
+[![GitHub Stars](https://img.shields.io/github/stars/lanxuexing/snow_dance.svg?style=flat-square)](https://github.com/lanxuexing/snow_dance/stargazers)
+[![CI/CD](https://github.com/lanxuexing/snow_dance/actions/workflows/deploy.yml/badge.svg)](https://github.com/lanxuexing/snow_dance/actions)
+[![GitHub license](https://img.shields.io/github/license/lanxuexing/snow_dance.svg?style=flat-square)](https://github.com/lanxuexing/snow_dance/blob/main/LICENSE)
+[![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=flat-square&logo=Flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-%230175C2.svg?style=flat-square&logo=dart&logoColor=white)](https://dart.dev)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 [English](./README.md) | **简体中文**
 
-**SnowDance** 是一个基于 **Flutter Web** 构建的高级、高性能博客引擎。它采用了现代化的玻璃拟态美学设计，支持多端响应式布局，并内置了专为技术写作优化的强大 Markdown 渲染引擎。
+## 🔗 在线演示
+点击预览效果：**[https://lanxuexing.github.io/snow_dance/](https://lanxuexing.github.io/snow_dance/)**
+
+</div>
 
 ## ✨ 核心特性
 
