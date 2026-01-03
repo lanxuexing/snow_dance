@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:snow_dance/core/config/app_config.dart';
@@ -26,10 +28,17 @@ class _AppDrawerState extends State<AppDrawer> {
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.8),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Theme.of(context).scaffoldBackgroundColor.withOpacity(0.85),
+                Theme.of(context).scaffoldBackgroundColor.withOpacity(0.6),
+              ],
+            ),
             border: Border(
               right: BorderSide(
-                color: Theme.of(context).dividerColor.withOpacity(0.1),
+                color: Theme.of(context).dividerColor.withOpacity(0.05),
               ),
             ),
           ),
@@ -80,21 +89,21 @@ class _AppDrawerState extends State<AppDrawer> {
         children: [
           Row(
             children: [
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.bolt, color: Colors.black, size: 20),
+              ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(
+                  colors: [Color(0xFF2563EB), Color(0xFF9333EA)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ).createShader(bounds),
+                child: const FaIcon(FontAwesomeIcons.snowflake, size: 24, color: Colors.white),
               ),
               const SizedBox(width: 12),
-              const Text(
+              Text(
                 'SnowDance',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                style: GoogleFonts.outfit(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.5,
                 ),
               ),
             ],
@@ -134,11 +143,11 @@ class _AppDrawerState extends State<AppDrawer> {
             Expanded(
               child: Text(
                 title,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: isCategorySelected ? FontWeight.bold : FontWeight.w500,
-                  color: isCategorySelected ? Theme.of(context).colorScheme.primary : null,
-                ),
+                  style: GoogleFonts.outfit(
+                    fontSize: 15,
+                    fontWeight: isCategorySelected ? FontWeight.w600 : FontWeight.w500,
+                    color: isCategorySelected ? Theme.of(context).colorScheme.primary : null,
+                  ),
               ),
             ),
             Icon(
@@ -161,13 +170,13 @@ class _AppDrawerState extends State<AppDrawer> {
             dense: true,
             title: Text(
               article.title,
-              style: TextStyle(
-                fontSize: 13,
-                color: isArticleSelected 
-                  ? Theme.of(context).colorScheme.primary 
-                  : Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
-                fontWeight: isArticleSelected ? FontWeight.bold : FontWeight.normal,
-              ),
+                style: GoogleFonts.outfit(
+                  fontSize: 13,
+                  color: isArticleSelected 
+                    ? Theme.of(context).colorScheme.primary 
+                    : Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                  fontWeight: isArticleSelected ? FontWeight.w600 : FontWeight.normal,
+                ),
             ),
             onTap: () {
               Navigator.of(context).pop();
@@ -202,9 +211,9 @@ class _AppDrawerState extends State<AppDrawer> {
             children: [
               Text(
                 title,
-                style: TextStyle(
+                style: GoogleFonts.outfit(
                   fontSize: 15,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   color: isSelected 
                     ? Theme.of(context).colorScheme.primary 
                     : null,
@@ -239,9 +248,9 @@ class _AppDrawerState extends State<AppDrawer> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Dark Mode',
-                style: TextStyle(fontSize: 14, color: Colors.grey),
+                style: GoogleFonts.outfit(fontSize: 14, color: Colors.grey),
               ),
               Switch(
                 value: Provider.of<ThemeProvider>(context).isDarkMode,
@@ -254,7 +263,7 @@ class _AppDrawerState extends State<AppDrawer> {
           const SizedBox(height: 12),
           Text(
             '© 2026 SnowDance Engine',
-            style: TextStyle(
+            style: GoogleFonts.outfit(
               fontSize: 12,
               color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.5),
             ),
