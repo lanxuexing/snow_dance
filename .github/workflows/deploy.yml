@@ -55,8 +55,12 @@ jobs:
         run: tar -czvf web.tar.gz -C build/web .
 
       - name: ☁️ Upload Initial Release
-        if: github.event_name != 'pull_request'
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
+        with:
+          files: web.tar.gz
+          make_latest: true
+          # 当不是 tag 触发时，tag_name 可能会导致错误，但由于有了 if 条件，这里就安全了
         with:
           files: web.tar.gz
           make_latest: true
@@ -89,7 +93,7 @@ jobs:
         run: mv build/app/outputs/flutter-apk/app-release.apk snow_dance_android.apk
       
       - name: ☁️ Upload to Release
-        if: github.event_name != 'pull_request'
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: snow_dance_android.apk
