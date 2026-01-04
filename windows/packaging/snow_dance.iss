@@ -10,7 +10,7 @@ DisableProgramGroupPage=yes
 LicenseFile=
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
-OutputDir=..\..\..\build\windows\installer
+OutputDir=..\..\build\windows\installer
 OutputBaseFilename=SnowDance_Setup_Windows
 Compression=lzma
 SolidCompression=yes
@@ -23,8 +23,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "..\..\..\build\windows\x64\runner\Release\snow_dance.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\..\build\windows\x64\runner\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\build\windows\x64\runner\Release\snow_dance.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\build\windows\x64\runner\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
