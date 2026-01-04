@@ -192,14 +192,14 @@ jobs:
             --window-size 800 400 \
             --icon-size 100 \
             --app-drop-link 600 185 \
-            "snow_dance.dmg" \
+            "snow_dance_macos.dmg" \
             "snow_dance.app"
       
       - name: ☁️ Upload to Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: build/macos/Build/Products/Release/snow_dance.dmg
+          files: build/macos/Build/Products/Release/snow_dance_macos.dmg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
