@@ -31,6 +31,9 @@ jobs:
       - name: 📦 Install Dependencies
         run: flutter pub get
 
+      - name: 📝 Generate Article Index
+        run: dart tool/generate_index.dart
+
       # 构建 Web 版本
       # 注意：如果发布到非根目录（如 username.github.io/repo/），请取消注释下方 lines 并设置正确的 base-href
       - name: 🔨 Build Web

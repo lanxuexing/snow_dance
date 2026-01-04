@@ -28,8 +28,20 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   @override
   void initState() {
     super.initState();
+    
+    // Check if content needs to be loaded
+    if (widget.article.content.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Provider.of<ArticleProvider>(context, listen: false)
+            .loadArticleContent(widget.article.id);
+      });
+    }
+
     _deferRendering();
-    _parseToC();
+
+    if (widget.article.content.isNotEmpty) {
+      _parseToC(widget.article.content);
+    }
     _scrollController.addListener(_onScroll);
   }
 
@@ -84,7 +96,10 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       _deferRendering();
       _tocEntries.clear();
       _headingKeys.clear();
-      _parseToC();
+      _headingKeys.clear();
+      if (widget.article.content.isNotEmpty) {
+        _parseToC(widget.article.content);
+      }
       if (_tocEntries.isNotEmpty) {
         _activeHeading = _tocEntries.first.title;
       }
@@ -94,8 +109,9 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     }
   }
 
-  void _parseToC() {
-    final lines = widget.article.content.split('\n');
+  void _parseToC(String content) {
+    _tocEntries.clear();
+    final lines = content.split('\n');
     for (var line in lines) {
       if (line.startsWith('## ') || line.startsWith('### ') || line.startsWith('#### ')) {
         int level = 1; 
@@ -103,6 +119,10 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
         else if (line.startsWith('#### ')) level = 3;
         
         final title = line.replaceFirst(RegExp(r'#+ '), '').trim();
+        // Check if title already parsed to avoid duplicate keys? 
+        // Logic assumes titles unique or handles duplicates? 
+        // Original logic didn't handle unique keys for same title properly if duplicate.
+        // Keeping original logic.
         final key = GlobalKey();
         _tocEntries.add(ToCEntry(title: title, level: level, key: key));
         _headingKeys[title] = key;
@@ -131,6 +151,22 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     final isMobile = MediaQuery.of(context).size.width < 1000;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final provider = Provider.of<ArticleProvider>(context);
+    // Resolve the up-to-date article from provider to get loaded content
+    final currentArticle = provider.articles.firstWhere(
+      (a) => a.id == widget.article.id, 
+      orElse: () => widget.article
+    );
+
+    if (currentArticle.content.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    // Re-parse ToC if content changed (e.g. just loaded)
+    if (_tocEntries.isEmpty && currentArticle.content.isNotEmpty) {
+       _parseToC(currentArticle.content);
+    }
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -156,7 +192,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                             ],
                             const SizedBox(height: 40),
                             MarkdownViewer(
-                              content: widget.article.content,
+                              content: currentArticle.content,
                               headingKeys: _headingKeys,
                             ),
                             const SizedBox(height: 80),
