@@ -158,12 +158,17 @@ jobs:
 
       - name: 💿 Create Installer
         run: iscc windows/packaging/snow_dance.iss
+
+      - name: 🗜️ Archive Windows
+        run: Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath snow_dance_windows.zip
         
       - name: ☁️ Upload to Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: build/windows/installer/SnowDance_Setup_Windows.exe
+          files: |
+            build/windows/installer/SnowDance_Setup_Windows.exe
+            snow_dance_windows.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
