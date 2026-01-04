@@ -150,14 +150,17 @@ jobs:
       - name: 🔨 Build Windows
         run: flutter build windows --release
         
-      - name: 🗜️ Archive Windows
-        run: Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath snow_dance_windows.zip
+      - name: ⚙️ Install Inno Setup
+        run: choco install innosetup
+
+      - name: 💿 Create Installer
+        run: iscc windows/packaging/snow_dance.iss
         
       - name: ☁️ Upload to Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: snow_dance_windows.zip
+          files: build/windows/installer/SnowDance_Setup_Windows.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -177,7 +180,7 @@ jobs:
       - name: 🔨 Build macOS
         run: flutter build macos --release
         
-      - name: � Install create-dmg
+      - name: ⚙️ Install create-dmg
         run: brew install create-dmg
 
       - name: 💿 Create DMG
