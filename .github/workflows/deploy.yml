@@ -7,9 +7,7 @@ on:
       - main
     tags:
       - 'v*'
-  pull_request:
-    branches:
-      - main
+
 
 permissions:
   contents: write
@@ -41,13 +39,13 @@ jobs:
 
       # 1. 部署到 GitHub Pages
       - name: 📤 Upload Pages Artifact
-        if: github.event_name != 'pull_request'
+
         uses: actions/upload-pages-artifact@v3
         with:
           path: build/web
 
       - name: 🚀 Deploy to GitHub Pages
-        if: github.event_name != 'pull_request'
+
         uses: actions/deploy-pages@v4
 
       # 2. 打包 Web 产物并发布到 Release
