@@ -213,16 +213,16 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).brightness == Brightness.dark 
-            ? Colors.black.withOpacity(0.3)
-            : Colors.grey.withOpacity(0.05),
+            ? Colors.black.withValues(alpha: 0.3)
+            : Colors.grey.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Theme.of(context).dividerColor.withOpacity(0.1)),
+        border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
       ),
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
-          iconColor: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
-          collapsedIconColor: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+          iconColor: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+          collapsedIconColor: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
           tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           title: Text(
             '本页总览',
@@ -253,7 +253,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                      height: 1.4,
                      color: isSelect 
                          ? Theme.of(context).colorScheme.primary 
-                         : Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                         : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                      fontWeight: isSelect ? FontWeight.w600 : FontWeight.normal,
                    ),
                  ),
@@ -277,7 +277,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
               image: NetworkImage(AppConfig.authorAvatar),
               fit: BoxFit.cover,
             ),
-            border: Border.all(color: Theme.of(context).dividerColor.withOpacity(0.1)),
+            border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
           ),
         ),
         const SizedBox(width: 16),
@@ -324,7 +324,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       decoration: BoxDecoration(
         border: Border(
             right: BorderSide(
-                color: Theme.of(context).dividerColor.withOpacity(0.1))),
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.1))),
       ),
       child: SingleChildScrollView(
         padding: const EdgeInsets.only(top: 40, left: 24, right: 24, bottom: 40),
@@ -359,7 +359,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       decoration: BoxDecoration(
         border: Border(
             left: BorderSide(
-                color: Theme.of(context).dividerColor.withOpacity(0.1))),
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.1))),
       ),
       child: SingleChildScrollView(
         padding: const EdgeInsets.only(top: 40, left: 8, right: 12, bottom: 40),
@@ -387,14 +387,14 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.arrow_upward_rounded, size: 14, color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5)),
+                      Icon(Icons.arrow_upward_rounded, size: 14, color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5)),
                       const SizedBox(width: 8),
                       Text(
                         'Back to the top',
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
-                          color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6),
+                          color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
                         ),
                       ),
                     ],

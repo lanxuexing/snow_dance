@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
@@ -14,7 +15,6 @@ class AppTheme {
       primary: primaryColor,
       secondary: secondaryColor,
       surface: Color(0xFF111111),
-      background: darkBgColor,
     ),
     scaffoldBackgroundColor: darkBgColor,
     textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme).copyWith(
@@ -44,7 +44,6 @@ class AppTheme {
       primary: primaryColor,
       secondary: secondaryColor,
       surface: Colors.white,
-      background: lightBgColor,
     ),
     scaffoldBackgroundColor: lightBgColor,
     textTheme: GoogleFonts.interTextTheme(ThemeData.light().textTheme).copyWith(
@@ -62,7 +61,7 @@ class AppTheme {
     cardTheme: CardThemeData(
       color: Colors.white,
       elevation: 2,
-      shadowColor: Colors.black.withOpacity(0.05),
+      shadowColor: Colors.black.withValues(alpha: 0.05),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     ),
     pageTransitionsTheme: _pageTransitionsTheme,

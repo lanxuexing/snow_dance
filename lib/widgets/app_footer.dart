@@ -13,7 +13,7 @@ class AppFooter extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border(
             top: BorderSide(
-                color: Theme.of(context).dividerColor.withOpacity(0.05))), // Subtler border
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.05))), // Subtler border
       ),
       child: Center(
         child: Container(
@@ -35,7 +35,7 @@ class AppFooter extends StatelessWidget {
                 '© 2026 SnowDance Engine. Built with Flutter Web.',
                 style: TextStyle(
                   fontSize: 12, // Smaller font
-                  color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5), // Lighter color
+                  color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5), // Lighter color
                 ),
               ),
             ],
@@ -46,15 +46,7 @@ class AppFooter extends StatelessWidget {
 
   }
 
-  Widget _buildFooterItem(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Text(title,
-          style: const TextStyle(fontSize: 14, color: Colors.grey)),
-    );
-  }
-
-  Widget _buildSocialIcon(BuildContext context, IconData icon, String url) {
+  Widget _buildSocialIcon(BuildContext context, FaIconData icon, String url) {
     return InkWell(
       onTap: () async {
         final uri = Uri.parse(url);

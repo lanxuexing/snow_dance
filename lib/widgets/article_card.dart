@@ -28,14 +28,14 @@ class _ArticleCardState extends State<ArticleCard> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeOutCubic,
-          transform: Matrix4.identity()..translate(0.0, _isHovered ? -4.0 : 0.0),
+          transform: Matrix4.translationValues(0.0, _isHovered ? -4.0 : 0.0, 0.0),
           decoration: BoxDecoration(
             color: Theme.of(context).cardTheme.color,
             borderRadius: BorderRadius.circular(16),
             boxShadow: _isHovered
                 ? [
                     BoxShadow(
-                      color: primaryColor.withOpacity(isDark ? 0.3 : 0.4),
+                      color: primaryColor.withValues(alpha: isDark ? 0.3 : 0.4),
                       blurRadius: 24,
                       offset: const Offset(0, 12),
                       spreadRadius: -4,
@@ -43,15 +43,15 @@ class _ArticleCardState extends State<ArticleCard> {
                   ]
                 : [
                     BoxShadow(
-                      color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
+                      color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
                   ],
             border: Border.all(
               color: _isHovered 
-                  ? primaryColor.withOpacity(0.5) 
-                  : Theme.of(context).dividerColor.withOpacity(0.1),
+                  ? primaryColor.withValues(alpha: 0.5) 
+                  : Theme.of(context).dividerColor.withValues(alpha: 0.1),
               width: 1,
             ),
           ),
@@ -66,7 +66,7 @@ class _ArticleCardState extends State<ArticleCard> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: primaryColor.withOpacity(0.1),
+                        color: primaryColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(Icons.article_outlined,

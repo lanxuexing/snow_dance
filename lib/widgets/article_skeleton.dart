@@ -12,7 +12,7 @@ class ArticleSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Define base colors based on theme
-    final baseColor = isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05);
+    final baseColor = isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05);
 
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(), // Prevent scrolling while loading

@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class FrostedBackground extends StatelessWidget {
@@ -23,32 +22,32 @@ class FrostedBackground extends StatelessWidget {
           _buildBlob(
             top: -100,
             left: -100,
-            color: const Color(0xFF00DC82).withOpacity(0.15),
+            color: const Color(0xFF00DC82).withValues(alpha: 0.15),
             size: 400,
           ),
           _buildBlob(
             bottom: -50,
             right: -50,
-            color: const Color(0xFF36E4DA).withOpacity(0.1),
+            color: const Color(0xFF36E4DA).withValues(alpha: 0.1),
             size: 500,
           ),
           _buildBlob(
             top: 200,
             right: 100,
-            color: const Color(0xFF16171D).withOpacity(0.5),
+            color: const Color(0xFF16171D).withValues(alpha: 0.5),
             size: 300,
           ),
         ] else ...[
           _buildBlob(
             top: -100,
             left: -100,
-            color: const Color(0xFF00DC82).withOpacity(0.05),
+            color: const Color(0xFF00DC82).withValues(alpha: 0.05),
             size: 400,
           ),
           _buildBlob(
             bottom: -50,
             right: -50,
-            color: const Color(0xFF36E4DA).withOpacity(0.05),
+            color: const Color(0xFF36E4DA).withValues(alpha: 0.05),
             size: 500,
           ),
         ],

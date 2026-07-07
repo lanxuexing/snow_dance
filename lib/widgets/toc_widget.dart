@@ -58,10 +58,9 @@ class _ToCItemState extends State<_ToCItem> {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     
     final isHighlighted = _isHovered || widget.isActive;
-
+ 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
@@ -84,7 +83,7 @@ class _ToCItemState extends State<_ToCItem> {
               fontWeight: isHighlighted ? FontWeight.w600 : FontWeight.normal,
               color: isHighlighted 
                   ? primaryColor 
-                  : Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                  : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
             ),
           ),
         ),

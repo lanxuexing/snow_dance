@@ -9,7 +9,7 @@ class PremiumLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Determine colors based on theme context if available, otherwise fallback
-    final primaryColor = const Color(0xFF00DC82);
+    const primaryColor = Color(0xFF00DC82);
     
     return Center(
       child: Column(
@@ -24,7 +24,7 @@ class PremiumLoader extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: primaryColor.withOpacity(0.4),
+                  color: primaryColor.withValues(alpha: 0.4),
                   blurRadius: 20,
                   spreadRadius: 5,
                 ),
@@ -40,12 +40,12 @@ class PremiumLoader extends StatelessWidget {
           )
           .boxShadow(
              begin: BoxShadow(
-               color: primaryColor.withOpacity(0.7),
+               color: primaryColor.withValues(alpha: 0.7),
                blurRadius: 20,
                spreadRadius: 2,
              ),
              end: BoxShadow(
-               color: primaryColor.withOpacity(0),
+               color: primaryColor.withValues(alpha: 0),
                blurRadius: 30,
                spreadRadius: 20,
              ),
@@ -60,7 +60,7 @@ class PremiumLoader extends StatelessWidget {
             'SNOWDANCE',
             style: TextStyle(
               fontFamily: 'Inter',
-              color: isDark ? Colors.white.withOpacity(0.6) : Colors.black.withOpacity(0.6),
+              color: isDark ? Colors.white.withValues(alpha: 0.6) : Colors.black.withValues(alpha: 0.6),
               fontSize: 14,
               letterSpacing: 2.0,
               fontWeight: FontWeight.w500,

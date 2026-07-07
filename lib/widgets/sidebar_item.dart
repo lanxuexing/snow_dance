@@ -41,7 +41,7 @@ class _SidebarItemState extends State<SidebarItem> {
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           decoration: BoxDecoration(
             color: isActive 
-                ? primaryColor.withOpacity(isDark ? 0.15 : 0.1) 
+                ? primaryColor.withValues(alpha: isDark ? 0.15 : 0.1) 
                 : Colors.transparent,
             border: Border(
               left: BorderSide(

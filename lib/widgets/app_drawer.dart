@@ -32,13 +32,13 @@ class _AppDrawerState extends State<AppDrawer> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Theme.of(context).scaffoldBackgroundColor.withOpacity(0.85),
-                Theme.of(context).scaffoldBackgroundColor.withOpacity(0.6),
+                Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.85),
+                Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.6),
               ],
             ),
             border: Border(
               right: BorderSide(
-                color: Theme.of(context).dividerColor.withOpacity(0.05),
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.05),
               ),
             ),
           ),
@@ -174,7 +174,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   fontSize: 13,
                   color: isArticleSelected 
                     ? Theme.of(context).colorScheme.primary 
-                    : Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                    : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                   fontWeight: isArticleSelected ? FontWeight.w600 : FontWeight.normal,
                 ),
             ),
@@ -203,7 +203,7 @@ class _AppDrawerState extends State<AppDrawer> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: isSelected 
-              ? Theme.of(context).colorScheme.primary.withOpacity(0.1) 
+              ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1) 
               : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
           ),
@@ -239,7 +239,7 @@ class _AppDrawerState extends State<AppDrawer> {
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
-            color: Theme.of(context).dividerColor.withOpacity(0.1),
+            color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
           ),
         ),
       ),
@@ -265,7 +265,7 @@ class _AppDrawerState extends State<AppDrawer> {
             '© 2026 SnowDance Engine',
             style: GoogleFonts.outfit(
               fontSize: 12,
-              color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.5),
+              color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.5),
             ),
           ),
         ],

@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:snow_dance/core/article_provider.dart';
 import 'package:snow_dance/widgets/premium_loader.dart';
 import 'package:snow_dance/widgets/main_layout.dart';
-import 'package:snow_dance/models/article.dart';
 
 class CategoryRedirectPage extends StatefulWidget {
   final String category;

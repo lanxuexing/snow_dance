@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+// ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:snow_dance/core/article_provider.dart';
 import 'package:snow_dance/core/theme/app_theme.dart';
