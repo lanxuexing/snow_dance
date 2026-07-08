@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:snow_dance/widgets/snowflake_logo.dart';
 
 class PremiumLoader extends StatelessWidget {
   final bool isDark;
@@ -29,6 +30,12 @@ class PremiumLoader extends StatelessWidget {
                   spreadRadius: 5,
                 ),
               ],
+            ),
+            child: const Center(
+              child: SnowflakeLogo(
+                size: 32,
+                gradientColors: [Colors.white, Colors.white70],
+              ),
             ),
           )
           .animate(onPlay: (controller) => controller.repeat(reverse: true))

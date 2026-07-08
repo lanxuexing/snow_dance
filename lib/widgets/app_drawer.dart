@@ -1,12 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:snow_dance/core/config/app_config.dart';
 import 'package:snow_dance/core/article_provider.dart';
 import 'package:snow_dance/core/theme/theme_provider.dart';
+import 'package:snow_dance/widgets/snowflake_logo.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
@@ -89,21 +89,22 @@ class _AppDrawerState extends State<AppDrawer> {
         children: [
           Row(
             children: [
+              const SnowflakeLogo(size: 26),
+              const SizedBox(width: 12),
               ShaderMask(
                 shaderCallback: (bounds) => const LinearGradient(
-                  colors: [Color(0xFF2563EB), Color(0xFF9333EA)],
+                  colors: [Color(0xFF00DC82), Color(0xFF36E4DA)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ).createShader(bounds),
-                child: const FaIcon(FontAwesomeIcons.snowflake, size: 24, color: Colors.white),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                'SnowDance',
-                style: GoogleFonts.outfit(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.5,
+                child: Text(
+                  'SnowDance',
+                  style: GoogleFonts.outfit(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.5,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
