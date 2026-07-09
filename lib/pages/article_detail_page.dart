@@ -189,7 +189,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                       const SizedBox(height: 60),
                       Container(
                         constraints: const BoxConstraints(maxWidth: 900),
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 40),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

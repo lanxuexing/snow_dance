@@ -40,7 +40,9 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
           child: Center(
             child: Container(
               constraints: const BoxConstraints(maxWidth: 1200),
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveLayout.isMobile(context) ? 16 : 24,
+              ),
               child: Row(
                 children: [
                   if (ResponsiveLayout.isMobile(context)) ...[
