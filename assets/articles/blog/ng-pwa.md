@@ -71,9 +71,9 @@ http-server -p 4200 -c-1 dist/<项目的名字>
     http-server -b -p 4200 -c-1 dist/<项目的名字>
     ```
 
-![PWA标识](https://github.com/lanxuexing/assets/raw/master/pwa/install.png)
+![PWA标识](https://raw.githubusercontent.com/lanxuexing/assets/master/pwa/install.png)
 
-![安装提示框](https://github.com/lanxuexing/assets/raw/master/pwa/install-tip.png)
+![安装提示框](https://raw.githubusercontent.com/lanxuexing/assets/master/pwa/install-tip.png)
 
 #### 4. PWA结构介绍
 
@@ -223,16 +223,16 @@ http-server -p 4200 -c-1 dist/<项目的名字>
 
 ```
 
-![PWA面板](https://github.com/lanxuexing/assets/raw/master/pwa/console.png)
+![PWA面板](https://raw.githubusercontent.com/lanxuexing/assets/master/pwa/console.png)
 
-![PWA资源拉取](https://github.com/lanxuexing/assets/raw/master/pwa/pull.png)
+![PWA资源拉取](https://raw.githubusercontent.com/lanxuexing/assets/master/pwa/pull.png)
 
 
 #### 5. PWA更新
 
 PWA @angular/service-worker 中的 SwUpdate 提供更新检测，也就是说当用户正在使用Web APP或者网页版网站时，我们刚好部署了新版本，这个时候就可以使用SwUpdate的trigger机制，通知用户更新新版本。
 
-![PWA版本更新](https://github.com/lanxuexing/assets/raw/master/pwa/update.png)
+![PWA版本更新](https://raw.githubusercontent.com/lanxuexing/assets/master/pwa/update.png)
 
 那么如何实现这个功能呢？其实也很简单，我们创建一个服务，然后订阅这个服务就好了，当有版本更新的时候，PWA的服务会收到这个回调，我们在回调里处理我们的逻辑即可。话不多说，上代码啦～
 
@@ -343,7 +343,7 @@ export class AppComponent implements OnInit {
 
 在PWA @angular/service-worker 的 SwPush 中，我们可以订阅并接收来着Service Worker的推送通知，当然我们需要借助服务器来实现这个机制，下边是简单的开发模式实现，后续有时间我再更新文章啦～
 
-![PWA消息推送](https://github.com/lanxuexing/assets/raw/master/pwa/push.png)
+![PWA消息推送](https://raw.githubusercontent.com/lanxuexing/assets/master/pwa/push.png)
 
 - 前端代码实现
 

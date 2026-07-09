@@ -9,7 +9,7 @@
 
 - [youtube传送门](https://www.youtube.com/watch?v=kYDLlfpTLEA)
 
-![image](https://github.com/lanxuexing/assets/raw/master/cdk/struct.png)
+![image](https://raw.githubusercontent.com/lanxuexing/assets/master/cdk/struct.png)
 
 > 官方用了一个很形象的比喻：`if the component library is a rocket ship,
 > the cdk is the box of engine parts.`，如果组件库是火箭飞船，
@@ -41,14 +41,14 @@
 
 FocusTrap是一个指令，它用于捕获元素中的Tab键焦点，常用于我们的表单里，可能说的比较模式，可以直接看下图的演示效果。
 
-<video controls preload="none" poster="https://github.com/lanxuexing/assets/raw/master/cdk/demo.png">
-      <source  src="https://github.com/lanxuexing/assets/raw/master/cdk/focus-trap.mov">
+<video controls preload="none" poster="https://raw.githubusercontent.com/lanxuexing/assets/master/cdk/demo.png">
+      <source  src="https://raw.githubusercontent.com/lanxuexing/assets/master/cdk/focus-trap.mov">
       <p>Your user agent does not support the HTML5 Video element.</p>
 </video>
 
 从视频演示中我们可以看到，使用指令包裹元素和不包裹元素，按下Tab键之后的效果是不同的。HTML其实很简单，如下：
 
-![focus trap html](https://github.com/lanxuexing/assets/raw/master/cdk/focus-trap-html.png)
+![focus trap html](https://raw.githubusercontent.com/lanxuexing/assets/master/cdk/focus-trap-html.png)
 
 
 
@@ -64,10 +64,10 @@ ListKeyManager可以通过键盘交互来管理条目列表。要使用ListKeyMa
 
 原则上应该实现`ListKeyManagerOption`接口（可选），`ListKeyManagerOption`里有一个可选方法和可选属性。
 
-![ListKeyManagerOption](https://github.com/lanxuexing/assets/raw/master/cdk/list-key-manager-option.png)		
+![ListKeyManagerOption](https://raw.githubusercontent.com/lanxuexing/assets/master/cdk/list-key-manager-option.png)		
 
 但是必须实现`FocusableOption`接口。
 
-![FocusableOption](https://github.com/lanxuexing/assets/raw/master/cdk/focusable-option.png)
+![FocusableOption](https://raw.githubusercontent.com/lanxuexing/assets/master/cdk/focusable-option.png)
 
 
