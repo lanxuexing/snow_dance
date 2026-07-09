@@ -7,9 +7,14 @@ class AppFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 1000;
+
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
-      margin: const EdgeInsets.only(top: 60),
+      padding: EdgeInsets.symmetric(
+        vertical: isMobile ? 16 : 32, 
+        horizontal: isMobile ? 16 : 24
+      ),
+      margin: EdgeInsets.only(top: isMobile ? 32 : 60),
       decoration: BoxDecoration(
         border: Border(
             top: BorderSide(
@@ -23,18 +28,18 @@ class AppFooter extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildSocialIcon(context, FontAwesomeIcons.xTwitter, 'https://twitter.com'),
-                  const SizedBox(width: 24),
-                  _buildSocialIcon(context, FontAwesomeIcons.github, 'https://github.com/lanxuexing/snow_dance'),
-                  const SizedBox(width: 24),
-                  _buildSocialIcon(context, FontAwesomeIcons.discord, 'https://discord.com'),
+                  _buildSocialIcon(context, FontAwesomeIcons.xTwitter, 'https://twitter.com', isMobile),
+                  SizedBox(width: isMobile ? 16 : 24),
+                  _buildSocialIcon(context, FontAwesomeIcons.github, 'https://github.com/lanxuexing/snow_dance', isMobile),
+                  SizedBox(width: isMobile ? 16 : 24),
+                  _buildSocialIcon(context, FontAwesomeIcons.discord, 'https://discord.com', isMobile),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: isMobile ? 8 : 16),
               Text(
                 '© 2026 SnowDance Engine. Built with Flutter Web.',
                 style: TextStyle(
-                  fontSize: 12, // Smaller font
+                  fontSize: isMobile ? 11 : 12, // Smaller font
                   color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5), // Lighter color
                 ),
               ),
@@ -46,7 +51,7 @@ class AppFooter extends StatelessWidget {
 
   }
 
-  Widget _buildSocialIcon(BuildContext context, FaIconData icon, String url) {
+  Widget _buildSocialIcon(BuildContext context, FaIconData icon, String url, bool isMobile) {
     return InkWell(
       onTap: () async {
         final uri = Uri.parse(url);
@@ -58,10 +63,10 @@ class AppFooter extends StatelessWidget {
       child: Opacity(
         opacity: 0.7,
         child: Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(isMobile ? 6 : 8),
           child: FaIcon(
             icon,
-            size: 20,
+            size: isMobile ? 16 : 20,
             color: Theme.of(context).textTheme.bodyMedium?.color,
           ),
         ),
