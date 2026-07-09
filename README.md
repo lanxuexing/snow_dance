@@ -27,8 +27,10 @@ Check out the live site: **[https://lanxuexing.github.io/snow_dance/](https://la
   - **Dynamic Spinning Snowflake Logo**: Hand-crafted vector snowflake with a smooth floating rotation animation and micro-glow interaction, integrated globally in the startup loader, app bar, and side drawer.
   - **Glassmorphism Design**: Frosted glass effects, subtle gradients, and dark mode support.
   - **Responsive Layout**: Adaptive sidebar and navigation for Desktop, Tablet, and Mobile.
+  - **Tailored Mobile Layout**: Fine-tuned content margins (`16px`), app headers, and drawer sidebar spacing for small devices to maximize reading space and enforce geometric vertical alignments.
   - **Global Smooth Inertial Scroll**: Mouse drag, trackpad gesture, and physics-based momentum bounds (`BouncingScrollPhysics`) across all platforms (macOS, Windows, Linux, and Web), making scrolling extremely fluid.
   - **Smooth Animations**: Refined transitions and micro-interactions using `flutter_animate`.
+  - **Bespoke Brand Icon Assets**: Replaced all default Flutter placeholder icons with our custom SnowDance cyber-snowflake brand asset across the page favicon, iOS touch-icons, and PWA launch layers.
 
 - **📝 Advanced Markdown Engine**
   - **Syntax Highlighting**: Code blocks with language detection and styling.
@@ -39,6 +41,8 @@ Check out the live site: **[https://lanxuexing.github.io/snow_dance/](https://la
 
 - **⚡ Performance & User Experience First**
   - **Instant Load & Local CanvasKit Hosting**: Decoupled custom `flutter_bootstrap.js` initialization that downloads CanvasKit directly from our server rather than unstable public unpkg.com CDNs, resolving black screen white-outs and removing the bulky loading rectangle box shadow.
+  - **Dynamic SEO & Open Graph Ingestion**: Platform-agnostic conditional-import wrapper that updates page `<title>`, `<meta name="description">` (derived from article excerpts), keywords, and Open Graph cards (`og:title`, `og:description`) dynamically on the Web without failing Dart VM command-line tests.
+  - **Crawler Search Engine Optimization**: Deployed crawler-friendly `robots.txt` instructions and full-tree `sitemap.xml` referencing the production GitHub Pages host URL (`https://lanxuexing.github.io/snow_dance/`), accompanied by a JSON-LD structured data graph for Google Rich Snippets support.
   - **Instant Article Load**: Deprecated expensive runtime manifest scanning by caching the asset file paths directly in the models, shrinking load latency to zero.
   - **Background Full-Text Preloading**: Quietly streams and parses all Markdown articles once the app starts, providing an index of all article bodies for search without sacrificing initial rendering performance.
   - **Algolia-style Search Keyboard Navigation**: Overhauled search with full keyboard navigation (Arrows `↑`/`↓` to cycle focus, `Enter` to navigate, `Esc` to close), hover-sync highlighting, and sub-millisecond search matched against **titles**, **excerpts**, and **full-text contents**.
