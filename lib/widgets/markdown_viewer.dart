@@ -6,6 +6,8 @@ import 'package:markdown/markdown.dart' as md;
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/themes/atom-one-dark.dart';
 import 'package:flutter_highlight/themes/atom-one-light.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:go_router/go_router.dart';
 
 class MarkdownViewer extends StatelessWidget {
   final String content;
@@ -26,6 +28,17 @@ class MarkdownViewer extends StatelessWidget {
         child: MarkdownBody(
           data: content,
           selectable: false, // Performance: Handle selection via parent SelectionArea
+          onTapLink: (text, href, title) async {
+            if (href == null) return;
+            if (href.startsWith('/') || !href.startsWith('http')) {
+              context.go(href);
+            } else {
+              final url = Uri.tryParse(href);
+              if (url != null) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              }
+            }
+          },
           builders: {
             'h1': HeadingBuilder(headingKeys),
             'h2': HeadingBuilder(headingKeys),
