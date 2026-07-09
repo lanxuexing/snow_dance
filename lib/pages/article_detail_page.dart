@@ -96,7 +96,15 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       _deferRendering();
       _tocEntries.clear();
       _headingKeys.clear();
-      _headingKeys.clear();
+      
+      // Load content of the new article if it is empty
+      if (widget.article.content.isEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Provider.of<ArticleProvider>(context, listen: false)
+              .loadArticleContent(widget.article.id);
+        });
+      }
+
       if (widget.article.content.isNotEmpty) {
         _parseToC(widget.article.content);
       }
@@ -327,6 +335,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                 color: Theme.of(context).dividerColor.withValues(alpha: 0.1))),
       ),
       child: SingleChildScrollView(
+        key: const PageStorageKey('sidebar_scroll'),
         padding: const EdgeInsets.only(top: 40, left: 24, right: 24, bottom: 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -44,20 +44,6 @@ class PremiumLoader extends StatelessWidget {
             end: const Offset(1, 1),
             duration: 1000.ms,
             curve: Curves.easeInOut,
-          )
-          .boxShadow(
-             begin: BoxShadow(
-               color: primaryColor.withValues(alpha: 0.7),
-               blurRadius: 20,
-               spreadRadius: 2,
-             ),
-             end: BoxShadow(
-               color: primaryColor.withValues(alpha: 0),
-               blurRadius: 30,
-               spreadRadius: 20,
-             ),
-             duration: 1000.ms, 
-             curve: Curves.easeInOut,
           ),
           
           const SizedBox(height: 32),

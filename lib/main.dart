@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 // ignore: depend_on_referenced_packages
@@ -34,8 +35,27 @@ class MyApp extends StatelessWidget {
           darkTheme: AppTheme.darkTheme,
           themeMode: themeProvider.themeMode,
           routerConfig: appRouter,
+          scrollBehavior: const AppScrollBehavior(),
         );
       },
     );
+  }
+}
+
+class AppScrollBehavior extends MaterialScrollBehavior {
+  const AppScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
+        PointerDeviceKind.stylus,
+      };
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    // BouncingScrollPhysics provides momentum-based smooth feeling on modern web browsers
+    return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
   }
 }

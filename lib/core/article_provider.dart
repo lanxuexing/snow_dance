@@ -31,6 +31,7 @@ class ArticleProvider extends ChangeNotifier {
           content: '', // Lazy load content
           date: json['date'],
           category: json['category'],
+          path: json['path'] ?? '',
         )).toList();
 
         debugPrint('Loaded ${_articles.length} articles from index.json');
@@ -93,34 +94,22 @@ class ArticleProvider extends ChangeNotifier {
     if (article.content.isNotEmpty) return; // Already loaded
 
     try {
-      // Re-construct path (Assuming standard structure or we should store path in Article)
-      // Since we don't store path in Article model yet, let's search manifest or guess
-      // But for index.json, we didn't store path in Article.
-      // Simplification: We need path to load content.
-      // Let's first try to find the path from manifest if needed, or assume standard structure.
-      // Improve: Store 'path' in Article model? But Article is immutable final.
-      
-      // Workaround: We will use AssetManifest to find the file matching ID.
-      // This is slow but only happens once per article click.
-      final AssetManifest manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
-      final allAssets = manifest.listAssets();
-      final path = allAssets.firstWhere(
-        (key) => key.endsWith('/$id.md'),
-        orElse: () => '',
-      );
-
-      if (path.isNotEmpty) {
-        final content = await rootBundle.loadString(path);
-        // We need to parse content again to strip frontmatter? 
-        // Yes, _parseArticle does that.
-        final fullArticle = _parseArticle(path, content);
-        
-        // Update the article in the list
-        _articles[index] = fullArticle;
-        notifyListeners();
+      // Use direct path from Article model, extremely fast!
+      var path = article.path;
+      if (path.isEmpty) {
+        // Fallback to construction if empty
+        path = 'assets/articles/${article.category.toLowerCase()}/$id.md';
       }
+
+      final content = await rootBundle.loadString(path);
+      final fullArticle = _parseArticle(path, content);
+      
+      _articles[index] = fullArticle;
+      notifyListeners();
     } catch (e) {
-      debugPrint('Error lazy loading article content: $e');
+      debugPrint('Error lazy loading article content for $id: $e');
+      // Ensure UI doesn't hang forever if load fails
+      notifyListeners();
     }
   }
 
@@ -216,6 +205,7 @@ class ArticleProvider extends ChangeNotifier {
       content: cleanContent,
       date: date,
       category: category,
+      path: path,
     );
   }
 }

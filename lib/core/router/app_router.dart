@@ -43,12 +43,16 @@ GoRoute _buildArticleRoute(String path) {
     path: path,
     builder: (context, state) {
       final id = state.pathParameters['id'];
+      final provider = Provider.of<ArticleProvider>(context);
       
-      // We need to access the provider to find the article
-      // Since GoRouter is defined globally, we can't easily get 'context' unless inside builder
-      // Luckily, builder provides context.
-      final provider = Provider.of<ArticleProvider>(context, listen: false);
-      
+      if (provider.isLoading) {
+        return const MainLayout(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+
       Article? article;
       try {
         article = provider.articles.firstWhere((a) => a.id == id);

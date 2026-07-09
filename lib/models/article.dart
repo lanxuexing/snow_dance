@@ -5,6 +5,7 @@ class Article {
   final String content;
   final String date;
   final String category;
+  final String path;
 
   Article({
     required this.id,
@@ -13,6 +14,7 @@ class Article {
     required this.content,
     required this.date,
     required this.category,
+    required this.path,
   });
 
   String get categoryPath => category.toLowerCase();
