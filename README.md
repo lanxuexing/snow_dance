@@ -24,19 +24,26 @@ Check out the live site: **[https://lanxuexing.github.io/snow_dance/](https://la
 ## ✨ Features
 
 - **🎨 Premium UI/UX**
+  - **Dynamic Spinning Snowflake Logo**: Hand-crafted vector snowflake with a smooth floating rotation animation and micro-glow interaction, integrated globally in the startup loader, app bar, and side drawer.
   - **Glassmorphism Design**: Frosted glass effects, subtle gradients, and dark mode support.
   - **Responsive Layout**: Adaptive sidebar and navigation for Desktop, Tablet, and Mobile.
+  - **Global Smooth Inertial Scroll**: Mouse drag, trackpad gesture, and physics-based momentum bounds (`BouncingScrollPhysics`) across all platforms (macOS, Windows, Linux, and Web), making scrolling extremely fluid.
   - **Smooth Animations**: Refined transitions and micro-interactions using `flutter_animate`.
 
 - **📝 Advanced Markdown Engine**
   - **Syntax Highlighting**: Code blocks with language detection and styling.
   - **Table of Contents**: Auto-generated ToC with scroll-spy (highlight active section).
+  - **Hyperlinks & Smart Redirection**: Full support for clicking markdown links. External links open securely in a new browser tab, while internal routing path links are resolved locally via GoRouter to maintain the single-page application (SPA) experience.
   - **Collapsible Mobile Header**: "Page Overview" panel for quick navigation on small screens.
   - **Deep Linking**: Direct navigation to specific headings.
 
-- **⚡ Performance First**
-  - **Lazy Loading**: Skeleton screens (`ArticleSkeleton`) for perceived performance.
-  - **Deferred Rendering**: Optimization for long articles to prevent UI freezes.
+- **⚡ Performance & User Experience First**
+  - **Instant Load & Local CanvasKit Hosting**: Decoupled custom `flutter_bootstrap.js` initialization that downloads CanvasKit directly from our server rather than unstable public unpkg.com CDNs, resolving black screen white-outs and removing the bulky loading rectangle box shadow.
+  - **Instant Article Load**: Deprecated expensive runtime manifest scanning by caching the asset file paths directly in the models, shrinking load latency to zero.
+  - **Background Full-Text Preloading**: Quietly streams and parses all Markdown articles once the app starts, providing an index of all article bodies for search without sacrificing initial rendering performance.
+  - **Algolia-style Search Keyboard Navigation**: Overhauled search with full keyboard navigation (Arrows `↑`/`↓` to cycle focus, `Enter` to navigate, `Esc` to close), hover-sync highlighting, and sub-millisecond search matched against **titles**, **excerpts**, and **full-text contents**.
+  - **Sidebar Scroll Offsets Retention**: Attached `PageStorageKey` to the sidebar scroll views to preserve and restore scroll positions across page rebuilds and router navigations.
+  - **State Reuse Lifecycle Optimization**: Added article ID change detection and async refresh triggers inside `didUpdateWidget` to prevent loading hangs when swapping articles within GoRouter's route reuse context.
   - **PWA Support**: Installable as a progressive web app.
 
 - **🤖 Automated DevOps**
