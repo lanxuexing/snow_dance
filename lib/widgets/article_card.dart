@@ -24,7 +24,7 @@ class _ArticleCardState extends State<ArticleCard> {
       onExit: (_) => setState(() => _isHovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () => context.push('/${widget.article.categoryPath}/${widget.article.id}'),
+        onTap: () => context.go('/${widget.article.categoryPath}/${widget.article.id}'),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeOutCubic,

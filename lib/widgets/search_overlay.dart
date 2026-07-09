@@ -79,7 +79,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
                   ),
                   onSubmitted: (value) {
                     if (_results.isNotEmpty) {
-                      context.push('/${_results.first.categoryPath}/${_results.first.id}');
+                      context.go('/${_results.first.categoryPath}/${_results.first.id}');
                       Navigator.pop(context);
                     }
                   },
@@ -105,7 +105,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         onTap: () {
-                          context.push('/${article.categoryPath}/${article.id}');
+                          context.go('/${article.categoryPath}/${article.id}');
                           Navigator.pop(context);
                         },
                       );
