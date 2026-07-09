@@ -48,7 +48,7 @@ class _AppDrawerState extends State<AppDrawer> {
               const Divider(height: 1),
               Expanded(
                 child: ListView(
-                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                   children: [
                     ...navItems.map((item) {
                       // Extract category key from route (e.g., /blog/some-id -> blog)
@@ -79,10 +79,10 @@ class _AppDrawerState extends State<AppDrawer> {
   Widget _buildHeader(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 24,
-        bottom: 24,
-        left: 24,
-        right: 16,
+        top: MediaQuery.of(context).padding.top + 12,
+        bottom: 12,
+        left: 16,
+        right: 8,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -242,7 +242,7 @@ class _AppDrawerState extends State<AppDrawer> {
 
   Widget _buildFooter(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
@@ -267,11 +267,11 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           Text(
             '© 2026 SnowDance Engine',
             style: GoogleFonts.outfit(
-              fontSize: 12,
+              fontSize: 11,
               color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.5),
             ),
           ),
