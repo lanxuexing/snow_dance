@@ -9,6 +9,7 @@ import 'package:snow_dance/widgets/sidebar_item.dart';
 import 'package:snow_dance/widgets/article_skeleton.dart';
 import 'package:snow_dance/widgets/app_footer.dart';
 import 'package:snow_dance/core/config/app_config.dart';
+import 'package:snow_dance/core/utils/seo_helper.dart';
 
 class ArticleDetailPage extends StatefulWidget {
   final Article article;
@@ -174,6 +175,14 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     if (_tocEntries.isEmpty && currentArticle.content.isNotEmpty) {
        _parseToC(currentArticle.content);
     }
+
+    // Dynamic SEO update for the article detail page
+    SEOHelper.updateSEO(
+      title: '${currentArticle.title} - SnowDance',
+      description: currentArticle.excerpt,
+      keywords: [currentArticle.category, 'SnowDance', 'Blog', 'Docs'],
+      author: AppConfig.authorName,
+    );
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -6,6 +6,7 @@ import 'package:snow_dance/core/article_provider.dart';
 import 'package:snow_dance/models/article.dart';
 import 'package:snow_dance/widgets/article_card.dart';
 import 'package:snow_dance/widgets/app_footer.dart';
+import 'package:snow_dance/core/utils/seo_helper.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -17,6 +18,13 @@ class HomePage extends StatelessWidget {
     if (provider.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
+
+    SEOHelper.updateSEO(
+      title: 'SnowDance - Premium Tech Blog Engine built with Flutter',
+      description: 'SnowDance is a premium, high-performance tech blog engine built with Flutter Web, featuring frosted glass aesthetics and modern technical writing features.',
+      keywords: ['Flutter', 'Flutter Web', 'Blog Engine', 'Tech Blog', 'SnowDance', 'Premium UI'],
+      author: 'lanxuexing',
+    );
 
     return SingleChildScrollView(
       child: Column(
