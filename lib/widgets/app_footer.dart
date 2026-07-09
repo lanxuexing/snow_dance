@@ -11,10 +11,10 @@ class AppFooter extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-        vertical: isMobile ? 16 : 32, 
+        vertical: isMobile ? 16 : 20, 
         horizontal: isMobile ? 16 : 24
       ),
-      margin: EdgeInsets.only(top: isMobile ? 32 : 60),
+      margin: EdgeInsets.only(top: isMobile ? 32 : 40),
       decoration: BoxDecoration(
         border: Border(
             top: BorderSide(
@@ -29,13 +29,13 @@ class AppFooter extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _buildSocialIcon(context, FontAwesomeIcons.xTwitter, 'https://twitter.com', isMobile),
-                  SizedBox(width: isMobile ? 16 : 24),
+                  SizedBox(width: isMobile ? 16 : 20),
                   _buildSocialIcon(context, FontAwesomeIcons.github, 'https://github.com/lanxuexing/snow_dance', isMobile),
-                  SizedBox(width: isMobile ? 16 : 24),
+                  SizedBox(width: isMobile ? 16 : 20),
                   _buildSocialIcon(context, FontAwesomeIcons.discord, 'https://discord.com', isMobile),
                 ],
               ),
-              SizedBox(height: isMobile ? 8 : 16),
+              SizedBox(height: isMobile ? 8 : 12),
               Text(
                 '© 2026 SnowDance Engine. Built with Flutter Web.',
                 style: TextStyle(
@@ -63,10 +63,10 @@ class AppFooter extends StatelessWidget {
       child: Opacity(
         opacity: 0.7,
         child: Container(
-          padding: EdgeInsets.all(isMobile ? 6 : 8),
+          padding: EdgeInsets.all(isMobile ? 6 : 7),
           child: FaIcon(
             icon,
-            size: isMobile ? 16 : 20,
+            size: isMobile ? 16 : 18,
             color: Theme.of(context).textTheme.bodyMedium?.color,
           ),
         ),
