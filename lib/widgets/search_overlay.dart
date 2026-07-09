@@ -173,13 +173,18 @@ class _SearchOverlayState extends State<SearchOverlay> {
                     ),
                   ),
                   child: Row(
+                    mainAxisAlignment: MediaQuery.of(context).size.width >= 600 
+                        ? MainAxisAlignment.start 
+                        : MainAxisAlignment.center,
                     children: [
-                      _buildKeyHint(context, '↵', 'to select'),
-                      const SizedBox(width: 16),
-                      _buildKeyHint(context, '↓↑', 'to navigate'),
-                      const SizedBox(width: 16),
-                      _buildKeyHint(context, 'esc', 'to close'),
-                      const Spacer(),
+                      if (MediaQuery.of(context).size.width >= 600) ...[
+                        _buildKeyHint(context, '↵', 'to select'),
+                        const SizedBox(width: 16),
+                        _buildKeyHint(context, '↓↑', 'to navigate'),
+                        const SizedBox(width: 16),
+                        _buildKeyHint(context, 'esc', 'to close'),
+                        const Spacer(),
+                      ],
                       Text(
                         'Search by SnowDance',
                         style: TextStyle(
