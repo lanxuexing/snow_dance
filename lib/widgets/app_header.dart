@@ -17,6 +17,13 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    String currentLocation = '/';
+    try {
+      currentLocation = GoRouterState.of(context).uri.path;
+    } catch (_) {
+      // Fallback for tests or contexts without GoRouter
+    }
+
     return ClipRRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
@@ -74,7 +81,7 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                   // Nav Items (Desktop)
                   if (!ResponsiveLayout.isMobile(context)) ...[
                     ...AppConfig.navItems.map((item) => 
-                      _buildNavItem(context, item.title, item.route)
+                      _buildNavItem(context, item.title, item.route, currentLocation)
                     ),
                   ],
                   const SizedBox(width: 24),
@@ -101,7 +108,9 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget _buildNavItem(BuildContext context, String title, String route) {
+  Widget _buildNavItem(BuildContext context, String title, String route, String currentLocation) {
+    final bool isActive = route == '/' ? currentLocation == '/' : currentLocation.startsWith(route);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: InkWell(
@@ -110,7 +119,10 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
           title,
           style: GoogleFonts.outfit(
             fontSize: 15,
-            fontWeight: FontWeight.w500,
+            fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+            color: isActive 
+                ? Theme.of(context).colorScheme.primary 
+                : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
           ),
         ),
       ),
