@@ -218,13 +218,15 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   }
 
   Widget _buildMobileToC(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark 
-            ? Colors.black.withValues(alpha: 0.3)
-            : Colors.grey.withValues(alpha: 0.05),
+    return Material(
+      color: Theme.of(context).brightness == Brightness.dark 
+          ? Colors.black.withValues(alpha: 0.3)
+          : Colors.grey.withValues(alpha: 0.05),
+      borderRadius: BorderRadius.circular(12),
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
+        side: BorderSide(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
       ),
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),

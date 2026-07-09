@@ -129,10 +129,12 @@ class _AppDrawerState extends State<AppDrawer> {
     // If we haven't tracked it yet, default to whether the category is active
     final bool isExpanded = _expansionStates[title] ?? isCategorySelected;
 
-    return Theme(
-      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-      child: ExpansionTile(
-        initiallyExpanded: isCategorySelected,
+    return Material(
+      type: MaterialType.transparency,
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          initiallyExpanded: isCategorySelected,
         onExpansionChanged: (expanded) {
           setState(() {
             _expansionStates[title] = expanded;
@@ -186,48 +188,52 @@ class _AppDrawerState extends State<AppDrawer> {
           );
         }).toList(),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildDrawerItem(BuildContext context, String title, String route) {
     final bool isSelected = GoRouterState.of(context).uri.toString() == route;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).pop();
-          context.go(route);
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: isSelected 
-              ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1) 
-              : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            children: [
-              Text(
-                title,
-                style: GoogleFonts.outfit(
-                  fontSize: 15,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected 
-                    ? Theme.of(context).colorScheme.primary 
-                    : null,
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context).pop();
+            context.go(route);
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: isSelected 
+                ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1) 
+                : Colors.transparent,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.outfit(
+                    fontSize: 15,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                    color: isSelected 
+                      ? Theme.of(context).colorScheme.primary 
+                      : null,
+                  ),
                 ),
-              ),
-              const Spacer(),
-              if (isSelected)
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 12,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-            ],
+                const Spacer(),
+                if (isSelected)
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 12,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+              ],
+            ),
           ),
         ),
       ),
