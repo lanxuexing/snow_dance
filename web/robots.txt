@@ -1,0 +1,5 @@
+# robots.txt for SnowDance Engine
+User-agent: *
+Allow: /
+
+Sitemap: https://lanxuexing.github.io/snow_dance/sitemap.xml
