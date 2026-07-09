@@ -222,7 +222,6 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       color: Theme.of(context).brightness == Brightness.dark 
           ? Colors.black.withValues(alpha: 0.3)
           : Colors.grey.withValues(alpha: 0.05),
-      borderRadius: BorderRadius.circular(12),
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
