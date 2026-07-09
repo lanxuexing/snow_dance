@@ -46,6 +46,9 @@ class ArticleProvider extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+    
+    // Start background preloading of all article contents for instant full-text search
+    _preloadAllArticleContents();
   }
 
   Future<void> _loadArticlesFromManifest() async {
@@ -84,6 +87,25 @@ class ArticleProvider extends ChangeNotifier {
         loadedArticles.sort((a, b) => b.date.compareTo(a.date));
         _articles = loadedArticles;
       }
+  }
+
+  Future<void> _preloadAllArticleContents() async {
+    // Sequentially preload all article contents in the background
+    // Using await inside the loop lets Flutter yield to frame rendering, keeping UI smooth
+    for (int i = 0; i < _articles.length; i++) {
+      final article = _articles[i];
+      if (article.content.isEmpty && article.path.isNotEmpty) {
+        try {
+          final content = await rootBundle.loadString(article.path);
+          final fullArticle = _parseArticle(article.path, content);
+          _articles[i] = fullArticle;
+        } catch (e) {
+          debugPrint('Error preloading article content for ${article.id}: $e');
+        }
+      }
+    }
+    notifyListeners();
+    debugPrint('Background preloading of all article contents completed.');
   }
 
   Future<void> loadArticleContent(String id) async {

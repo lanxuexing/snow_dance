@@ -29,6 +29,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
         _results = articles
             .where((a) =>
                 a.title.toLowerCase().contains(query.toLowerCase()) ||
+                a.excerpt.toLowerCase().contains(query.toLowerCase()) ||
                 a.content.toLowerCase().contains(query.toLowerCase()))
             .toList();
         _focusedIndex = 0;
