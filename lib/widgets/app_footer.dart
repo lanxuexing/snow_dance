@@ -28,7 +28,7 @@ class AppFooter extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildSocialIcon(context, FontAwesomeIcons.xTwitter, 'https://twitter.com', isMobile),
+                  _buildSocialIcon(context, FontAwesomeIcons.xTwitter, 'https://x.com', isMobile),
                   SizedBox(width: isMobile ? 16 : 20),
                   _buildSocialIcon(context, FontAwesomeIcons.github, 'https://github.com/lanxuexing/snow_dance', isMobile),
                   SizedBox(width: isMobile ? 16 : 20),
