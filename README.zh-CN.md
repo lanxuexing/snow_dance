@@ -80,8 +80,8 @@
    # Debug 模式 (编译快，性能一般)
    flutter run -d chrome
 
-   # Release 模式 (生产级性能，接近上线效果)
-   flutter run -d chrome --release
+   # Release 模式 (生产级性能，使用最新的 WasmGC/Skwasm 渲染引擎)
+   flutter run -d chrome --release --wasm
    ```
 
 ## ✍️ 内容管理

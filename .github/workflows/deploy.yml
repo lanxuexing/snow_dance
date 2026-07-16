@@ -37,8 +37,8 @@ jobs:
       # 构建 Web 版本
       # 注意：如果发布到非根目录（如 username.github.io/repo/），请取消注释下方 lines 并设置正确的 base-href
       - name: 🔨 Build Web
-        run: flutter build web --release --base-href "/$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')/"
-        # run: flutter build web --release
+        run: flutter build web --wasm --release --base-href "/$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')/"
+        # run: flutter build web --wasm --release
 
       # 1. 部署到 GitHub Pages
       - name: 📤 Upload Pages Artifact

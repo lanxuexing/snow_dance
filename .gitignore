@@ -62,7 +62,6 @@ flutter_export_environment.sh
 **/ios/Pods/
 
 # Web specific
-lib/generated_plugin_registrant.dart
 
 # Archives & Build Artifacts (from CI script or local builds)
 *.tar.gz

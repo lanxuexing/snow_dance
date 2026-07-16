@@ -80,8 +80,8 @@ Check out the live site: **[https://lanxuexing.github.io/snow_dance/](https://la
    # Debug mode (faster compilation, slower performance)
    flutter run -d chrome
 
-   # Release mode (production performance, closer to live site)
-   flutter run -d chrome --release
+   # Release mode (production performance using the latest WasmGC/Skwasm engine)
+   flutter run -d chrome --release --wasm
    ```
 
 ## ✍️ Content Management
