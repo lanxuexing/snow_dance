@@ -7,11 +7,9 @@ import 'package:snow_dance/core/article_provider.dart';
 import 'package:snow_dance/core/theme/app_theme.dart';
 import 'package:snow_dance/core/theme/theme_provider.dart';
 import 'package:snow_dance/core/router/app_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   usePathUrlStrategy();
-  GoogleFonts.config.allowRuntimeFetching = false;
   runApp(
     MultiProvider(
       providers: [

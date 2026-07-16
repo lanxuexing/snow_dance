@@ -74,7 +74,6 @@ flutter:
     - assets/articles/guide/
     - assets/articles/docs/
     - assets/articles/ecosystem/
-    - google_fonts/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
