@@ -3,7 +3,7 @@
 # ❄️ SnowDance
 
 基于 Flutter Web 构建的高性能、高级感博客引擎。
-拥有玻璃拟态 UI、强大的 Markdown 渲染及全自动 GitHub Pages 部署流程。
+拥有玻璃拟态 UI、强大的 Markdown 渲染及全自动 GitHub Pages 部署流程。 
 
 [![GitHub Release Date](https://img.shields.io/github/release-date/lanxuexing/snow_dance.svg?style=flat-square)](https://github.com/lanxuexing/snow_dance/releases)
 [![GitHub repo size](https://img.shields.io/github/repo-size/lanxuexing/snow_dance.svg?style=flat-square)](https://github.com/lanxuexing/snow_dance)
