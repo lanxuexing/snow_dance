@@ -90,15 +90,60 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                   // Search Button
                   _buildSearchButton(context),
                   const SizedBox(width: 12),
-                  // Dark Mode Toggle
-                  IconButton(
-                    icon: Icon(
-                      Provider.of<ThemeProvider>(context).isDarkMode
-                          ? Icons.light_mode
-                          : Icons.dark_mode,
-                    ),
-                    onPressed: () {
-                      Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+                  // Theme Mode Selector
+                  Consumer<ThemeProvider>(
+                    builder: (context, themeProvider, child) {
+                      IconData themeIcon;
+                      switch (themeProvider.themeMode) {
+                        case ThemeMode.light:
+                          themeIcon = Icons.light_mode_outlined;
+                          break;
+                        case ThemeMode.dark:
+                          themeIcon = Icons.dark_mode_outlined;
+                          break;
+                        case ThemeMode.system:
+                          themeIcon = Icons.brightness_6_outlined;
+                          break;
+                      }
+                      return PopupMenuButton<ThemeMode>(
+                        icon: Icon(themeIcon),
+                        tooltip: '选择主题模式',
+                        onSelected: (ThemeMode mode) {
+                          themeProvider.setThemeMode(mode);
+                        },
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            value: ThemeMode.light,
+                            child: Row(
+                              children: [
+                                const Icon(Icons.light_mode_outlined, size: 18),
+                                const SizedBox(width: 8),
+                                Text('浅色模式', style: GoogleFonts.outfit(fontSize: 14)),
+                              ],
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: ThemeMode.dark,
+                            child: Row(
+                              children: [
+                                const Icon(Icons.dark_mode_outlined, size: 18),
+                                const SizedBox(width: 8),
+                                Text('深色模式', style: GoogleFonts.outfit(fontSize: 14)),
+                              ],
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: ThemeMode.system,
+                            child: Row(
+                              children: [
+                                const Icon(Icons.brightness_6_outlined, size: 18),
+                                const SizedBox(width: 8),
+                                Text('跟随系统', style: GoogleFonts.outfit(fontSize: 14)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
                     },
                   ),
                 ],

@@ -252,18 +252,47 @@ class _AppDrawerState extends State<AppDrawer> {
       ),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Dark Mode',
+                '主题模式',
                 style: GoogleFonts.outfit(fontSize: 14, color: Colors.grey),
               ),
-              Switch(
-                value: Provider.of<ThemeProvider>(context).isDarkMode,
-                onChanged: (value) {
-                  Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
-                },
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: Consumer<ThemeProvider>(
+                  builder: (context, themeProvider, child) {
+                    return SegmentedButton<ThemeMode>(
+                      style: const ButtonStyle(
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      segments: const [
+                        ButtonSegment<ThemeMode>(
+                          value: ThemeMode.light,
+                          icon: Icon(Icons.light_mode_outlined, size: 14),
+                          label: Text('浅色', style: TextStyle(fontSize: 11)),
+                        ),
+                        ButtonSegment<ThemeMode>(
+                          value: ThemeMode.dark,
+                          icon: Icon(Icons.dark_mode_outlined, size: 14),
+                          label: Text('深色', style: TextStyle(fontSize: 11)),
+                        ),
+                        ButtonSegment<ThemeMode>(
+                          value: ThemeMode.system,
+                          icon: Icon(Icons.brightness_6_outlined, size: 14),
+                          label: Text('系统', style: TextStyle(fontSize: 11)),
+                        ),
+                      ],
+                      selected: {themeProvider.themeMode},
+                      onSelectionChanged: (Set<ThemeMode> newSelection) {
+                        themeProvider.setThemeMode(newSelection.first);
+                      },
+                      showSelectedIcon: false,
+                    );
+                  },
+                ),
               ),
             ],
           ),
