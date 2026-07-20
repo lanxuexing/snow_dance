@@ -4,14 +4,14 @@ import 'dart:convert';
 void main() async {
   final articlesDir = Directory('assets/articles');
   if (!articlesDir.existsSync()) {
-    print('Error: assets/articles directory not found.');
+    stderr.writeln('Error: assets/articles directory not found.');
     exit(1);
   }
 
   final List<Map<String, String>> articles = [];
   final files = articlesDir.listSync(recursive: true).whereType<File>().where((f) => f.path.endsWith('.md'));
 
-  print('Found ${files.length} markdown files.');
+  stdout.writeln('Found ${files.length} markdown files.');
 
   for (final file in files) {
     final content = await file.readAsString();
@@ -24,12 +24,12 @@ void main() async {
 
   final indexFile = File('assets/articles/index.json');
   await indexFile.writeAsString(jsonEncode(articles));
-  print('Generated assets/articles/index.json with ${articles.length} articles.');
+  stdout.writeln('Generated assets/articles/index.json with ${articles.length} articles.');
 }
 
 Map<String, String> _parseMetadata(String path, String content) {
   // Normalized path for web asset loading (forward slashes)
-  String assetPath = path.replaceAll('\\', '/');
+  final String assetPath = path.replaceAll('\\', '/');
   
   final fileName = assetPath.split('/').last.replaceAll('.md', '');
   
@@ -60,15 +60,19 @@ Map<String, String> _parseMetadata(String path, String content) {
     cleanContent = content.substring(match.end);
     
     final yamlLines = yamlContent.split('\n');
-    for (var line in yamlLines) {
+    for (final line in yamlLines) {
       if (line.contains(':')) {
         final keyParts = line.split(':');
         final key = keyParts[0].trim().toLowerCase();
         final value = keyParts.sublist(1).join(':').trim();
         
-        if (key == 'title') title = value;
-        else if (key == 'date') date = value;
-        else if (key == 'category') category = value;
+        if (key == 'title') {
+          title = value;
+        } else if (key == 'date') {
+          date = value;
+        } else if (key == 'category') {
+          category = value;
+        }
       }
     }
   } else {
@@ -76,9 +80,13 @@ Map<String, String> _parseMetadata(String path, String content) {
      final lines = content.split('\n');
      for (var i = 0; i < lines.length; i++) {
         final line = lines[i].trim();
-        if (line.startsWith('# ') && !title.contains(line.replaceFirst('# ', ''))) title = line.replaceFirst('# ', '').trim();
-        else if (line.startsWith('> Date:')) date = line.replaceFirst('> Date:', '').trim();
-        else if (line.startsWith('> Category:')) category = line.replaceFirst('> Category:', '').trim();
+        if (line.startsWith('# ') && !title.contains(line.replaceFirst('# ', ''))) {
+          title = line.replaceFirst('# ', '').trim();
+        } else if (line.startsWith('> Date:')) {
+          date = line.replaceFirst('> Date:', '').trim();
+        } else if (line.startsWith('> Category:')) {
+          category = line.replaceFirst('> Category:', '').trim();
+        }
      }
   }
 
@@ -92,7 +100,7 @@ Map<String, String> _parseMetadata(String path, String content) {
     }
   }
   if (excerpt.length > 200) {
-    excerpt = excerpt.substring(0, 197) + '...';
+    excerpt = '${excerpt.substring(0, 197)}...';
   }
 
   // Ensure ID is unique and simple

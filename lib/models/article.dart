@@ -1,4 +1,4 @@
-class Article {
+final class Article {
   final String id;
   final String title;
   final String excerpt;
@@ -7,7 +7,7 @@ class Article {
   final String category;
   final String path;
 
-  Article({
+  const Article({
     required this.id,
     required this.title,
     required this.excerpt,

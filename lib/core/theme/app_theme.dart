@@ -11,10 +11,12 @@ class AppTheme {
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
-    colorScheme: ColorScheme.dark(
+    colorScheme: const ColorScheme.dark(
       primary: primaryColor,
       secondary: secondaryColor,
       surface: Color(0xFF111111),
+      surfaceContainer: Color(0xFF1A1A1A),
+      surfaceContainerHigh: Color(0xFF222222),
     ),
     scaffoldBackgroundColor: darkBgColor,
     textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme).copyWith(
@@ -30,7 +32,7 @@ class AppTheme {
       ),
     ),
     cardTheme: CardThemeData(
-      color: Color(0xFF1A1A1A),
+      color: const Color(0xFF1A1A1A),
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     ),
@@ -40,10 +42,12 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-    colorScheme: ColorScheme.light(
+    colorScheme: const ColorScheme.light(
       primary: primaryColor,
       secondary: secondaryColor,
       surface: Colors.white,
+      surfaceContainer: Color(0xFFF3F4F6),
+      surfaceContainerHigh: Color(0xFFE5E7EB),
     ),
     scaffoldBackgroundColor: lightBgColor,
     textTheme: GoogleFonts.interTextTheme(ThemeData.light().textTheme).copyWith(

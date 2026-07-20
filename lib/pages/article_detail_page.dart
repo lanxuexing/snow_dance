@@ -121,11 +121,13 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   void _parseToC(String content) {
     _tocEntries.clear();
     final lines = content.split('\n');
-    for (var line in lines) {
+    for (final line in lines) {
       if (line.startsWith('## ') || line.startsWith('### ') || line.startsWith('#### ')) {
-        int level = 1; 
-        if (line.startsWith('### ')) level = 2;
-        else if (line.startsWith('#### ')) level = 3;
+        final level = switch (line) {
+          _ when line.startsWith('#### ') => 3,
+          _ when line.startsWith('### ') => 2,
+          _ => 1,
+        };
         
         final title = line.replaceFirst(RegExp(r'#+ '), '').trim();
         // Check if title already parsed to avoid duplicate keys? 

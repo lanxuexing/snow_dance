@@ -93,24 +93,15 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                   // Theme Mode Selector
                   Consumer<ThemeProvider>(
                     builder: (context, themeProvider, child) {
-                      IconData themeIcon;
-                      switch (themeProvider.themeMode) {
-                        case ThemeMode.light:
-                          themeIcon = Icons.light_mode_outlined;
-                          break;
-                        case ThemeMode.dark:
-                          themeIcon = Icons.dark_mode_outlined;
-                          break;
-                        case ThemeMode.system:
-                          themeIcon = Icons.brightness_6_outlined;
-                          break;
-                      }
+                      final themeIcon = switch (themeProvider.themeMode) {
+                        ThemeMode.light => Icons.light_mode_outlined,
+                        ThemeMode.dark => Icons.dark_mode_outlined,
+                        ThemeMode.system => Icons.brightness_6_outlined,
+                      };
                       return PopupMenuButton<ThemeMode>(
                         icon: Icon(themeIcon),
                         tooltip: '选择主题模式',
-                        onSelected: (ThemeMode mode) {
-                          themeProvider.setThemeMode(mode);
-                        },
+                        onSelected: themeProvider.setThemeMode,
                         itemBuilder: (context) => [
                           PopupMenuItem(
                             value: ThemeMode.light,

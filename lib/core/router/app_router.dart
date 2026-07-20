@@ -6,7 +6,6 @@ import 'package:snow_dance/widgets/main_layout.dart';
 import 'package:snow_dance/widgets/category_redirect_page.dart';
 import 'package:snow_dance/pages/home_page.dart';
 import 'package:snow_dance/pages/article_detail_page.dart';
-import 'package:snow_dance/models/article.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -53,12 +52,7 @@ GoRoute _buildArticleRoute(String path) {
         );
       }
 
-      Article? article;
-      try {
-        article = provider.articles.firstWhere((a) => a.id == id);
-      } catch (e) {
-        article = null;
-      }
+      final article = provider.articles.where((a) => a.id == id).firstOrNull;
 
       if (article == null) {
         return const MainLayout(

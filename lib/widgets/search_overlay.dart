@@ -41,35 +41,38 @@ class _SearchOverlayState extends State<SearchOverlay> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Center(
-      child: Material(
-        color: Colors.transparent,
-        child: Focus(
-          autofocus: true,
-          onKeyEvent: (node, event) {
-            if (event is KeyDownEvent) {
-              if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-                setState(() {
-                  if (_results.isNotEmpty) {
-                    _focusedIndex = (_focusedIndex + 1) % _results.length;
-                  }
-                });
-                return KeyEventResult.handled;
-              } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-                setState(() {
-                  if (_results.isNotEmpty) {
-                    _focusedIndex = (_focusedIndex - 1 + _results.length) % _results.length;
-                  }
-                });
-                return KeyEventResult.handled;
-              } else if (event.logicalKey == LogicalKeyboardKey.escape) {
-                Navigator.pop(context);
-                return KeyEventResult.handled;
+    return PopScope(
+      canPop: true,
+      child: Center(
+        child: Material(
+          color: Colors.transparent,
+          child: Focus(
+            autofocus: true,
+            onKeyEvent: (node, event) {
+              if (event is KeyDownEvent) {
+                switch (event.logicalKey) {
+                  case LogicalKeyboardKey.arrowDown:
+                    if (_results.isNotEmpty) {
+                      setState(() {
+                        _focusedIndex = (_focusedIndex + 1) % _results.length;
+                      });
+                    }
+                    return KeyEventResult.handled;
+                  case LogicalKeyboardKey.arrowUp:
+                    if (_results.isNotEmpty) {
+                      setState(() {
+                        _focusedIndex = (_focusedIndex - 1 + _results.length) % _results.length;
+                      });
+                    }
+                    return KeyEventResult.handled;
+                  case LogicalKeyboardKey.escape:
+                    Navigator.pop(context);
+                    return KeyEventResult.handled;
+                }
               }
-            }
-            return KeyEventResult.ignored;
-          },
-          child: Container(
+              return KeyEventResult.ignored;
+            },
+            child: Container(
             width: 600,
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
             decoration: BoxDecoration(
@@ -200,8 +203,9 @@ class _SearchOverlayState extends State<SearchOverlay> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildKeyHint(BuildContext context, String key, String label) {
     final isDark = Theme.of(context).brightness == Brightness.dark;

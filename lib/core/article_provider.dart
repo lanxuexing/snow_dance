@@ -161,15 +161,19 @@ class ArticleProvider extends ChangeNotifier {
       cleanContent = content.substring(match.end);
       
       final yamlLines = yamlContent.split('\n');
-      for (var line in yamlLines) {
+      for (final line in yamlLines) {
         if (line.contains(':')) {
           final parts = line.split(':');
           final key = parts[0].trim().toLowerCase();
           final value = parts.sublist(1).join(':').trim();
           
-          if (key == 'title') title = value;
-          else if (key == 'date') date = value;
-          else if (key == 'category') category = value;
+          if (key == 'title') {
+            title = value;
+          } else if (key == 'date') {
+            date = value;
+          } else if (key == 'category') {
+            category = value;
+          }
         }
       }
     } else {
@@ -179,7 +183,7 @@ class ArticleProvider extends ChangeNotifier {
       bool titleFound = false;
       bool isHeaderSection = true;
       
-      for (var line in lines) {
+      for (final line in lines) {
         // Once found a non-metadata block, treat everything else as content
         if (!isHeaderSection) {
           filteredLines.add(line);
@@ -209,7 +213,7 @@ class ArticleProvider extends ChangeNotifier {
 
     // Generate excerpt from clean content
     final contentLines = cleanContent.split('\n');
-    for (var line in contentLines) {
+    for (final line in contentLines) {
       if (excerpt.isEmpty && line.trim().isNotEmpty && !line.startsWith('#') && !line.startsWith('---') && !line.startsWith('>')) {
         excerpt = line.trim();
         break;
@@ -217,7 +221,7 @@ class ArticleProvider extends ChangeNotifier {
     }
 
     if (excerpt.length > 150) {
-      excerpt = excerpt.substring(0, 147) + '...';
+      excerpt = '${excerpt.substring(0, 147)}...';
     }
 
     return Article(
