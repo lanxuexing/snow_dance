@@ -120,20 +120,18 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
 
   void _parseToC(String content) {
     _tocEntries.clear();
+    _headingKeys.clear();
     final lines = content.split('\n');
+    final headingRegex = RegExp(r'^(#{1,6})\s+(.+)$');
+
     for (final line in lines) {
-      if (line.startsWith('## ') || line.startsWith('### ') || line.startsWith('#### ')) {
-        final level = switch (line) {
-          _ when line.startsWith('#### ') => 3,
-          _ when line.startsWith('### ') => 2,
-          _ => 1,
-        };
-        
-        final title = line.replaceFirst(RegExp(r'#+ '), '').trim();
-        // Check if title already parsed to avoid duplicate keys? 
-        // Logic assumes titles unique or handles duplicates? 
-        // Original logic didn't handle unique keys for same title properly if duplicate.
-        // Keeping original logic.
+      final trimmed = line.trim();
+      final match = headingRegex.firstMatch(trimmed);
+      if (match != null) {
+        final hashes = match.group(1)!;
+        final title = match.group(2)!.trim();
+        final level = hashes.length;
+
         final key = GlobalKey();
         _tocEntries.add(ToCEntry(title: title, level: level, key: key));
         _headingKeys[title] = key;

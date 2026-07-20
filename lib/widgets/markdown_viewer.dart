@@ -81,6 +81,8 @@ class MarkdownViewer extends StatelessWidget {
             'h2': HeadingBuilder(headingKeys),
             'h3': HeadingBuilder(headingKeys),
             'h4': HeadingBuilder(headingKeys),
+            'h5': HeadingBuilder(headingKeys),
+            'h6': HeadingBuilder(headingKeys),
             'code': CodeBlockBuilder(isDark),
           },
           styleSheet: MarkdownStyleSheet(
@@ -152,8 +154,19 @@ class HeadingBuilder extends MarkdownElementBuilder {
 
   @override
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
-    final text = element.textContent;
-    final key = headingKeys[text];
+    final text = element.textContent.trim();
+    GlobalKey? key = headingKeys[text];
+
+    if (key == null) {
+      final normalizedText = text.replaceAll(RegExp(r'[\.\s\、\-\(\)（）_#]'), '').toLowerCase();
+      for (final entry in headingKeys.entries) {
+        final normalizedKey = entry.key.replaceAll(RegExp(r'[\.\s\、\-\(\)（）_#]'), '').toLowerCase();
+        if (normalizedKey == normalizedText || entry.key.trim() == text) {
+          key = entry.value;
+          break;
+        }
+      }
+    }
 
     return Container(
       key: key,
