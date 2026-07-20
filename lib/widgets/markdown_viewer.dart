@@ -29,14 +29,51 @@ class MarkdownViewer extends StatelessWidget {
           data: content,
           selectable: false, // Performance: Handle selection via parent SelectionArea
           onTapLink: (text, href, title) async {
-            if (href == null) return;
-            if (href.startsWith('/') || !href.startsWith('http')) {
-              context.go(href);
-            } else {
+            if (href == null || href.isEmpty) return;
+
+            // Handle in-page anchor links (e.g. #section-name or #一前言与演进背景)
+            if (href.startsWith('#')) {
+              final rawAnchor = Uri.decodeComponent(href.substring(1)).trim();
+              if (rawAnchor.isEmpty) return;
+
+              final normalizedAnchor = rawAnchor.replaceAll(RegExp(r'[\.\s\、\-\(\)（）_]'), '').toLowerCase();
+
+              GlobalKey? targetKey = headingKeys[rawAnchor];
+
+              if (targetKey == null) {
+                for (final entry in headingKeys.entries) {
+                  final headingTitle = entry.key;
+                  final normalizedTitle = headingTitle.replaceAll(RegExp(r'[\.\s\、\-\(\)（）_]'), '').toLowerCase();
+                  if (normalizedTitle == normalizedAnchor || headingTitle == rawAnchor) {
+                    targetKey = entry.value;
+                    break;
+                  }
+                }
+              }
+
+              if (targetKey != null && targetKey.currentContext != null) {
+                Scrollable.ensureVisible(
+                  targetKey.currentContext!,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                  alignment: 0.1,
+                );
+              }
+              return;
+            }
+
+            // External links
+            if (href.startsWith('http://') || href.startsWith('https://')) {
               final url = Uri.tryParse(href);
               if (url != null) {
                 await launchUrl(url, mode: LaunchMode.externalApplication);
               }
+              return;
+            }
+
+            // Internal relative app routes
+            if (href.startsWith('/')) {
+              context.go(href);
             }
           },
           builders: {
