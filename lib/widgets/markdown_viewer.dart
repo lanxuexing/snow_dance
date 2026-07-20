@@ -9,6 +9,17 @@ import 'package:flutter_highlight/themes/atom-one-light.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
 
+String _universalClean(String text) {
+  String decoded = text;
+  try {
+    decoded = Uri.decodeComponent(text);
+  } catch (_) {}
+  return decoded
+      .toLowerCase()
+      .replaceAll(RegExp(r'[\s\-\_\.\,\!\?\:\;\(\)\[\]\{\}\<\>\/\\\#\*\+\=\|\~\`\^\&\"\%]'), '')
+      .replaceAll(RegExp(r'[\u3000-\u303F\uFF00-\uFFEF\u2000-\u206F]'), '');
+}
+
 class MarkdownViewer extends StatelessWidget {
   final String content;
   final Map<String, GlobalKey> headingKeys;
@@ -31,20 +42,17 @@ class MarkdownViewer extends StatelessWidget {
           onTapLink: (text, href, title) async {
             if (href == null || href.isEmpty) return;
 
-            // Handle in-page anchor links (e.g. #section-name or #一前言与演进背景)
+            // Handle in-page anchor links (e.g. #section-name or #案例-1主题状态与图标转换)
             if (href.startsWith('#')) {
-              final rawAnchor = Uri.decodeComponent(href.substring(1)).trim();
+              final rawAnchor = href.substring(1).trim();
               if (rawAnchor.isEmpty) return;
 
-              final normalizedAnchor = rawAnchor.replaceAll(RegExp(r'[\.\s\、\-\(\)（）_]'), '').toLowerCase();
-
+              final targetClean = _universalClean(rawAnchor);
               GlobalKey? targetKey = headingKeys[rawAnchor];
 
               if (targetKey == null) {
                 for (final entry in headingKeys.entries) {
-                  final headingTitle = entry.key;
-                  final normalizedTitle = headingTitle.replaceAll(RegExp(r'[\.\s\、\-\(\)（）_]'), '').toLowerCase();
-                  if (normalizedTitle == normalizedAnchor || headingTitle == rawAnchor) {
+                  if (_universalClean(entry.key) == targetClean || entry.key.trim() == rawAnchor) {
                     targetKey = entry.value;
                     break;
                   }
@@ -158,10 +166,9 @@ class HeadingBuilder extends MarkdownElementBuilder {
     GlobalKey? key = headingKeys[text];
 
     if (key == null) {
-      final normalizedText = text.replaceAll(RegExp(r'[\.\s\、\-\(\)（）_#]'), '').toLowerCase();
+      final targetClean = _universalClean(text);
       for (final entry in headingKeys.entries) {
-        final normalizedKey = entry.key.replaceAll(RegExp(r'[\.\s\、\-\(\)（）_#]'), '').toLowerCase();
-        if (normalizedKey == normalizedText || entry.key.trim() == text) {
+        if (_universalClean(entry.key) == targetClean || entry.key.trim() == text) {
           key = entry.value;
           break;
         }
