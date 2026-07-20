@@ -392,6 +392,31 @@ linter:
 - **文件**：`lib/widgets/app_header.dart`
 
 ```dart
+// ❌ 重构前
+Consumer<ThemeProvider>(
+  builder: (context, themeProvider, child) {
+    IconData themeIcon;
+    switch (themeProvider.themeMode) {
+      case ThemeMode.light:
+        themeIcon = Icons.light_mode_outlined;
+        break;
+      case ThemeMode.dark:
+        themeIcon = Icons.dark_mode_outlined;
+        break;
+      case ThemeMode.system:
+        themeIcon = Icons.brightness_6_outlined;
+        break;
+    }
+    return PopupMenuButton<ThemeMode>(
+      icon: Icon(themeIcon),
+      onSelected: (ThemeMode mode) {
+        themeProvider.setThemeMode(mode);
+      },
+      itemBuilder: ...
+    );
+  },
+);
+
 // ✅ 重构后
 Consumer<ThemeProvider>(
   builder: (context, themeProvider, child) {
@@ -417,6 +442,14 @@ Consumer<ThemeProvider>(
 - **文件**：`lib/core/router/app_router.dart`
 
 ```dart
+// ❌ 重构前
+Article? article;
+try {
+  article = provider.articles.firstWhere((a) => a.id == id);
+} catch (e) {
+  article = null;
+}
+
 // ✅ 重构后
 final article = provider.articles.where((a) => a.id == id).firstOrNull;
 ```
@@ -429,6 +462,18 @@ final article = provider.articles.where((a) => a.id == id).firstOrNull;
 - **文件**：`lib/widgets/search_overlay.dart`
 
 ```dart
+// ❌ 重构前
+return Center(
+  child: Focus(
+    onKeyEvent: (node, event) {
+      if (event is KeyDownEvent) {
+        if (event.logicalKey == LogicalKeyboardKey.arrowDown) { ... }
+        else if (event.logicalKey == LogicalKeyboardKey.escape) { ... }
+      }
+    },
+  ),
+);
+
 // ✅ 重构后
 return PopScope(
   canPop: true,
@@ -454,12 +499,63 @@ return PopScope(
 
 ---
 
-### 案例 4：局部状态 ListenableBuilder 与微动画重构
+### 案例 4：Markdown 标题层级计算
+
+- **重构目标**：使用卫语句 Switch 表达式与正则解构计算标题深度。
+- **文件**：`lib/pages/article_detail_page.dart`
+
+```dart
+// ❌ 重构前
+int level = 1;
+if (line.startsWith('### ')) level = 2;
+else if (line.startsWith('#### ')) level = 3;
+
+// ✅ 重构后
+final match = RegExp(r'^(#{1,6})\s+(.+)$').firstMatch(line.trim());
+if (match != null) {
+  final level = match.group(1)!.length;
+  final title = match.group(2)!.trim();
+  ...
+}
+```
+
+---
+
+### 案例 5：数据模型声明与不可变优化
+
+- **重构目标**：添加 `final class` 修饰符与 `const` 构造函数。
+- **文件**：`lib/models/article.dart`
+
+```dart
+// ❌ 重构前
+class Article {
+  final String id;
+  Article({required this.id, ...});
+}
+
+// ✅ 重构后
+final class Article {
+  final String id;
+  const Article({required this.id, ...});
+}
+```
+
+---
+
+### 案例 6：局部状态 ListenableBuilder 与微动画重构
 
 - **重构目标**：淘汰全组件 `setState`，使用 `ListenableBuilder` 局域更新与 `AnimatedSwitcher` 微动画。
 - **文件**：`lib/widgets/markdown_viewer.dart`
 
 ```dart
+// ❌ 重构前
+class _CopyButtonState extends State<_CopyButton> {
+  bool _copied = false;
+  void _copy() {
+    setState(() => _copied = true);
+  }
+}
+
 // ✅ 重构后
 class _CopyButtonState extends State<_CopyButton> {
   final ValueNotifier<bool> _copied = ValueNotifier(false);
