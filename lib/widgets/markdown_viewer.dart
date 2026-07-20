@@ -209,28 +209,47 @@ class _CopyButton extends StatefulWidget {
 }
 
 class _CopyButtonState extends State<_CopyButton> {
-  bool _copied = false;
+  final ValueNotifier<bool> _copied = ValueNotifier(false);
+
+  @override
+  void dispose() {
+    _copied.dispose();
+    super.dispose();
+  }
 
   void _copy() {
     Clipboard.setData(ClipboardData(text: widget.code));
-    setState(() => _copied = true);
+    _copied.value = true;
     Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) setState(() => _copied = false);
+      if (mounted) {
+        _copied.value = false;
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(
-        _copied ? Icons.check : Icons.copy_rounded,
-        size: 16,
-        color: _copied ? Colors.green : Colors.grey,
-      ),
-      onPressed: _copy,
-      tooltip: 'Copy code',
-      constraints: const BoxConstraints(),
-      padding: const EdgeInsets.all(8),
+    return ListenableBuilder(
+      listenable: _copied,
+      builder: (context, child) {
+        final isCopied = _copied.value;
+        return IconButton(
+          icon: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            transitionBuilder: (child, anim) => ScaleTransition(scale: anim, child: child),
+            child: Icon(
+              isCopied ? Icons.check_rounded : Icons.copy_rounded,
+              key: ValueKey(isCopied),
+              size: 16,
+              color: isCopied ? const Color(0xFF00DC82) : Colors.grey,
+            ),
+          ),
+          onPressed: _copy,
+          tooltip: isCopied ? 'Copied!' : 'Copy code',
+          constraints: const BoxConstraints(),
+          padding: const EdgeInsets.all(8),
+        );
+      },
     );
   }
 }

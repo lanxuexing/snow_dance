@@ -11,46 +11,53 @@ class FrostedBackground extends StatelessWidget {
 
     return Stack(
       children: [
-        // Background Gradients
+        // Isolated RepaintBoundary for heavy background blur repaints
         Positioned.fill(
-          child: Container(
-            color: isDark ? const Color(0xFF020420) : const Color(0xFFF9FAFB),
+          child: RepaintBoundary(
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Container(
+                    color: isDark ? const Color(0xFF020420) : const Color(0xFFF9FAFB),
+                  ),
+                ),
+                if (isDark) ...[
+                  _buildBlob(
+                    top: -100,
+                    left: -100,
+                    color: const Color(0xFF00DC82).withValues(alpha: 0.15),
+                    size: 400,
+                  ),
+                  _buildBlob(
+                    bottom: -50,
+                    right: -50,
+                    color: const Color(0xFF36E4DA).withValues(alpha: 0.1),
+                    size: 500,
+                  ),
+                  _buildBlob(
+                    top: 200,
+                    right: 100,
+                    color: const Color(0xFF16171D).withValues(alpha: 0.5),
+                    size: 300,
+                  ),
+                ] else ...[
+                  _buildBlob(
+                    top: -100,
+                    left: -100,
+                    color: const Color(0xFF00DC82).withValues(alpha: 0.05),
+                    size: 400,
+                  ),
+                  _buildBlob(
+                    bottom: -50,
+                    right: -50,
+                    color: const Color(0xFF36E4DA).withValues(alpha: 0.05),
+                    size: 500,
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
-        // Decorative Blurs (Mesh segments)
-        if (isDark) ...[
-          _buildBlob(
-            top: -100,
-            left: -100,
-            color: const Color(0xFF00DC82).withValues(alpha: 0.15),
-            size: 400,
-          ),
-          _buildBlob(
-            bottom: -50,
-            right: -50,
-            color: const Color(0xFF36E4DA).withValues(alpha: 0.1),
-            size: 500,
-          ),
-          _buildBlob(
-            top: 200,
-            right: 100,
-            color: const Color(0xFF16171D).withValues(alpha: 0.5),
-            size: 300,
-          ),
-        ] else ...[
-          _buildBlob(
-            top: -100,
-            left: -100,
-            color: const Color(0xFF00DC82).withValues(alpha: 0.05),
-            size: 400,
-          ),
-          _buildBlob(
-            bottom: -50,
-            right: -50,
-            color: const Color(0xFF36E4DA).withValues(alpha: 0.05),
-            size: 500,
-          ),
-        ],
         // The child content
         Positioned.fill(child: child),
       ],

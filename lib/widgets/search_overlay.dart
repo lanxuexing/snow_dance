@@ -176,11 +176,11 @@ class _SearchOverlayState extends State<SearchOverlay> {
                     ),
                   ),
                   child: Row(
-                    mainAxisAlignment: MediaQuery.of(context).size.width >= 600 
+                    mainAxisAlignment: MediaQuery.sizeOf(context).width >= 600 
                         ? MainAxisAlignment.start 
                         : MainAxisAlignment.center,
                     children: [
-                      if (MediaQuery.of(context).size.width >= 600) ...[
+                      if (MediaQuery.sizeOf(context).width >= 600) ...[
                         _buildKeyHint(context, '↵', 'to select'),
                         const SizedBox(width: 16),
                         _buildKeyHint(context, '↓↑', 'to navigate'),

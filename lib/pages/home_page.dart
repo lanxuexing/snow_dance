@@ -116,7 +116,7 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildArticleGrid(BuildContext context, List<Article> allArticles) {
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
     final isMobile = width < 800;
     
     // Limit to 6 articles for homepage
