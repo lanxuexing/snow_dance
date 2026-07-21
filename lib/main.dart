@@ -9,11 +9,12 @@ import 'package:snow_dance/core/theme/theme_provider.dart';
 import 'package:snow_dance/core/router/app_router.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ArticleProvider()..loadArticles()),
+        ChangeNotifierProvider(create: (_) => ArticleProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
       child: const MyApp(),

@@ -1,115 +1,129 @@
-import 'dart:io';
+// ignore_for_file: avoid_print
 import 'dart:convert';
+import 'dart:io';
 
+
+/// SnowDance Automated Article Index Generator
+/// Run this script whenever you add or update Markdown articles:
+///   dart run tool/generate_index.dart
 void main() async {
   final articlesDir = Directory('assets/articles');
   if (!articlesDir.existsSync()) {
-    stderr.writeln('Error: assets/articles directory not found.');
-    exit(1);
+    print('Error: assets/articles directory not found.');
+    return;
   }
 
-  final List<Map<String, String>> articles = [];
-  final files = articlesDir.listSync(recursive: true).whereType<File>().where((f) => f.path.endsWith('.md'));
+  final List<Map<String, String>> articleList = [];
 
-  stdout.writeln('Found ${files.length} markdown files.');
-
-  for (final file in files) {
-    final content = await file.readAsString();
-    final metadata = _parseMetadata(file.path, content);
-    articles.add(metadata);
+  final List<FileSystemEntity> files = articlesDir.listSync(recursive: true);
+  for (final entity in files) {
+    if (entity is File && entity.path.endsWith('.md')) {
+      final relativePath = entity.path.replaceAll('\\', '/');
+      final content = await entity.readAsString();
+      final metadata = parseArticleMetadata(relativePath, content);
+      articleList.add(metadata);
+    }
   }
 
-  // Sort by date descending
-  articles.sort((a, b) => (b['date'] ?? '').compareTo(a['date'] ?? ''));
+  // Sort articles by date descending
+  articleList.sort((a, b) => b['date']!.compareTo(a['date']!));
 
-  final indexFile = File('assets/articles/index.json');
-  await indexFile.writeAsString(jsonEncode(articles));
-  stdout.writeln('Generated assets/articles/index.json with ${articles.length} articles.');
+  final outputFile = File('assets/articles/index.json');
+  final jsonEncoder = JsonEncoder.withIndent('  ');
+  await outputFile.writeAsString(jsonEncoder.convert(articleList));
+
+  print('Successfully generated index.json with ${articleList.length} articles!');
 }
 
-Map<String, String> _parseMetadata(String path, String content) {
-  // Normalized path for web asset loading (forward slashes)
-  final String assetPath = path.replaceAll('\\', '/');
-  
-  final fileName = assetPath.split('/').last.replaceAll('.md', '');
-  
+Map<String, String> parseArticleMetadata(String path, String content) {
+  final fileName = path.split('/').last.replaceAll('.md', '');
   String title = fileName;
-  String date = '2024-01-01';
+  String date = '2026-01-01';
+  
+  final parts = path.split('/');
   String category = 'Blog';
-  String excerpt = '';
-
-  // Infer category from folder structure if possible
-  final parts = assetPath.split('/');
-  if (parts.length >= 2) {
-      // e.g. assets/articles/blog/foo.md -> parts: [assets, articles, blog, foo.md]
-      // category folder is parts[parts.length - 2]
-      final folder = parts[parts.length - 2];
-      // Use the immediate parent folder name as category
-      if (folder.isNotEmpty && folder.toLowerCase() != 'articles') {
-          category = folder[0].toUpperCase() + folder.substring(1).toLowerCase();
-      }
+  if (parts.length >= 3) {
+    final folderName = parts[parts.length - 2];
+    category = folderName[0].toUpperCase() + folderName.substring(1).toLowerCase();
   }
 
-  // Parse Frontmatter
+  String excerpt = '';
+  String cleanContent = content;
+
   final frontmatterRegex = RegExp(r'^---\s*\n([\s\S]*?)\n---\s*\n');
   final match = frontmatterRegex.firstMatch(content);
-  String cleanContent = content;
 
   if (match != null) {
     final yamlContent = match.group(1) ?? '';
     cleanContent = content.substring(match.end);
-    
     final yamlLines = yamlContent.split('\n');
+
     for (final line in yamlLines) {
       if (line.contains(':')) {
-        final keyParts = line.split(':');
-        final key = keyParts[0].trim().toLowerCase();
-        final value = keyParts.sublist(1).join(':').trim();
-        
+        final pair = line.split(':');
+        final key = pair[0].trim().toLowerCase();
+        final value = pair.sublist(1).join(':').trim();
+
         if (key == 'title') {
           title = value;
         } else if (key == 'date') {
           date = value;
         } else if (key == 'category') {
           category = value;
+        } else if (key == 'excerpt') {
+          excerpt = value;
         }
       }
     }
   } else {
-     // Check for legacy headers
-     final lines = content.split('\n');
-     for (var i = 0; i < lines.length; i++) {
-        final line = lines[i].trim();
-        if (line.startsWith('# ') && !title.contains(line.replaceFirst('# ', ''))) {
-          title = line.replaceFirst('# ', '').trim();
-        } else if (line.startsWith('> Date:')) {
-          date = line.replaceFirst('> Date:', '').trim();
-        } else if (line.startsWith('> Category:')) {
-          category = line.replaceFirst('> Category:', '').trim();
-        }
-     }
+    final lines = content.split('\n');
+    final filteredLines = <String>[];
+    bool titleFound = false;
+    bool isHeaderSection = true;
+
+    for (final line in lines) {
+      if (!isHeaderSection) {
+        filteredLines.add(line);
+        continue;
+      }
+
+      if (line.trim().isEmpty) continue;
+
+      if (line.startsWith('# ') && !titleFound) {
+        title = line.replaceFirst('# ', '').trim();
+        titleFound = true;
+      } else if (line.startsWith('> Date:')) {
+        date = line.replaceFirst('> Date:', '').trim();
+      } else if (line.startsWith('> Category:')) {
+        category = line.replaceFirst('> Category:', '').trim();
+      } else {
+        isHeaderSection = false;
+        filteredLines.add(line);
+      }
+    }
+    cleanContent = filteredLines.join('\n').trim();
   }
 
-  // Generate Excerpt
-  final contentLines = cleanContent.split('\n');
-  for (var line in contentLines) {
-    line = line.trim();
-    if (line.isNotEmpty && !line.startsWith('#') && !line.startsWith('---') && !line.startsWith('>')) {
-      excerpt = line;
-      break;
+  if (excerpt.isEmpty) {
+    final contentLines = cleanContent.split('\n');
+    for (final line in contentLines) {
+      if (line.trim().isNotEmpty && !line.startsWith('#') && !line.startsWith('---') && !line.startsWith('>')) {
+        excerpt = line.trim();
+        break;
+      }
     }
   }
-  if (excerpt.length > 200) {
-    excerpt = '${excerpt.substring(0, 197)}...';
+
+  if (excerpt.length > 150) {
+    excerpt = '${excerpt.substring(0, 147)}...';
   }
 
-  // Ensure ID is unique and simple
   return {
     'id': fileName,
     'title': title,
+    'excerpt': excerpt,
     'date': date,
     'category': category,
-    'excerpt': excerpt,
-    'path': assetPath, // usage for fetch
+    'path': path,
   };
 }

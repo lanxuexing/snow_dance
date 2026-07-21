@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:snow_dance/core/article_provider.dart';
 import 'package:snow_dance/widgets/article_card.dart';
 import 'package:snow_dance/widgets/app_footer.dart';
-import 'package:snow_dance/widgets/premium_loader.dart';
 import 'package:snow_dance/core/utils/seo_helper.dart';
+
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -15,17 +15,13 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<ArticleProvider>(context);
 
-    if (provider.isLoading) {
-      return const PremiumLoader();
-    }
-
-
     SEOHelper.updateSEO(
       title: 'SnowDance - Premium Tech Blog Engine built with Flutter',
       description: 'SnowDance is a premium, high-performance tech blog engine built with Flutter Web, featuring frosted glass aesthetics and modern technical writing features.',
       keywords: ['Flutter', 'Flutter Web', 'Blog Engine', 'Tech Blog', 'SnowDance', 'Premium UI'],
       author: 'lanxuexing',
     );
+
 
     final isMobile = MediaQuery.sizeOf(context).width < 800;
     final displayArticles = provider.articles.take(6).toList();
