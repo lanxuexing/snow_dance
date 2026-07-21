@@ -8,8 +8,10 @@ import 'package:snow_dance/widgets/markdown_viewer.dart';
 import 'package:snow_dance/widgets/sidebar_item.dart';
 import 'package:snow_dance/widgets/article_skeleton.dart';
 import 'package:snow_dance/widgets/app_footer.dart';
+import 'package:snow_dance/widgets/premium_loader.dart';
 import 'package:snow_dance/core/config/app_config.dart';
 import 'package:snow_dance/core/utils/seo_helper.dart';
+
 
 class ArticleDetailPage extends StatefulWidget {
   final Article article;
@@ -157,18 +159,18 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 1000;
+    final isMobile = MediaQuery.sizeOf(context).width < 1000;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final provider = Provider.of<ArticleProvider>(context);
-    // Resolve the up-to-date article from provider to get loaded content
-    final currentArticle = provider.articles.firstWhere(
-      (a) => a.id == widget.article.id, 
-      orElse: () => widget.article
-    );
+    // Resolve the up-to-date article from provider to get loaded content using firstOrNull
+    final currentArticle = provider.articles
+            .where((a) => a.id == widget.article.id)
+            .firstOrNull ??
+        widget.article;
 
     if (currentArticle.content.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
+      return const PremiumLoader();
     }
 
     // Re-parse ToC if content changed (e.g. just loaded)
@@ -191,33 +193,35 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
         Expanded(
           child: _isRendering
               ? ArticleSkeleton(isDark: isDark)
-              : SingleChildScrollView(
-                  controller: _scrollController,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 60),
-                      Container(
-                        constraints: const BoxConstraints(maxWidth: 900),
-                        padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 40),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildAuthorSection(context),
-                            if (isMobile && _tocEntries.isNotEmpty) ...[
-                              const SizedBox(height: 32),
-                              _buildMobileToC(context),
+              : SelectionArea(
+                  child: SingleChildScrollView(
+                    controller: _scrollController,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 60),
+                        Container(
+                          constraints: const BoxConstraints(maxWidth: 900),
+                          padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 40),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildAuthorSection(context),
+                              if (isMobile && _tocEntries.isNotEmpty) ...[
+                                const SizedBox(height: 32),
+                                _buildMobileToC(context),
+                              ],
+                              const SizedBox(height: 40),
+                              MarkdownViewer(
+                                content: currentArticle.content,
+                                headingKeys: _headingKeys,
+                              ),
+                              const SizedBox(height: 80),
                             ],
-                            const SizedBox(height: 40),
-                            MarkdownViewer(
-                              content: currentArticle.content,
-                              headingKeys: _headingKeys,
-                            ),
-                            const SizedBox(height: 80),
-                          ],
+                          ),
                         ),
-                      ),
-                      const AppFooter(),
-                    ],
+                        const AppFooter(),
+                      ],
+                    ),
                   ),
                 ),
         ),

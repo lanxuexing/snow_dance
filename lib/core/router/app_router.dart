@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:snow_dance/core/article_provider.dart';
 import 'package:snow_dance/widgets/main_layout.dart';
 import 'package:snow_dance/widgets/category_redirect_page.dart';
+import 'package:snow_dance/widgets/premium_loader.dart';
 import 'package:snow_dance/pages/home_page.dart';
 import 'package:snow_dance/pages/article_detail_page.dart';
 
@@ -46,9 +47,7 @@ GoRoute _buildArticleRoute(String path) {
       
       if (provider.isLoading) {
         return const MainLayout(
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
+          child: PremiumLoader(),
         );
       }
 

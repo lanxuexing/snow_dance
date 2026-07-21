@@ -24,20 +24,21 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
       // Fallback for tests or contexts without GoRouter
     }
 
-    return ClipRRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Container(
-          height: 64,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.2),
-            border: Border(
-              bottom: BorderSide(
-                color: Theme.of(context).dividerColor.withValues(alpha: 0.05),
+    return RepaintBoundary(
+      child: ClipRRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+          child: Container(
+            height: 64,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.2),
+              border: Border(
+                bottom: BorderSide(
+                  color: Theme.of(context).dividerColor.withValues(alpha: 0.05),
+                ),
               ),
             ),
-          ),
-          child: Center(
+            child: Center(
             child: Container(
               constraints: const BoxConstraints(maxWidth: 1200),
               padding: EdgeInsets.symmetric(
@@ -143,8 +144,9 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildNavItem(BuildContext context, String title, String route, String currentLocation) {
     final bool isActive = route == '/' ? currentLocation == '/' : currentLocation.startsWith(route);

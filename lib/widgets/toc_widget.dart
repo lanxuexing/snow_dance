@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ToCEntry {
+final class ToCEntry {
   final String title;
   final int level;
   final GlobalKey key;
 
-  ToCEntry({required this.title, required this.level, required this.key});
+  const ToCEntry({required this.title, required this.level, required this.key});
 }
+
 
 class TableOfContents extends StatelessWidget {
   final List<ToCEntry> entries;

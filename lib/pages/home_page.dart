@@ -3,9 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:snow_dance/core/article_provider.dart';
-import 'package:snow_dance/models/article.dart';
 import 'package:snow_dance/widgets/article_card.dart';
 import 'package:snow_dance/widgets/app_footer.dart';
+import 'package:snow_dance/widgets/premium_loader.dart';
 import 'package:snow_dance/core/utils/seo_helper.dart';
 
 class HomePage extends StatelessWidget {
@@ -16,8 +16,9 @@ class HomePage extends StatelessWidget {
     final provider = Provider.of<ArticleProvider>(context);
 
     if (provider.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const PremiumLoader();
     }
+
 
     SEOHelper.updateSEO(
       title: 'SnowDance - Premium Tech Blog Engine built with Flutter',
@@ -26,25 +27,80 @@ class HomePage extends StatelessWidget {
       author: 'lanxuexing',
     );
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const SizedBox(height: 120),
-          _buildHero(context),
-          _buildArticleGrid(context, provider.articles),
-          const AppFooter(),
-        ],
-      ),
+    final isMobile = MediaQuery.sizeOf(context).width < 800;
+    final displayArticles = provider.articles.take(6).toList();
+
+    return CustomScrollView(
+      slivers: [
+        const SliverToBoxAdapter(child: SizedBox(height: 120)),
+        SliverToBoxAdapter(child: _buildHero(context)),
+        SliverToBoxAdapter(child: const SizedBox(height: 40)),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          sliver: SliverCenterConstraints(
+            maxWidth: 1200,
+            sliver: isMobile
+                ? SliverList.separated(
+                    itemCount: displayArticles.length,
+                    separatorBuilder: (context, index) => const SizedBox(height: 16),
+                    itemBuilder: (context, index) => ArticleCard(article: displayArticles[index]),
+                  )
+                : SliverGrid(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => ArticleCard(article: displayArticles[index]),
+                      childCount: displayArticles.length,
+                    ),
+                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 600,
+                      childAspectRatio: 2.5,
+                      crossAxisSpacing: 24,
+                      mainAxisSpacing: 24,
+                    ),
+                  ),
+          ),
+        ),
+        if (provider.articles.length > 6)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 48, bottom: 40),
+              child: Center(
+                child: OutlinedButton(
+                  onPressed: () => context.go('/blog'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    side: BorderSide(color: Theme.of(context).dividerColor),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'View all articles',
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(Icons.arrow_forward_rounded, size: 16, color: Theme.of(context).textTheme.bodyLarge?.color),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        const SliverToBoxAdapter(child: AppFooter()),
+      ],
     );
   }
 
   Widget _buildHero(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(1.5), // Border width
+            padding: const EdgeInsets.all(1.5),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
                 colors: [Color(0xFF42D392), Color(0xFF647EFF)],
@@ -92,11 +148,11 @@ class HomePage extends StatelessWidget {
               'Build Beautiful Blogs\nwith Flutter Web',
               textAlign: TextAlign.center,
               style: GoogleFonts.outfit(
-                fontSize: 56, // Increased size for impact
+                fontSize: 56,
                 fontWeight: FontWeight.w900,
                 height: 1.1,
                 letterSpacing: -1.5,
-                color: Colors.white, // Required for ShaderMask
+                color: Colors.white,
               ),
             ),
           ),
@@ -109,78 +165,37 @@ class HomePage extends StatelessWidget {
               color: Colors.grey,
             ),
           ),
-          const SizedBox(height: 40),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildArticleGrid(BuildContext context, List<Article> allArticles) {
-    final width = MediaQuery.sizeOf(context).width;
-    final isMobile = width < 800;
-    
-    // Limit to 6 articles for homepage
-    final displayArticles = allArticles.take(6).toList();
-
-    Widget content;
-    if (isMobile) {
-      content = ListView.separated(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: displayArticles.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 16),
-        itemBuilder: (context, index) => ArticleCard(article: displayArticles[index]),
-      );
-    } else {
-      content = GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 600,
-          childAspectRatio: 2.5,
-          crossAxisSpacing: 24,
-          mainAxisSpacing: 24,
-        ),
-        itemCount: displayArticles.length,
-        itemBuilder: (context, index) => ArticleCard(article: displayArticles[index]),
-      );
-    }
-
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 1200),
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        children: [
-          content,
-          if (allArticles.length > 6) ...[
-            const SizedBox(height: 48),
-            Center(
-              child: OutlinedButton(
-                onPressed: () => context.go('/blog'),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  side: BorderSide(color: Theme.of(context).dividerColor),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'View all articles',
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.bodyLarge?.color,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Icon(Icons.arrow_forward_rounded, size: 16, color: Theme.of(context).textTheme.bodyLarge?.color),
-                  ],
-                ),
-              ),
-            ),
-          ],
         ],
       ),
     );
   }
 }
+
+/// Helper Sliver to constrain maxWidth in CustomScrollView
+class SliverCenterConstraints extends StatelessWidget {
+  final double maxWidth;
+  final Widget sliver;
+
+  const SliverCenterConstraints({
+    super.key,
+    required this.maxWidth,
+    required this.sliver,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Center(
+        child: Container(
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          child: CustomScrollView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            slivers: [sliver],
+          ),
+        ),
+      ),
+    );
+  }
+}
+

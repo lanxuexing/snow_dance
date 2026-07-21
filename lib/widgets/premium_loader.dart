@@ -3,13 +3,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:snow_dance/widgets/snowflake_logo.dart';
 
 class PremiumLoader extends StatelessWidget {
-  final bool isDark;
+  final bool? isDark;
   
-  const PremiumLoader({super.key, this.isDark = true});
+  const PremiumLoader({super.key, this.isDark});
 
   @override
   Widget build(BuildContext context) {
-    // Determine colors based on theme context if available, otherwise fallback
+    final effectiveIsDark = isDark ?? (Theme.of(context).brightness == Brightness.dark);
     const primaryColor = Color(0xFF00DC82);
     
     return Center(
@@ -53,7 +53,7 @@ class PremiumLoader extends StatelessWidget {
             'SNOWDANCE',
             style: TextStyle(
               fontFamily: 'Inter',
-              color: isDark ? Colors.white.withValues(alpha: 0.6) : Colors.black.withValues(alpha: 0.6),
+              color: effectiveIsDark ? Colors.white.withValues(alpha: 0.6) : Colors.black.withValues(alpha: 0.6),
               fontSize: 14,
               letterSpacing: 2.0,
               fontWeight: FontWeight.w500,
@@ -67,3 +67,4 @@ class PremiumLoader extends StatelessWidget {
     );
   }
 }
+

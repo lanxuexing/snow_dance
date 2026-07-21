@@ -1,6 +1,7 @@
-class NavItem {
+final class NavItem {
   final String title;
   final String route;
 
-  NavItem({required this.title, required this.route});
+  const NavItem({required this.title, required this.route});
 }
+

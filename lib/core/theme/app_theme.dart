@@ -5,8 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   static const Color primaryColor = Color(0xFF00DC82); // From the green logo in reference
   static const Color secondaryColor = Color(0xFF007A5E);
-  static const Color darkBgColor = Color(0xFF050505);
+  static const Color darkBgColor = Color(0xFF020420);
   static const Color lightBgColor = Color(0xFFF9FAFB);
+
 
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,

@@ -43,7 +43,6 @@
   <meta name="keywords" content="Flutter, Flutter Web, Blog Engine, Tech Blog, SnowDance, Premium UI">
   <meta name="author" content="lanxuexing">
 
-
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="SnowDance - Premium Tech Blog Engine built with Flutter">
@@ -85,7 +84,7 @@
   </script>
   <style>
     body {
-      background-color: #050505; /* Match AppTheme.darkBgColor */
+      background-color: #020420; /* Unified dark background with FrostedBackground & AppTheme */
       margin: 0;
       height: 100vh;
       display: flex;
@@ -98,23 +97,33 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      transition: opacity 0.4s ease-out;
     }
     .logo-pulse {
       width: 64px;
       height: 64px;
-      background-color: #00DC82; /* AppTheme.primaryColor */
+      background-color: #00DC82;
       border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       animation: pulse 2s infinite ease-in-out;
       box-shadow: 0 0 20px rgba(0, 220, 130, 0.4);
     }
+    .logo-pulse svg {
+      width: 32px;
+      height: 32px;
+      stroke: #ffffff;
+      fill: none;
+    }
     .loading-text {
-      margin-top: 24px;
+      margin-top: 32px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: rgba(255, 255, 255, 0.6);
       font-size: 14px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      animation: fadeIn 2s ease-out;
+      animation: fadeIn 1s ease-out;
     }
     @keyframes pulse {
       0% { transform: scale(0.85); box-shadow: 0 0 0 0 rgba(0, 220, 130, 0.7); }
@@ -128,10 +137,34 @@
   </style>
 </head>
 <body>
-  <div class="loading-container">
-    <div class="logo-pulse"></div>
-    <div class="loading-text">SnowDance</div>
+  <div id="loading" class="loading-container">
+    <div class="logo-pulse">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2V22M2 12H22M4.93 4.93L19.07 19.07M4.93 19.07L19.07 4.93M12 6L10 8M12 6L14 8M12 18L10 16M12 18L14 16M6 12L8 10M6 12L8 14M18 12L16 10M18 12L16 14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="loading-text">SNOWDANCE</div>
   </div>
+  <script>
+    // Smoothly fade out HTML loading element when Flutter canvas mounts
+    window.addEventListener('load', function() {
+      var checkFlutter = setInterval(function() {
+        var flutterView = document.querySelector('flutter-view');
+        if (flutterView) {
+          clearInterval(checkFlutter);
+          var loading = document.getElementById('loading');
+          if (loading) {
+            loading.style.opacity = '0';
+            setTimeout(function() {
+              if (loading && loading.parentNode) {
+                loading.parentNode.removeChild(loading);
+              }
+            }, 400);
+          }
+        }
+      }, 50);
+    });
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
