@@ -1,11 +1,35 @@
 [
   {
+    "id": "flutter-3-44-performance-rendering",
+    "title": "Flutter 3.44.6 GPU 渲染与图层隔离实战：BackdropFilter 磨砂玻璃与 RepaintBoundary 性能调优",
+    "excerpt": "深入剖析 Flutter 渲染树 Layer 结构与 GPU 光栅化开销：如何通过 RepaintBoundary 为 BackdropFilter 磨砂玻璃、多重 Canvas 阴影构建独立的 GPU 离屏缓存，消灭全屏重绘卡顿。",
+    "date": "2026-07-22",
+    "category": "Docs",
+    "path": "assets/articles/docs/flutter-3-44-performance-rendering.md"
+  },
+  {
+    "id": "flutter-3-44-web-wasm-optimization",
+    "title": "Flutter Web 毫秒级启动与极致体验：WASM 构建、Deferred Loading 分包与 SelectionArea 选中文本实战",
+    "excerpt": "全方位解锁 Flutter 3.44 Web 端高性能建站技巧：从 WebAssembly (WASM) 编译、路由级 Deferred Loading 分包加载，到 SelectionArea 原生文本选择与 Google Fonts 预连接优化。",
+    "date": "2026-07-22",
+    "category": "Docs",
+    "path": "assets/articles/docs/flutter-3-44-web-wasm-optimization.md"
+  },
+  {
     "id": "flutter-3-44-migration",
-    "title": "Flutter 3.44.6 & Dart 3.12 性能飞跃：从 GPU 图层隔离、零开销 Extension Types 到 Slivers 懒加载实战",
-    "excerpt": "深入剖析 Flutter 3.44.6 & Dart 3.12 最佳性能调优实战：从 GPU 光栅化磨砂玻璃 RepaintBoundary 图层隔离，到 CustomScrollView Slivers 响应式懒加载，以及零成本 Extension Types 与 WebAssembly (...",
-    "date": "2026-07-21",
+    "title": "Flutter 3.44.6 & Dart 3.12 现代化组件开发与语法重构全景指南",
+    "excerpt": "权威级 Flutter 3.44.6 与 Dart 3.12 最佳实践手册：涵盖模式匹配、Switch 表达式、类修饰符、Material 3 Surface Tokens、PopScope、ListenableBuilder、MediaQuery.sizeOf 性能优化与 Lint 规范。",
+    "date": "2026-07-20",
     "category": "Docs",
     "path": "assets/articles/docs/flutter-3-44-migration.md"
+  },
+  {
+    "id": "angular-v22-hostdirectives-dedup",
+    "title": "Angular v22 特性解析：hostDirectives（宿主指令）去重机制详解",
+    "excerpt": "宿主指令（hostDirectives）是 Angular 组合复用行为的利器。但在 Angular 22 之前，若同一元素上的多个指令共享同一个底层宿主指令，会触发令人沮丧的“重复指令错误”。本文将深度解析 Angular 22 如何通过原生去重技术破解这一痛点，使指令组合真正走向实用。",
+    "date": "2026-07-11",
+    "category": "Blog",
+    "path": "assets/articles/blog/angular-v22-hostdirectives-dedup.md"
   },
   {
     "id": "angular-signals-deep-dive",
@@ -32,14 +56,6 @@
     "path": "assets/articles/blog/angular-guards-resolvers.md"
   },
   {
-    "id": "angular-v22-hostdirectives-dedup",
-    "title": "Angular v22 特性解析：hostDirectives（宿主指令）去重机制详解",
-    "excerpt": "宿主指令（hostDirectives）是 Angular 组合复用行为的利器。但在 Angular 22 之前，若同一元素上的多个指令共享同一个底层宿主指令，会触发令人沮丧的“重复指令错误”。本文将深度解析 Angular 22 如何通过原生去重技术破解这一痛点，使指令组合真正走向实用。",
-    "date": "2026-07-11",
-    "category": "Blog",
-    "path": "assets/articles/blog/angular-v22-hostdirectives-dedup.md"
-  },
-  {
     "id": "git-delete",
     "title": "git删除操作",
     "excerpt": "```vim",
@@ -64,20 +80,20 @@
     "path": "assets/articles/ecosystem/astro-markdown-component-utility.md"
   },
   {
-    "id": "overview",
-    "title": "Ecosystem Overview",
-    "excerpt": "Explore the tools and libraries in the SnowDance ecosystem.",
-    "date": "2026-01-01",
-    "category": "Ecosystem",
-    "path": "assets/articles/ecosystem/overview.md"
-  },
-  {
     "id": "getting-started",
     "title": "Getting Started with SnowDance",
     "excerpt": "Learn how to set up and customize your SnowDance blog engine.",
     "date": "2026-01-01",
     "category": "Docs",
     "path": "assets/articles/docs/getting-started.md"
+  },
+  {
+    "id": "overview",
+    "title": "Ecosystem Overview",
+    "excerpt": "Explore the tools and libraries in the SnowDance ecosystem.",
+    "date": "2026-01-01",
+    "category": "Ecosystem",
+    "path": "assets/articles/ecosystem/overview.md"
   },
   {
     "id": "angular-v21-announcement",
@@ -232,12 +248,12 @@
     "path": "assets/articles/blog/vim.md"
   },
   {
-    "id": "ffmpeg",
-    "title": "ffmpeg 学习笔记",
-    "excerpt": "1. 视频录制命令",
+    "id": "rxjs-combineLatest-withLatestFrom-zip",
+    "title": "Rxjs【combineLatest、withLatestFrom、zip】",
+    "excerpt": "这篇文章是我的Angular Rxjs Series中的第六篇文章，在继续阅读本文之前，您至少应该熟悉系列中的第一篇基础文章",
     "date": "2020-01-11",
     "category": "Blog",
-    "path": "assets/articles/blog/ffmpeg.md"
+    "path": "assets/articles/blog/rxjs-combineLatest-withLatestFrom-zip.md"
   },
   {
     "id": "ng-templates",
@@ -248,12 +264,12 @@
     "path": "assets/articles/blog/ng-templates.md"
   },
   {
-    "id": "rxjs-combineLatest-withLatestFrom-zip",
-    "title": "Rxjs【combineLatest、withLatestFrom、zip】",
-    "excerpt": "这篇文章是我的Angular Rxjs Series中的第六篇文章，在继续阅读本文之前，您至少应该熟悉系列中的第一篇基础文章",
+    "id": "ffmpeg",
+    "title": "ffmpeg 学习笔记",
+    "excerpt": "1. 视频录制命令",
     "date": "2020-01-11",
     "category": "Blog",
-    "path": "assets/articles/blog/rxjs-combineLatest-withLatestFrom-zip.md"
+    "path": "assets/articles/blog/ffmpeg.md"
   },
   {
     "id": "ng-library",
@@ -280,20 +296,20 @@
     "path": "assets/articles/blog/rxjs-take-first-takeUnitl-concatAll.md"
   },
   {
-    "id": "rxjs-skip-takeLast-last-concat-startWith-merge",
-    "title": "Rxjs【skip, takeLast, last, concat, startWith, merge】",
-    "excerpt": "这篇文章是我的Angular Rxjs Series中的第篇四文章，在继续阅读本文之前，您至少应该熟悉系列中的第一篇基础文章：",
-    "date": "2019-06-23",
-    "category": "Blog",
-    "path": "assets/articles/blog/rxjs-skip-takeLast-last-concat-startWith-merge.md"
-  },
-  {
     "id": "git-github-search",
     "title": "Github检索方法总结",
     "excerpt": "1. 这里的name是指仓库的名称",
     "date": "2019-06-23",
     "category": "Blog",
     "path": "assets/articles/blog/git-github-search.md"
+  },
+  {
+    "id": "rxjs-skip-takeLast-last-concat-startWith-merge",
+    "title": "Rxjs【skip, takeLast, last, concat, startWith, merge】",
+    "excerpt": "这篇文章是我的Angular Rxjs Series中的第篇四文章，在继续阅读本文之前，您至少应该熟悉系列中的第一篇基础文章：",
+    "date": "2019-06-23",
+    "category": "Blog",
+    "path": "assets/articles/blog/rxjs-skip-takeLast-last-concat-startWith-merge.md"
   },
   {
     "id": "rxjs-version",
