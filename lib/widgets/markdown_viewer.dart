@@ -175,9 +175,15 @@ class HeadingBuilder extends MarkdownElementBuilder {
       }
     }
 
+    final isH1 = element.tag == 'h1';
+    final isH2 = element.tag == 'h2';
+
     return Container(
       key: key,
-      padding: const EdgeInsets.only(top: 24, bottom: 12),
+      padding: EdgeInsets.only(
+        top: isH1 ? 32 : (isH2 ? 28 : 24),
+        bottom: 16,
+      ),
       child: Text(
         text,
         style: preferredStyle,
