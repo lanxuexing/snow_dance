@@ -1,5 +1,21 @@
 [
   {
+    "id": "flutter-3-44-7-8-patch-updates",
+    "title": "Flutter 3.44.7 & 3.44.8 补丁更新深度解析：Impeller 渲染稳定性、iOS 18 / SwiftPM 深度适配与 Web WASM GC 优化",
+    "excerpt": "详细拆解 Flutter 3.44.7 与 3.44.8 两个热修复补丁的核心改动：涵盖 Impeller 阴影与高斯模糊内存泄露修复、iOS 18 / Xcode 16.x 与 SwiftPM 构建链优化、Android 15 沉浸式 Edge-to-Edge 边到边布局补丁，以及 Dart 3.12 补丁级的模式匹配性能提升。",
+    "date": "2026-07-25",
+    "category": "Blog",
+    "path": "assets/articles/blog/flutter-3-44-7-8-patch-updates.md"
+  },
+  {
+    "id": "flutter-recent-updates-guide",
+    "title": "Flutter 近期小版本更新全景解析：语言语法、组件范式与 GPU 渲染性能调优指南",
+    "excerpt": "系统记录 Flutter 近期版本更新的核心变化与技术细节：涵盖 Dart 3.x/3.12 模式匹配与零开销 Extension Types、PopScope、ListenableBuilder 与 MediaQuery.sizeOf 细粒度监听，以及 Impeller 图层隔离与 Web WASM 构建实战。",
+    "date": "2026-07-25",
+    "category": "Blog",
+    "path": "assets/articles/blog/flutter-recent-updates-guide.md"
+  },
+  {
     "id": "flutter-3-44-performance-rendering",
     "title": "Flutter 3.44.6 GPU 渲染与图层隔离实战：BackdropFilter 磨砂玻璃与 RepaintBoundary 性能调优",
     "excerpt": "深入剖析 Flutter 渲染树 Layer 结构与 GPU 光栅化开销：如何通过 RepaintBoundary 为 BackdropFilter 磨砂玻璃、多重 Canvas 阴影构建独立的 GPU 离屏缓存，消灭全屏重绘卡顿。",
