@@ -175,15 +175,8 @@ class HeadingBuilder extends MarkdownElementBuilder {
       }
     }
 
-    final isH1 = element.tag == 'h1';
-    final isH2 = element.tag == 'h2';
-
-    return Container(
+    return KeyedSubtree(
       key: key,
-      padding: EdgeInsets.only(
-        top: isH1 ? 32 : (isH2 ? 28 : 24),
-        bottom: 16,
-      ),
       child: Text(
         text,
         style: preferredStyle,
