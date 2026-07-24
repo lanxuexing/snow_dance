@@ -83,9 +83,16 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                   const Spacer(),
                   // Nav Items (Desktop)
                   if (!ResponsiveLayout.isMobile(context)) ...[
-                    ...AppConfig.navItems.map((item) => 
-                      _buildNavItem(context, item.title, item.route, currentLocation)
-                    ),
+                    ...AppConfig.navItems.map((item) {
+                      final bool isActive = item.route == '/' 
+                          ? currentLocation == '/' 
+                          : currentLocation.startsWith(item.route);
+                      return _HeaderNavItem(
+                        title: item.title,
+                        route: item.route,
+                        isActive: isActive,
+                      );
+                    }),
                   ],
                   const SizedBox(width: 24),
                   // Search Button
@@ -148,27 +155,6 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
   );
 }
 
-  Widget _buildNavItem(BuildContext context, String title, String route, String currentLocation) {
-    final bool isActive = route == '/' ? currentLocation == '/' : currentLocation.startsWith(route);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: InkWell(
-        onTap: () => context.go(route),
-        child: Text(
-          title,
-          style: GoogleFonts.outfit(
-            fontSize: 15,
-            fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-            color: isActive 
-                ? Theme.of(context).colorScheme.primary 
-                : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildSearchButton(BuildContext context) {
     final isMobile = ResponsiveLayout.isMobile(context);
     
@@ -204,6 +190,61 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
               ),
             ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _HeaderNavItem extends StatefulWidget {
+  final String title;
+  final String route;
+  final bool isActive;
+
+  const _HeaderNavItem({
+    required this.title,
+    required this.route,
+    required this.isActive,
+  });
+
+  @override
+  State<_HeaderNavItem> createState() => _HeaderNavItemState();
+}
+
+class _HeaderNavItemState extends State<_HeaderNavItem> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
+    final defaultTextColor = theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7);
+    final hoverTextColor = theme.textTheme.bodyLarge?.color ?? Colors.white;
+
+    final Color textColor = widget.isActive
+        ? primaryColor
+        : (_isHovered ? hoverTextColor : (defaultTextColor ?? Colors.white70));
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: () => context.go(widget.route),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 150),
+              style: GoogleFonts.outfit(
+                fontSize: 15,
+                fontWeight: widget.isActive ? FontWeight.w700 : FontWeight.w500,
+                color: textColor,
+              ),
+              child: Text(widget.title),
+            ),
+          ),
         ),
       ),
     );
