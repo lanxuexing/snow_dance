@@ -270,19 +270,19 @@ class _AppDrawerState extends State<AppDrawer> {
                       ),
                       segments: const [
                         ButtonSegment<ThemeMode>(
-                          value: ThemeMode.light,
-                          icon: Icon(Icons.light_mode_outlined, size: 14),
-                          label: Text('浅色', style: TextStyle(fontSize: 11)),
+                          value: ThemeMode.system,
+                          icon: Icon(Icons.brightness_6_outlined, size: 14),
+                          label: Text('System', style: TextStyle(fontSize: 11)),
                         ),
                         ButtonSegment<ThemeMode>(
                           value: ThemeMode.dark,
                           icon: Icon(Icons.dark_mode_outlined, size: 14),
-                          label: Text('深色', style: TextStyle(fontSize: 11)),
+                          label: Text('Dark', style: TextStyle(fontSize: 11)),
                         ),
                         ButtonSegment<ThemeMode>(
-                          value: ThemeMode.system,
-                          icon: Icon(Icons.brightness_6_outlined, size: 14),
-                          label: Text('系统', style: TextStyle(fontSize: 11)),
+                          value: ThemeMode.light,
+                          icon: Icon(Icons.light_mode_outlined, size: 14),
+                          label: Text('Light', style: TextStyle(fontSize: 11)),
                         ),
                       ],
                       selected: {themeProvider.themeMode},

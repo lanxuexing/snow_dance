@@ -101,16 +101,16 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                       };
                       return PopupMenuButton<ThemeMode>(
                         icon: Icon(themeIcon),
-                        tooltip: '选择主题模式',
+                        tooltip: 'Theme',
                         onSelected: themeProvider.setThemeMode,
                         itemBuilder: (context) => [
                           PopupMenuItem(
-                            value: ThemeMode.light,
+                            value: ThemeMode.system,
                             child: Row(
                               children: [
-                                const Icon(Icons.light_mode_outlined, size: 18),
-                                const SizedBox(width: 8),
-                                Text('浅色模式', style: GoogleFonts.outfit(fontSize: 14)),
+                                const Icon(Icons.brightness_6_outlined, size: 18),
+                                const SizedBox(width: 10),
+                                Text('System', style: GoogleFonts.outfit(fontSize: 14)),
                               ],
                             ),
                           ),
@@ -119,18 +119,18 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                             child: Row(
                               children: [
                                 const Icon(Icons.dark_mode_outlined, size: 18),
-                                const SizedBox(width: 8),
-                                Text('深色模式', style: GoogleFonts.outfit(fontSize: 14)),
+                                const SizedBox(width: 10),
+                                Text('Dark', style: GoogleFonts.outfit(fontSize: 14)),
                               ],
                             ),
                           ),
                           PopupMenuItem(
-                            value: ThemeMode.system,
+                            value: ThemeMode.light,
                             child: Row(
                               children: [
-                                const Icon(Icons.brightness_6_outlined, size: 18),
-                                const SizedBox(width: 8),
-                                Text('跟随系统', style: GoogleFonts.outfit(fontSize: 14)),
+                                const Icon(Icons.light_mode_outlined, size: 18),
+                                const SizedBox(width: 10),
+                                Text('Light', style: GoogleFonts.outfit(fontSize: 14)),
                               ],
                             ),
                           ),
