@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown/markdown.dart' as md;
-import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/themes/atom-one-dark.dart';
 import 'package:flutter_highlight/themes/atom-one-light.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
+import 'package:highlight/highlight.dart' show highlight, Node;
 
 String _universalClean(String text) {
   String decoded = text;
@@ -234,16 +234,14 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
               // Allow code to be as wide as it needs to be for horizontal scrolling, 
               // but the container background will be double.infinity wide.
               constraints: const BoxConstraints(minWidth: 800), 
-              child: SelectionArea(
-                child: HighlightView(
-                  code.trimRight(),
-                  language: language ?? 'plaintext',
-                  theme: theme,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-                  textStyle: GoogleFonts.firaCode(
-                    fontSize: 14,
-                    height: 1.6,
-                  ),
+              child: SelectableHighlightView(
+                code.trimRight(),
+                language: language ?? 'plaintext',
+                theme: theme,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                textStyle: GoogleFonts.firaCode(
+                  fontSize: 14,
+                  height: 1.6,
                 ),
               ),
             ),
@@ -312,3 +310,85 @@ class _CopyButtonState extends State<_CopyButton> {
     );
   }
 }
+
+/// Highlight View using SelectableText.rich for full native text selection & copying support
+class SelectableHighlightView extends StatelessWidget {
+  final String source;
+  final String? language;
+  final Map<String, TextStyle> theme;
+  final EdgeInsetsGeometry? padding;
+  final TextStyle? textStyle;
+
+  SelectableHighlightView(
+    String input, {
+    super.key,
+    this.language,
+    this.theme = const {},
+    this.padding,
+    this.textStyle,
+    int tabSize = 8,
+  }) : source = input.replaceAll('\t', ' ' * tabSize);
+
+  List<TextSpan> _convert(List<Node> nodes) {
+    final List<TextSpan> spans = [];
+    var currentSpans = spans;
+    final List<List<TextSpan>> stack = [];
+
+    void traverse(Node node) {
+      if (node.value != null) {
+        currentSpans.add(node.className == null
+            ? TextSpan(text: node.value)
+            : TextSpan(text: node.value, style: theme[node.className!]));
+      } else if (node.children != null) {
+        final List<TextSpan> tmp = [];
+        currentSpans.add(TextSpan(children: tmp, style: theme[node.className!]));
+        stack.add(currentSpans);
+        currentSpans = tmp;
+
+        for (final n in node.children!) {
+          traverse(n);
+          if (n == node.children!.last) {
+            currentSpans = stack.isEmpty ? spans : stack.removeLast();
+          }
+        }
+      }
+    }
+
+    for (final node in nodes) {
+      traverse(node);
+    }
+
+    return spans;
+  }
+
+  static const _rootKey = 'root';
+  static const _defaultFontColor = Color(0xff000000);
+  static const _defaultBackgroundColor = Color(0xffffffff);
+  static const _defaultFontFamily = 'monospace';
+
+  @override
+  Widget build(BuildContext context) {
+    var style = TextStyle(
+      fontFamily: _defaultFontFamily,
+      color: theme[_rootKey]?.color ?? _defaultFontColor,
+    );
+    if (textStyle != null) {
+      style = style.merge(textStyle);
+    }
+
+    final parsedResult = highlight.parse(source, language: language);
+    final nodes = parsedResult.nodes ?? [];
+
+    return Container(
+      color: theme[_rootKey]?.backgroundColor ?? _defaultBackgroundColor,
+      padding: padding,
+      child: SelectableText.rich(
+        TextSpan(
+          style: style,
+          children: _convert(nodes),
+        ),
+      ),
+    );
+  }
+}
+
