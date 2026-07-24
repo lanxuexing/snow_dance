@@ -8,17 +8,18 @@ final class ToCEntry {
   const ToCEntry({required this.title, required this.level, required this.key});
 }
 
-
 class TableOfContents extends StatelessWidget {
   final List<ToCEntry> entries;
   final Function(ToCEntry) onTap;
   final String? activeId;
+  final String title;
 
   const TableOfContents({
     super.key, 
     required this.entries, 
     required this.onTap,
     this.activeId,
+    this.title = 'On this page',
   });
 
   @override
@@ -28,6 +29,17 @@ class TableOfContents extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 12, bottom: 8),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+            ),
+          ),
+        ),
         ...entries.map((entry) => _ToCItem(
           entry: entry, 
           onTap: onTap,
@@ -74,7 +86,7 @@ class _ToCItemState extends State<_ToCItem> {
           padding: EdgeInsets.only(
             left: (widget.entry.level - 1) * 12.0 + 12,
             right: 12,
-            top: 6, // Slightly reduced padding for text-only look
+            top: 6,
             bottom: 6,
           ),
           child: Text(

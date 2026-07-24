@@ -126,8 +126,35 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     final lines = content.split('\n');
     final headingRegex = RegExp(r'^(#{1,6})\s+(.+)$');
 
+    bool isInCodeBlock = false;
+    bool isInFrontmatter = false;
+    int lineIndex = 0;
+
     for (final line in lines) {
       final trimmed = line.trim();
+      lineIndex++;
+
+      // Ignore YAML frontmatter at file start
+      if (lineIndex == 1 && trimmed == '---') {
+        isInFrontmatter = true;
+        continue;
+      }
+      if (isInFrontmatter) {
+        if (trimmed == '---') {
+          isInFrontmatter = false;
+        }
+        continue;
+      }
+
+      // Ignore contents inside code blocks (e.g. ```bash comments starting with #)
+      if (trimmed.startsWith('```') || trimmed.startsWith('~~~')) {
+        isInCodeBlock = !isInCodeBlock;
+        continue;
+      }
+      if (isInCodeBlock) {
+        continue;
+      }
+
       final match = headingRegex.firstMatch(trimmed);
       if (match != null) {
         final hashes = match.group(1)!;
