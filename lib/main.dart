@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:snow_dance/core/article_provider.dart';
@@ -8,14 +9,21 @@ import 'package:snow_dance/core/theme/app_theme.dart';
 import 'package:snow_dance/core/theme/theme_provider.dart';
 import 'package:snow_dance/core/router/app_router.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
+  
+  String? savedTheme;
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    savedTheme = prefs.getString('snow_dance_theme_mode');
+  } catch (_) {}
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ArticleProvider()),
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider(initialSavedTheme: savedTheme)),
       ],
       child: const MyApp(),
     ),

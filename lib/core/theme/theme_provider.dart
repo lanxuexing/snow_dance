@@ -3,10 +3,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
   static const String _themeKey = 'snow_dance_theme_mode';
-  ThemeMode _themeMode = ThemeMode.system;
+  late ThemeMode _themeMode;
 
-  ThemeProvider() {
-    _loadTheme();
+  ThemeProvider({String? initialSavedTheme}) {
+    _themeMode = _parseThemeMode(initialSavedTheme);
+  }
+
+  static ThemeMode _parseThemeMode(String? saved) {
+    return switch (saved) {
+      'light' => ThemeMode.light,
+      'dark' => ThemeMode.dark,
+      _ => ThemeMode.system,
+    };
   }
 
   ThemeMode get themeMode => _themeMode;
@@ -16,23 +24,6 @@ class ThemeProvider extends ChangeNotifier {
         ThemeMode.dark => true,
         ThemeMode.light => false,
       };
-
-  Future<void> _loadTheme() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final savedTheme = prefs.getString(_themeKey);
-      if (savedTheme != null) {
-        _themeMode = switch (savedTheme) {
-          'light' => ThemeMode.light,
-          'dark' => ThemeMode.dark,
-          _ => ThemeMode.system,
-        };
-        notifyListeners();
-      }
-    } catch (_) {
-      // Fallback gracefully if storage is unavailable
-    }
-  }
 
   Future<void> _saveTheme(ThemeMode mode) async {
     try {

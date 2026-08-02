@@ -90,29 +90,15 @@
   <script type="text/javascript">
     (function() {
       try {
-        var raw = '';
-        for (var i = 0; i < localStorage.length; i++) {
-          var k = localStorage.key(i);
-          if (k && k.indexOf('snow_dance_theme') !== -1) {
-            raw += localStorage.getItem(k) || '';
-          }
-        }
-        if (!raw) {
-          raw = localStorage.getItem('flutter.snow_dance_theme_mode') || localStorage.getItem('snow_dance_theme') || '';
-        }
-        
-        var isLight = raw.indexOf('light') !== -1;
-        var isDark = raw.indexOf('dark') !== -1;
+        var val = localStorage.getItem('flutter.snow_dance_theme_mode') || localStorage.getItem('snow_dance_theme_mode') || '';
         var useLight = false;
-        
-        if (isLight) {
+        if (val.indexOf('light') !== -1) {
           useLight = true;
-        } else if (isDark) {
+        } else if (val.indexOf('dark') !== -1) {
           useLight = false;
         } else {
           useLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
         }
-        
         if (useLight) {
           document.documentElement.className = 'light-theme';
         } else {
