@@ -12,57 +12,60 @@ class PremiumLoader extends StatelessWidget {
     final effectiveIsDark = isDark ?? (Theme.of(context).brightness == Brightness.dark);
     const primaryColor = Color(0xFF00DC82);
     
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Pulsing Logo Container
-          Container(
-            width: 64,
-            height: 64,
-            decoration: BoxDecoration(
-              color: primaryColor,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: primaryColor.withValues(alpha: 0.4),
-                  blurRadius: 20,
-                  spreadRadius: 5,
-                ),
-              ],
-            ),
-            child: const Center(
-              child: SnowflakeLogo(
-                size: 32,
-                gradientColors: [Colors.white, Colors.white70],
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Pulsing Logo Container
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                color: primaryColor,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: primaryColor.withValues(alpha: 0.4),
+                    blurRadius: 20,
+                    spreadRadius: 5,
+                  ),
+                ],
               ),
+              child: const Center(
+                child: SnowflakeLogo(
+                  size: 32,
+                  gradientColors: [Colors.white, Colors.white70],
+                ),
+              ),
+            )
+            .animate(onPlay: (controller) => controller.repeat(reverse: true))
+            .scale(
+              begin: const Offset(0.85, 0.85),
+              end: const Offset(1, 1),
+              duration: 1000.ms,
+              curve: Curves.easeInOut,
             ),
-          )
-          .animate(onPlay: (controller) => controller.repeat(reverse: true))
-          .scale(
-            begin: const Offset(0.85, 0.85),
-            end: const Offset(1, 1),
-            duration: 1000.ms,
-            curve: Curves.easeInOut,
-          ),
-          
-          const SizedBox(height: 32),
-          
-          // Loading Text
-          Text(
-            'SNOWDANCE',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              color: effectiveIsDark ? Colors.white.withValues(alpha: 0.6) : Colors.black.withValues(alpha: 0.6),
-              fontSize: 14,
-              letterSpacing: 2.0,
-              fontWeight: FontWeight.w500,
-            ),
-          )
-          .animate()
-          .fadeIn(duration: 800.ms, curve: Curves.easeOut)
-          .slideY(begin: 0.2, end: 0, duration: 800.ms, curve: Curves.easeOut),
-        ],
+            
+            const SizedBox(height: 32),
+            
+            // Loading Text
+            Text(
+              'SNOWDANCE',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                color: effectiveIsDark ? Colors.white.withValues(alpha: 0.6) : Colors.black.withValues(alpha: 0.6),
+                fontSize: 14,
+                letterSpacing: 2.0,
+                fontWeight: FontWeight.w500,
+              ),
+            )
+            .animate()
+            .fadeIn(duration: 800.ms, curve: Curves.easeOut)
+            .slideY(begin: 0.2, end: 0, duration: 800.ms, curve: Curves.easeOut),
+          ],
+        ),
       ),
     );
   }
