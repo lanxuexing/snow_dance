@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:snow_dance/core/article_provider.dart';
 import 'package:snow_dance/widgets/article_card.dart';
 import 'package:snow_dance/widgets/app_footer.dart';
@@ -39,11 +40,17 @@ class HomePage extends StatelessWidget {
                 ? SliverList.separated(
                     itemCount: displayArticles.length,
                     separatorBuilder: (context, index) => const SizedBox(height: 16),
-                    itemBuilder: (context, index) => ArticleCard(article: displayArticles[index]),
+                    itemBuilder: (context, index) => ArticleCard(article: displayArticles[index])
+                        .animate(delay: (40 * index).ms)
+                        .fadeIn(duration: 300.ms, curve: Curves.easeOutCubic)
+                        .moveY(begin: 12, end: 0, curve: Curves.easeOutCubic),
                   )
                 : SliverGrid(
                     delegate: SliverChildBuilderDelegate(
-                      (context, index) => ArticleCard(article: displayArticles[index]),
+                      (context, index) => ArticleCard(article: displayArticles[index])
+                          .animate(delay: (40 * index).ms)
+                          .fadeIn(duration: 300.ms, curve: Curves.easeOutCubic)
+                          .moveY(begin: 12, end: 0, curve: Curves.easeOutCubic),
                       childCount: displayArticles.length,
                     ),
                     gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(

@@ -13,6 +13,7 @@ class ArticleCard extends StatefulWidget {
 
 class _ArticleCardState extends State<ArticleCard> {
   bool _isHovered = false;
+  bool _isPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +25,17 @@ class _ArticleCardState extends State<ArticleCard> {
       onExit: (_) => setState(() => _isHovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
+        onTapDown: (_) => setState(() => _isPressed = true),
+        onTapUp: (_) => setState(() => _isPressed = false),
+        onTapCancel: () => setState(() => _isPressed = false),
         onTap: () => context.go('/${widget.article.categoryPath}/${widget.article.id}'),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOutCubic,
+        child: AnimatedScale(
+          scale: _isPressed ? 0.97 : 1.0,
+          duration: const Duration(milliseconds: 120),
+          curve: Curves.easeOut,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOutCubic,
           transform: Matrix4.translationValues(0.0, _isHovered ? -4.0 : 0.0, 0.0),
           decoration: BoxDecoration(
             color: Theme.of(context).cardTheme.color,
@@ -105,6 +113,7 @@ class _ArticleCardState extends State<ArticleCard> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

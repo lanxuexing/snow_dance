@@ -361,8 +361,22 @@ class _SearchResultItemState extends State<_SearchResultItem> {
 }
 
 void showSearchOverlay(BuildContext context) {
-  showDialog(
+  showGeneralDialog(
     context: context,
-    builder: (context) => const SearchOverlay(),
+    barrierDismissible: true,
+    barrierLabel: 'Search',
+    barrierColor: Colors.black54,
+    transitionDuration: const Duration(milliseconds: 200),
+    pageBuilder: (context, anim1, anim2) => const SearchOverlay(),
+    transitionBuilder: (context, anim1, anim2, child) {
+      final curve = CurvedAnimation(parent: anim1, curve: Curves.easeOutCubic);
+      return FadeTransition(
+        opacity: curve,
+        child: ScaleTransition(
+          scale: Tween<double>(begin: 0.95, end: 1.0).animate(curve),
+          child: child,
+        ),
+      );
+    },
   );
 }

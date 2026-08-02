@@ -213,6 +213,7 @@ class _HeaderNavItem extends StatefulWidget {
 
 class _HeaderNavItemState extends State<_HeaderNavItem> {
   bool _isHovered = false;
+  bool _isPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -232,17 +233,25 @@ class _HeaderNavItemState extends State<_HeaderNavItem> {
         onExit: (_) => setState(() => _isHovered = false),
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
+          onTapDown: (_) => setState(() => _isPressed = true),
+          onTapUp: (_) => setState(() => _isPressed = false),
+          onTapCancel: () => setState(() => _isPressed = false),
           onTap: () => context.go(widget.route),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 150),
-              style: GoogleFonts.outfit(
-                fontSize: 15,
-                fontWeight: widget.isActive ? FontWeight.w700 : FontWeight.w500,
-                color: textColor,
+          child: AnimatedScale(
+            scale: _isPressed ? 0.97 : 1.0,
+            duration: const Duration(milliseconds: 120),
+            curve: Curves.easeOut,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 150),
+                style: GoogleFonts.outfit(
+                  fontSize: 15,
+                  fontWeight: widget.isActive ? FontWeight.w700 : FontWeight.w500,
+                  color: textColor,
+                ),
+                child: Text(widget.title),
               ),
-              child: Text(widget.title),
             ),
           ),
         ),
