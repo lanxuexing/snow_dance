@@ -1,5 +1,13 @@
 [
   {
+    "id": "angular-v22-1-announcement",
+    "title": "Angular v22.1.0 重磅发布：Signal Forms 终极进化、Zoneless 零开销渲染与流式水合全景解析",
+    "excerpt": "Angular v22.1.0 正式发布！作为 v22 大版本的首个重大子版本，v22.1.0 带来了里程碑式的技术革新：Signal Forms 响应式表单体系全面成熟、Zoneless 无 Zone.js 架构实现零开销渲染与极致打包瘦身、增量水合支持 SSR 服务器流式传输，以及 CLI esbuild 编译链的深度优化。本文将为您带来最权威的技术细节与实战升级全景指南。",
+    "date": "2026-08-03",
+    "category": "Blog",
+    "path": "assets/articles/blog/angular-v22-1-announcement.md"
+  },
+  {
     "id": "flutter-3-44-7-8-patch-updates",
     "title": "Flutter 3.44.7 & 3.44.8 补丁更新深度解析：Impeller 渲染稳定性、iOS 18 / SwiftPM 深度适配与 Web WASM GC 优化",
     "excerpt": "详细拆解 Flutter 3.44.7 与 3.44.8 两个热修复补丁的核心改动：涵盖 Impeller 阴影与高斯模糊内存泄露修复、iOS 18 / Xcode 16.x 与 SwiftPM 构建链优化、Android 15 沉浸式 Edge-to-Edge 边到边布局补丁，以及 Dart 3.12 补丁级的模式匹配性能提升。",
