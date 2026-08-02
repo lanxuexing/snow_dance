@@ -24,17 +24,19 @@ Check out the live site: **[https://lanxuexing.github.io/snow_dance/](https://la
 ## ✨ Features
 
 - **🎨 Premium UI/UX**
+  - **Apple Fluid Motion & Design Engineering**: Built according to Apple Design Guidelines and Emil Kowalski's Design Engineering philosophy. Added `scale(0.97)` press scale feedback on cards and navigation buttons, `scale(0.95)` smooth popover entrance for `Cmd + K` search overlay, and 40ms staggered card entry on the home page.
+  - **Cross-Platform Theme Engine & 0ms Splash Screen**: Dual-synced persistence using `SharedPreferences` and Web native `localStorage`. Preloads theme in `main()` before `runApp()`, adapting HTML loading screen background (`#F9FAFB` vs `#020420`) and system status bars across Web, iOS, Android, macOS, Windows, and Linux.
   - **Dynamic Spinning Snowflake Logo**: Hand-crafted vector snowflake with a smooth floating rotation animation and micro-glow interaction, integrated globally in the startup loader, app bar, and side drawer.
-  - **Glassmorphism Design**: Frosted glass effects, subtle gradients, and dark mode support.
+  - **Glassmorphism Design**: Frosted glass effects, subtle gradients, and dark/light mode support.
   - **Responsive Layout**: Adaptive sidebar and navigation for Desktop, Tablet, and Mobile.
   - **Tailored Mobile Layout**: Fine-tuned content margins (`16px`), app headers, and drawer sidebar spacing for small devices to maximize reading space and enforce geometric vertical alignments.
   - **Global Smooth Inertial Scroll**: Mouse drag, trackpad gesture, and physics-based momentum bounds (`BouncingScrollPhysics`) across all platforms (macOS, Windows, Linux, and Web), making scrolling extremely fluid.
-  - **Smooth Animations**: Refined transitions and micro-interactions using `flutter_animate`.
   - **Bespoke Brand Icon Assets**: Replaced all default Flutter placeholder icons with our custom SnowDance cyber-snowflake brand asset across the page favicon, iOS touch-icons, and PWA launch layers.
 
 - **📝 Advanced Markdown Engine**
+  - **Selectable Code Blocks (`SelectableHighlightView`)**: Native text selection and copying support inside code blocks.
   - **Syntax Highlighting**: Code blocks with language detection and styling.
-  - **Table of Contents**: Auto-generated ToC with scroll-spy (highlight active section).
+  - **Table of Contents**: Auto-generated ToC with scroll-spy (highlight active section), filtering code block and frontmatter comment interference.
   - **Hyperlinks & Smart Redirection**: Full support for clicking markdown links. External links open securely in a new browser tab, while internal routing path links are resolved locally via GoRouter to maintain the single-page application (SPA) experience.
   - **Collapsible Mobile Header**: "Page Overview" panel for quick navigation on small screens.
   - **Deep Linking**: Direct navigation to specific headings.
