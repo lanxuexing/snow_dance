@@ -1,23 +1,19 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:snow_dance/core/article_provider.dart';
 import 'package:snow_dance/core/theme/app_theme.dart';
 import 'package:snow_dance/core/theme/theme_provider.dart';
+import 'package:snow_dance/core/utils/theme_storage.dart';
 import 'package:snow_dance/core/router/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
   
-  String? savedTheme;
-  try {
-    final prefs = await SharedPreferences.getInstance();
-    savedTheme = prefs.getString('snow_dance_theme_mode');
-  } catch (_) {}
+  final savedTheme = await ThemeStorage.getSavedTheme();
 
   runApp(
     MultiProvider(

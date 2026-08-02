@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:snow_dance/core/utils/theme_storage.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  static const String _themeKey = 'snow_dance_theme_mode';
   late ThemeMode _themeMode;
 
   ThemeProvider({String? initialSavedTheme}) {
-    _themeMode = _parseThemeMode(initialSavedTheme);
+    final syncTheme = initialSavedTheme ?? ThemeStorage.getSavedThemeSync();
+    _themeMode = _parseThemeMode(syncTheme);
+    if (initialSavedTheme == null) {
+      _loadThemeAsync();
+    }
   }
 
   static ThemeMode _parseThemeMode(String? saved) {
@@ -25,17 +28,14 @@ class ThemeProvider extends ChangeNotifier {
         ThemeMode.light => false,
       };
 
-  Future<void> _saveTheme(ThemeMode mode) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final modeString = switch (mode) {
-        ThemeMode.light => 'light',
-        ThemeMode.dark => 'dark',
-        ThemeMode.system => 'system',
-      };
-      await prefs.setString(_themeKey, modeString);
-    } catch (_) {
-      // Ignore write errors
+  Future<void> _loadThemeAsync() async {
+    final saved = await ThemeStorage.getSavedTheme();
+    if (saved != null) {
+      final mode = _parseThemeMode(saved);
+      if (mode != _themeMode) {
+        _themeMode = mode;
+        notifyListeners();
+      }
     }
   }
 
@@ -51,7 +51,12 @@ class ThemeProvider extends ChangeNotifier {
   void setThemeMode(ThemeMode mode) {
     if (_themeMode == mode) return;
     _themeMode = mode;
-    _saveTheme(mode);
+    final modeString = switch (mode) {
+      ThemeMode.light => 'light',
+      ThemeMode.dark => 'dark',
+      ThemeMode.system => 'system',
+    };
+    ThemeStorage.saveTheme(modeString);
     notifyListeners();
   }
 }

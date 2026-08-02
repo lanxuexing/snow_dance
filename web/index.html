@@ -171,6 +171,22 @@
   </style>
 </head>
 <body>
+  <script type="text/javascript">
+    (function() {
+      try {
+        var val = localStorage.getItem('snow_dance_theme_mode') || localStorage.getItem('flutter.snow_dance_theme_mode') || '';
+        var useLight = val.indexOf('light') !== -1;
+        if (!useLight && val.indexOf('dark') === -1) {
+          useLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+        }
+        if (useLight) {
+          document.documentElement.className = 'light-theme';
+          document.body.className = 'light-theme';
+          document.body.style.backgroundColor = '#F9FAFB';
+        }
+      } catch (e) {}
+    })();
+  </script>
   <div id="loading" class="loading-container">
     <div class="logo-pulse">
       <svg viewBox="0 0 24 24">
