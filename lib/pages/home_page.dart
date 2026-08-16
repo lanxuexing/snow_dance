@@ -135,7 +135,7 @@ class HomePage extends StatelessWidget {
                    ),
                    const SizedBox(width: 6),
                     Text(
-                    'Introducing SnowDance v1.1',
+                    'Introducing SnowDance v1.2',
                     style: AppTheme.outfit(
                       fontSize: isMobile ? 12.5 : 14,
                       fontWeight: FontWeight.w600,

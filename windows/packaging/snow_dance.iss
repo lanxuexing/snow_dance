@@ -1,7 +1,7 @@
 [Setup]
 AppId={{8B6E3294-0D2C-4BA7-8F12-70678F3D7824}
 AppName=SnowDance
-AppVersion=1.1.0
+AppVersion=1.2.0
 AppPublisher=LanXueXing
 AppPublisherURL=https://github.com/lanxuexing/snow_dance
 DefaultDirName={autopf}\SnowDance
