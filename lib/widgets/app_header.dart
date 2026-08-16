@@ -58,11 +58,18 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                       onTap: () => context.go('/'),
                       child: Row(
                         children: [
-                          const SnowflakeLogo(size: 26),
+                          SnowflakeLogo(
+                            size: 26,
+                            gradientColors: Theme.of(context).brightness == Brightness.dark
+                                ? const [Color(0xFF00DC82), Color(0xFF36E4DA), Color(0xFF007A5E)]
+                                : const [Color(0xFF059669), Color(0xFF0D9488), Color(0xFF047857)],
+                          ),
                           const SizedBox(width: 10),
                           ShaderMask(
-                            shaderCallback: (bounds) => const LinearGradient(
-                              colors: [Color(0xFF00DC82), Color(0xFF36E4DA)],
+                            shaderCallback: (bounds) => LinearGradient(
+                              colors: Theme.of(context).brightness == Brightness.dark
+                                  ? const [Color(0xFF00DC82), Color(0xFF36E4DA)]
+                                  : const [Color(0xFF059669), Color(0xFF0D9488)],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ).createShader(bounds),

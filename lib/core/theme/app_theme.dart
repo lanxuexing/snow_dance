@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  static const Color primaryColor = Color(0xFF00DC82); // From the green logo in reference
+  static const Color primaryColor = Color(0xFF00DC82); // Dark theme primary (vibrant emerald)
+  static const Color lightPrimaryColor = Color(0xFF059669); // Light theme primary (Emerald 600, high contrast & soothing)
   static const Color secondaryColor = Color(0xFF007A5E);
+  static const Color lightSecondaryColor = Color(0xFF0D9488);
   static const Color darkBgColor = Color(0xFF020420);
   static const Color lightBgColor = Color(0xFFF9FAFB);
 
@@ -155,8 +157,8 @@ class AppTheme {
     useMaterial3: true,
     brightness: Brightness.light,
     colorScheme: const ColorScheme.light(
-      primary: primaryColor,
-      secondary: secondaryColor,
+      primary: lightPrimaryColor,
+      secondary: lightSecondaryColor,
       surface: Colors.white,
       surfaceContainer: Color(0xFFF3F4F6),
       surfaceContainerHigh: Color(0xFFE5E7EB),
