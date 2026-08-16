@@ -137,6 +137,12 @@ class _AppDrawerState extends State<AppDrawer> {
     // If we haven't tracked it yet, default to whether the category is active
     final bool isExpanded = _expansionStates[title] ?? isCategorySelected;
 
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final unselectedIconColor = isDark 
+        ? Colors.white.withValues(alpha: 0.7) 
+        : const Color(0xFF4B5563); // Slate 600 - coordinated, elegant contrast
+
     return Material(
       type: MaterialType.transparency,
       child: Theme(
@@ -157,21 +163,21 @@ class _AppDrawerState extends State<AppDrawer> {
                   style: AppTheme.outfit(
                     fontSize: 15,
                     fontWeight: isCategorySelected ? FontWeight.w600 : FontWeight.w500,
-                    color: isCategorySelected ? Theme.of(context).colorScheme.primary : null,
+                    color: isCategorySelected ? primaryColor : null,
                   ),
               ),
             ),
             Icon(
               isExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right,
               size: 20,
-              color: isCategorySelected ? Theme.of(context).colorScheme.primary : Colors.grey,
+              color: isCategorySelected ? primaryColor : unselectedIconColor,
             ),
           ],
         ),
         leading: Icon(
           isCategorySelected ? Icons.folder_open : Icons.folder_outlined,
           size: 20,
-          color: isCategorySelected ? Theme.of(context).colorScheme.primary : Colors.grey,
+          color: isCategorySelected ? primaryColor : unselectedIconColor,
         ),
         childrenPadding: const EdgeInsets.only(left: 12),
         children: categoryArticles.map((article) {
@@ -185,7 +191,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 style: AppTheme.outfit(
                   fontSize: 13,
                   color: isArticleSelected 
-                    ? Theme.of(context).colorScheme.primary 
+                    ? primaryColor 
                     : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                   fontWeight: isArticleSelected ? FontWeight.w600 : FontWeight.normal,
                 ),
@@ -266,7 +272,11 @@ class _AppDrawerState extends State<AppDrawer> {
             children: [
               Text(
                 '主题模式',
-                style: AppTheme.outfit(fontSize: 14, color: Colors.grey),
+                style: AppTheme.outfit(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                ),
               ),
               const SizedBox(height: 10),
               SizedBox(
