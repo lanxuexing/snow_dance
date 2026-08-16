@@ -199,22 +199,41 @@
       100% { left: 100%; width: 25%; }
     }
 
-    /* Override Flutter default blue loading bar colors */
+    /* Override and suppress Flutter debug blue loading bar */
     .flutter-loader,
     .flutter-loader *,
     .indeterminate,
     [class*="flutter-loading"],
     [id*="flutter-loading"],
-    .progress-bar,
-    .linear-progress-bar,
-    .loading-progress {
-      background: linear-gradient(90deg, #00DC82, #36E4DA) !important;
-      background-color: #00DC82 !important;
-      color: #00DC82 !important;
-      border-color: #00DC82 !important;
-      box-shadow: 0 0 10px rgba(0, 220, 130, 0.6) !important;
+    div[style*="background-color: rgb(2, 86, 155)"],
+    div[style*="#02569b"],
+    div[style*="#0175c2"],
+    div[style*="#13b9fd"] {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
     }
   </style>
+  <script>
+    // Immediately suppress any dynamic Flutter debug blue progress bars
+    (function() {
+      var hideDebugBars = function() {
+        var elements = document.querySelectorAll('div[style*="background-color: rgb(2, 86, 155)"], div[style*="#02569b"], div[style*="#0175c2"], div[style*="#13b9fd"], .flutter-loader, .indeterminate');
+        for (var i = 0; i < elements.length; i++) {
+          if (elements[i].id !== 'top-loader' && !elements[i].classList.contains('snow-top-loader-bar')) {
+            elements[i].remove();
+          }
+        }
+      };
+      var observer = new MutationObserver(hideDebugBars);
+      if (document.documentElement) {
+        observer.observe(document.documentElement, { childList: true, subtree: true });
+      }
+      window.addEventListener('load', function() {
+        hideDebugBars();
+      });
+    })();
+  </script>
 </head>
 <body>
   <div id="top-loader" class="snow-top-loader">
