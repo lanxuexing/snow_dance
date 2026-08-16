@@ -149,37 +149,31 @@ class _AppDrawerState extends State<AppDrawer> {
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           initiallyExpanded: isCategorySelected,
-        onExpansionChanged: (expanded) {
-          setState(() {
-            _expansionStates[title] = expanded;
-          });
-        },
-        trailing: const SizedBox.shrink(), // Hide default rotating icon
-        title: Row(
-          children: [
-            Expanded(
-              child: Text(
-                title,
-                  style: AppTheme.outfit(
-                    fontSize: 15,
-                    fontWeight: isCategorySelected ? FontWeight.w600 : FontWeight.w500,
-                    color: isCategorySelected ? primaryColor : null,
-                  ),
-              ),
+          tilePadding: const EdgeInsets.symmetric(horizontal: 16),
+          onExpansionChanged: (expanded) {
+            setState(() {
+              _expansionStates[title] = expanded;
+            });
+          },
+          leading: Icon(
+            isCategorySelected ? Icons.folder_open : Icons.folder_outlined,
+            size: 20,
+            color: isCategorySelected ? primaryColor : unselectedIconColor,
+          ),
+          title: Text(
+            title,
+            style: AppTheme.outfit(
+              fontSize: 15,
+              fontWeight: isCategorySelected ? FontWeight.w600 : FontWeight.w500,
+              color: isCategorySelected ? primaryColor : null,
             ),
-            Icon(
-              isExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right,
-              size: 20,
-              color: isCategorySelected ? primaryColor : unselectedIconColor,
-            ),
-          ],
-        ),
-        leading: Icon(
-          isCategorySelected ? Icons.folder_open : Icons.folder_outlined,
-          size: 20,
-          color: isCategorySelected ? primaryColor : unselectedIconColor,
-        ),
-        childrenPadding: const EdgeInsets.only(left: 12),
+          ),
+          trailing: Icon(
+            isExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right,
+            size: 20,
+            color: isCategorySelected ? primaryColor : unselectedIconColor,
+          ),
+          childrenPadding: const EdgeInsets.only(left: 12),
         children: categoryArticles.map((article) {
           final articleRoute = '/${article.categoryPath}/${article.id}';
           final bool isArticleSelected = currentPath == articleRoute;
