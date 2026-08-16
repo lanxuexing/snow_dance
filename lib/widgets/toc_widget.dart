@@ -73,11 +73,11 @@ class _ToCItem extends StatefulWidget {
 
 class _ToCItemState extends State<_ToCItem> {
   bool _isHovered = false;
-  bool _isPressed = false;
 
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
+    
     final isHighlighted = _isHovered || widget.isActive;
  
     return MouseRegion(
@@ -85,45 +85,24 @@ class _ToCItemState extends State<_ToCItem> {
       onExit: (_) => setState(() => _isHovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTapDown: (_) => setState(() => _isPressed = true),
-        onTapUp: (_) => setState(() => _isPressed = false),
-        onTapCancel: () => setState(() => _isPressed = false),
         onTap: () => widget.onTap(widget.entry),
-        child: AnimatedScale(
-          scale: _isPressed ? 0.97 : 1.0,
-          duration: const Duration(milliseconds: 120),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
           curve: Curves.easeOut,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
-            curve: Curves.easeOutCubic,
-            margin: const EdgeInsets.symmetric(vertical: 2),
-            padding: EdgeInsets.only(
-              left: (widget.entry.level - 1) * 12.0 + 8,
-              right: 12,
-              top: 6,
-              bottom: 6,
-            ),
-            decoration: BoxDecoration(
-              color: widget.isActive
-                  ? primaryColor.withValues(alpha: 0.08)
-                  : (_isHovered ? Theme.of(context).dividerColor.withValues(alpha: 0.04) : Colors.transparent),
-              borderRadius: BorderRadius.circular(6),
-              border: Border(
-                left: BorderSide(
-                  color: widget.isActive ? primaryColor : Colors.transparent,
-                  width: 2.5,
-                ),
-              ),
-            ),
-            child: Text(
-              widget.entry.title,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: isHighlighted ? FontWeight.w600 : FontWeight.normal,
-                color: isHighlighted 
-                    ? primaryColor 
-                    : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
-              ),
+          padding: EdgeInsets.only(
+            left: (widget.entry.level - 1) * 12.0 + 12,
+            right: 12,
+            top: 6,
+            bottom: 6,
+          ),
+          child: Text(
+            widget.entry.title,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: isHighlighted ? FontWeight.w600 : FontWeight.normal,
+              color: isHighlighted 
+                  ? primaryColor 
+                  : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
             ),
           ),
         ),

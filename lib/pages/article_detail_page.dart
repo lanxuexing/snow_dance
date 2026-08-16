@@ -26,7 +26,6 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   final ScrollController _scrollController = ScrollController();
   String? _activeHeading;
   DateTime _lastScrollCheck = DateTime.now();
-  bool _showBackToTop = false;
 
   @override
   void initState() {
@@ -56,17 +55,8 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
 
   void _onScroll() {
     final now = DateTime.now();
-    if (now.difference(_lastScrollCheck).inMilliseconds < 40) return;
+    if (now.difference(_lastScrollCheck).inMilliseconds < 50) return;
     _lastScrollCheck = now;
-
-    if (_scrollController.hasClients) {
-      final showTop = _scrollController.offset > 350;
-      if (showTop != _showBackToTop && mounted) {
-        setState(() {
-          _showBackToTop = showTop;
-        });
-      }
-    }
 
     String? newActiveHeading;
 
@@ -135,8 +125,8 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     int lineIndex = 0;
 
     for (final line in lines) {
-      lineIndex++;
       final trimmed = line.trim();
+      lineIndex++;
 
       // Ignore YAML frontmatter at file start
       if (lineIndex == 1 && trimmed == '---') {
@@ -200,15 +190,17 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final provider = Provider.of<ArticleProvider>(context);
+    // Resolve the up-to-date article from provider to get loaded content
     final currentArticle = provider.findById(widget.article.id) ?? widget.article;
     final isContentEmpty = currentArticle.content.isEmpty;
 
-    // Re-parse ToC if content changed / just loaded
+    // Re-parse ToC if content changed (e.g. just loaded)
     if (!isContentEmpty && _tocEntries.isEmpty) {
-      _parseToC(currentArticle.content);
+       _parseToC(currentArticle.content);
     }
 
     if (!isContentEmpty) {
+      // Dynamic SEO update for the article detail page
       SEOHelper.updateSEO(
         title: '${currentArticle.title} - SnowDance',
         description: currentArticle.excerpt,
@@ -222,81 +214,52 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       children: [
         if (!isMobile) _buildSidebar(context),
         Expanded(
-          child: Stack(
-            children: [
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 250),
-                switchInCurve: Curves.easeOut,
-                switchOutCurve: Curves.easeIn,
-                child: isContentEmpty
-                    ? KeyedSubtree(
-                        key: const ValueKey('article_skeleton'),
-                        child: ArticleSkeleton(isDark: isDark),
-                      )
-                    : KeyedSubtree(
-                        key: ValueKey('article_content_${currentArticle.id}'),
-                        child: SelectionArea(
-                          child: SingleChildScrollView(
-                            controller: _scrollController,
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 60),
-                                Container(
-                                  constraints: const BoxConstraints(maxWidth: 900),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: isMobile ? 16 : 40,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            switchInCurve: Curves.easeOut,
+            switchOutCurve: Curves.easeIn,
+            child: isContentEmpty
+                ? KeyedSubtree(
+                    key: const ValueKey('article_skeleton'),
+                    child: ArticleSkeleton(isDark: isDark),
+                  )
+                : KeyedSubtree(
+                    key: ValueKey('article_content_${currentArticle.id}'),
+                    child: SelectionArea(
+                      child: SingleChildScrollView(
+                        controller: _scrollController,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 60),
+                            Container(
+                              constraints: const BoxConstraints(maxWidth: 900),
+                              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 40),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildAuthorSection(context),
+                                  if (isMobile && _tocEntries.isNotEmpty) ...[
+                                    const SizedBox(height: 32),
+                                    _buildMobileToC(context),
+                                  ],
+                                  const SizedBox(height: 40),
+                                  MarkdownViewer(
+                                    content: currentArticle.content,
+                                    headingKeys: _headingKeys,
                                   ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      _buildAuthorSection(context),
-                                      if (isMobile && _tocEntries.isNotEmpty) ...[
-                                        const SizedBox(height: 32),
-                                        _buildMobileToC(context),
-                                      ],
-                                      const SizedBox(height: 40),
-                                      MarkdownViewer(
-                                        content: currentArticle.content,
-                                        headingKeys: _headingKeys,
-                                      ),
-                                      const SizedBox(height: 80),
-                                      const AppFooter(),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                                  const SizedBox(height: 80),
+                                  const AppFooter(),
+                                ],
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
-              ),
-              // Floating Back-to-Top Button
-              Positioned(
-                bottom: isMobile ? 24 : 36,
-                right: isMobile ? 20 : 36,
-                child: AnimatedScale(
-                  scale: _showBackToTop ? 1.0 : 0.0,
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.easeOutBack,
-                  child: AnimatedOpacity(
-                    opacity: _showBackToTop ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 150),
-                    child: _FloatingBackToTopButton(
-                      onTap: () {
-                        _scrollController.animateTo(
-                          0,
-                          duration: const Duration(milliseconds: 600),
-                          curve: Curves.easeOutCubic,
-                        );
-                      },
                     ),
                   ),
-                ),
-              ),
-            ],
           ),
         ),
-        if (!isMobile) (isContentEmpty ? const SizedBox(width: 240) : _buildToCSidebar(context)),
+        if (!isMobile) (isContentEmpty ? const SizedBox(width: 260) : _buildToCSidebar(context)),
       ],
     );
   }
@@ -502,70 +465,3 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     );
   }
 }
-
-class _FloatingBackToTopButton extends StatefulWidget {
-  final VoidCallback onTap;
-  const _FloatingBackToTopButton({required this.onTap});
-
-  @override
-  State<_FloatingBackToTopButton> createState() => _FloatingBackToTopButtonState();
-}
-
-class _FloatingBackToTopButtonState extends State<_FloatingBackToTopButton> {
-  bool _isHovered = false;
-  bool _isPressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTapDown: (_) => setState(() => _isPressed = true),
-        onTapUp: (_) => setState(() => _isPressed = false),
-        onTapCancel: () => setState(() => _isPressed = false),
-        onTap: widget.onTap,
-        child: AnimatedScale(
-          scale: _isPressed ? 0.92 : (_isHovered ? 1.08 : 1.0),
-          duration: const Duration(milliseconds: 140),
-          curve: Curves.easeOutCubic,
-          child: Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: isDark 
-                  ? const Color(0xFF1E1E1E).withValues(alpha: 0.85) 
-                  : Colors.white.withValues(alpha: 0.9),
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: _isHovered 
-                    ? primaryColor.withValues(alpha: 0.6) 
-                    : (isDark ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.08)),
-                width: 1.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: _isHovered 
-                      ? primaryColor.withValues(alpha: isDark ? 0.35 : 0.25) 
-                      : Colors.black.withValues(alpha: isDark ? 0.4 : 0.12),
-                  blurRadius: _isHovered ? 16 : 8,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Icon(
-              Icons.keyboard_arrow_up_rounded,
-              size: 24,
-              color: _isHovered ? primaryColor : (isDark ? Colors.white : Colors.black87),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
