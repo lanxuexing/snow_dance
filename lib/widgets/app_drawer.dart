@@ -276,37 +276,41 @@ class _AppDrawerState extends State<AppDrawer> {
                     return SegmentedButton<ThemeMode>(
                       style: ButtonStyle(
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        visualDensity: VisualDensity.compact,
-                        padding: WidgetStateProperty.all(
-                          const EdgeInsets.symmetric(horizontal: 2),
-                        ),
+                        visualDensity: const VisualDensity(horizontal: -4, vertical: -2),
+                        padding: WidgetStateProperty.all(EdgeInsets.zero),
                       ),
                       segments: const [
                         ButtonSegment<ThemeMode>(
                           value: ThemeMode.system,
-                          icon: Icon(Icons.brightness_6_outlined, size: 14),
+                          icon: Icon(Icons.brightness_6_outlined, size: 13),
                           label: Text(
                             'System',
                             maxLines: 1,
-                            style: TextStyle(fontSize: 11),
+                            softWrap: false,
+                            overflow: TextOverflow.visible,
+                            style: TextStyle(fontSize: 10.5, letterSpacing: -0.2),
                           ),
                         ),
                         ButtonSegment<ThemeMode>(
                           value: ThemeMode.dark,
-                          icon: Icon(Icons.dark_mode_outlined, size: 14),
+                          icon: Icon(Icons.dark_mode_outlined, size: 13),
                           label: Text(
                             'Dark',
                             maxLines: 1,
-                            style: TextStyle(fontSize: 11),
+                            softWrap: false,
+                            overflow: TextOverflow.visible,
+                            style: TextStyle(fontSize: 10.5, letterSpacing: -0.2),
                           ),
                         ),
                         ButtonSegment<ThemeMode>(
                           value: ThemeMode.light,
-                          icon: Icon(Icons.light_mode_outlined, size: 14),
+                          icon: Icon(Icons.light_mode_outlined, size: 13),
                           label: Text(
                             'Light',
                             maxLines: 1,
-                            style: TextStyle(fontSize: 11),
+                            softWrap: false,
+                            overflow: TextOverflow.visible,
+                            style: TextStyle(fontSize: 10.5, letterSpacing: -0.2),
                           ),
                         ),
                       ],
