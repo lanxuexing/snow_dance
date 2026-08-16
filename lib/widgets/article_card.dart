@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:snow_dance/models/article.dart';
+import 'package:snow_dance/core/article_provider.dart';
 
 class ArticleCard extends StatefulWidget {
   final Article article;
@@ -15,20 +17,36 @@ class _ArticleCardState extends State<ArticleCard> {
   bool _isHovered = false;
   bool _isPressed = false;
 
+  void _preloadArticle() {
+    if (widget.article.content.isEmpty) {
+      Provider.of<ArticleProvider>(context, listen: false)
+          .loadArticleContent(widget.article.id);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
+      onEnter: (_) {
+        setState(() => _isHovered = true);
+        _preloadArticle();
+      },
       onExit: (_) => setState(() => _isHovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTapDown: (_) => setState(() => _isPressed = true),
+        onTapDown: (_) {
+          setState(() => _isPressed = true);
+          _preloadArticle();
+        },
         onTapUp: (_) => setState(() => _isPressed = false),
         onTapCancel: () => setState(() => _isPressed = false),
-        onTap: () => context.go('/${widget.article.categoryPath}/${widget.article.id}'),
+        onTap: () {
+          _preloadArticle();
+          context.go('/${widget.article.categoryPath}/${widget.article.id}');
+        },
         child: AnimatedScale(
           scale: _isPressed ? 0.97 : 1.0,
           duration: const Duration(milliseconds: 120),
