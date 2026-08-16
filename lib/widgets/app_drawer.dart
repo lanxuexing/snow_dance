@@ -74,7 +74,7 @@ class _AppDrawerState extends State<AppDrawer> {
   Widget _buildHeader(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 12,
+        top: MediaQuery.paddingOf(context).top + 12,
         bottom: 12,
         left: 16,
         right: 8,
