@@ -127,7 +127,7 @@ class MarkdownViewer extends StatelessWidget {
             code: AppTheme.firaCode(
               fontSize: 14,
               backgroundColor: Colors.transparent,
-              color: isDark ? const Color(0xFF00DC82) : const Color(0xFF059669),
+              color: isDark ? const Color(0xFF00DC82) : const Color(0xFF00BD7E),
             ),
             codeblockDecoration: const BoxDecoration(),
             codeblockPadding: EdgeInsets.zero,
