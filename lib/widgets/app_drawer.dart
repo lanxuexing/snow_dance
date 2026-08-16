@@ -90,11 +90,18 @@ class _AppDrawerState extends State<AppDrawer> {
         children: [
           Row(
             children: [
-              const SnowflakeLogo(size: 26),
+              SnowflakeLogo(
+                size: 26,
+                gradientColors: Theme.of(context).brightness == Brightness.dark
+                    ? const [Color(0xFF00DC82), Color(0xFF36E4DA), Color(0xFF007A5E)]
+                    : const [Color(0xFF00BD7E), Color(0xFF36E4DA), Color(0xFF009663)],
+              ),
               const SizedBox(width: 12),
               ShaderMask(
-                shaderCallback: (bounds) => const LinearGradient(
-                  colors: [Color(0xFF00DC82), Color(0xFF36E4DA)],
+                shaderCallback: (bounds) => LinearGradient(
+                  colors: Theme.of(context).brightness == Brightness.dark
+                      ? const [Color(0xFF00DC82), Color(0xFF36E4DA)]
+                      : const [Color(0xFF00BD7E), Color(0xFF36E4DA)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ).createShader(bounds),
