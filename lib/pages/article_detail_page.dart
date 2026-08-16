@@ -143,60 +143,49 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     bool isInFrontmatter = false;
     int lineIndex = 0;
 
-    for (var line in lines) {
+    for (final line in lines) {
       lineIndex++;
       final trimmed = line.trim();
-      
-      // Toggle frontmatter boundary (---) only at the very top of file
-      if (trimmed == '---' && lineIndex <= 3) {
-        isInFrontmatter = !isInFrontmatter;
+
+      // Ignore YAML frontmatter at file start
+      if (lineIndex == 1 && trimmed == '---') {
+        isInFrontmatter = true;
         continue;
       }
-      if (isInFrontmatter) continue;
+      if (isInFrontmatter) {
+        if (trimmed == '---') {
+          isInFrontmatter = false;
+        }
+        continue;
+      }
 
-      // Toggle code block
-      if (trimmed.startsWith('```')) {
+      // Ignore contents inside code blocks
+      if (trimmed.startsWith('```') || trimmed.startsWith('~~~')) {
         isInCodeBlock = !isInCodeBlock;
         continue;
       }
-      if (isInCodeBlock) continue;
+      if (isInCodeBlock) {
+        continue;
+      }
 
-      final match = headingRegex.firstMatch(line);
+      final match = headingRegex.firstMatch(trimmed);
       if (match != null) {
-        final level = match.group(1)!.length;
-        if (level > 3) continue; // Only support H1, H2, H3 in ToC for clarity
-
+        final hashes = match.group(1)!;
         final title = match.group(2)!.trim();
-        // Clean markdown links/formatting from title if any
-        final cleanTitle = title.replaceAll(RegExp(r'\[(.*?)\]\(.*?\)|`|\*'), r'$1');
-        
-        // Generate unique slug id
-        var id = cleanTitle
-            .toLowerCase()
-            .replaceAll(RegExp(r'[^\w\s\u4e00-\u9fa5-]'), '')
-            .replaceAll(RegExp(r'\s+'), '-');
-        if (id.isEmpty) id = 'heading-$lineIndex';
+        final level = hashes.length;
 
-        if (counts.containsKey(id)) {
-          final count = counts[id]! + 1;
-          counts[id] = count;
-          id = '$id-$count';
-        } else {
-          counts[id] = 1;
-        }
+        final count = counts[title] = (counts[title] ?? 0) + 1;
+        final uniqueId = '${title}_$count';
 
         final key = GlobalKey();
-        _headingKeys[id] = key;
-        _tocEntries.add(ToCEntry(
-          id: id,
-          title: cleanTitle,
-          level: level,
-          key: key,
-        ));
+        _tocEntries.add(ToCEntry(title: title, id: uniqueId, level: level, key: key));
+        _headingKeys[uniqueId] = key;
+        if (count == 1) {
+          _headingKeys[title] = key;
+        }
       }
     }
-
-    if (_tocEntries.isNotEmpty && _activeHeading == null) {
+    if (_activeHeading == null && _tocEntries.isNotEmpty) {
       _activeHeading = _tocEntries.first.id;
     }
   }
@@ -222,6 +211,11 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     final provider = Provider.of<ArticleProvider>(context);
     final currentArticle = provider.findById(widget.article.id) ?? widget.article;
     final isContentEmpty = currentArticle.content.isEmpty;
+
+    // Re-parse ToC if content changed / just loaded
+    if (!isContentEmpty && _tocEntries.isEmpty) {
+      _parseToC(currentArticle.content);
+    }
 
     if (!isContentEmpty) {
       SEOHelper.updateSEO(
@@ -276,7 +270,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                     ),
                   ),
                 ),
-                if (!isMobile) SizedBox(width: isContentEmpty ? 0 : 240),
+                if (!isMobile) const SizedBox(width: 240),
               ],
             ),
           ),
@@ -299,7 +293,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
             ),
 
           // 3. Fixed Right TOC (Sticky on the right with pointer scroll forwarding)
-          if (!isMobile && !isContentEmpty)
+          if (!isMobile)
             Positioned(
               right: 0,
               top: 0,
@@ -311,7 +305,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                     _forwardScroll(signal);
                   }
                 },
-                child: _buildToCSidebar(context),
+                child: isContentEmpty ? const SizedBox(width: 240) : _buildToCSidebar(context),
               ),
             ),
 
