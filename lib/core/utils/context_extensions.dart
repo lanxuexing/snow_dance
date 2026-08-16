@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Flutter 3.44+ 官方推荐的 BuildContext 语义扩展
+/// Flutter 3.47+ 官方推荐的 BuildContext 语义扩展
 /// 简化主题、颜色、响应式尺寸与状态的获取，提升代码可读性与性能
 extension BuildContextX on BuildContext {
   /// 主题相关快捷访问
