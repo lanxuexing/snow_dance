@@ -27,7 +27,6 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   String? _activeHeading;
   DateTime _lastScrollCheck = DateTime.now();
   bool _showBackToTop = false;
-  double _readingProgress = 0.0;
 
   @override
   void initState() {
@@ -57,22 +56,15 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
 
   void _onScroll() {
     final now = DateTime.now();
-    if (now.difference(_lastScrollCheck).inMilliseconds < 30) return;
+    if (now.difference(_lastScrollCheck).inMilliseconds < 40) return;
     _lastScrollCheck = now;
 
     if (_scrollController.hasClients) {
-      final maxScroll = _scrollController.position.maxScrollExtent;
-      final currentScroll = _scrollController.offset;
-      final progress = maxScroll > 0 ? (currentScroll / maxScroll).clamp(0.0, 1.0) : 0.0;
-      final showTop = currentScroll > 350;
-
-      if ((progress - _readingProgress).abs() > 0.01 || showTop != _showBackToTop) {
-        if (mounted) {
-          setState(() {
-            _readingProgress = progress;
-            _showBackToTop = showTop;
-          });
-        }
+      final showTop = _scrollController.offset > 350;
+      if (showTop != _showBackToTop && mounted) {
+        setState(() {
+          _showBackToTop = showTop;
+        });
       }
     }
 
@@ -227,8 +219,6 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       );
     }
 
-    final primaryColor = Theme.of(context).colorScheme.primary;
-
     return Stack(
       children: [
         Row(
@@ -284,35 +274,6 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
             if (!isMobile) (isContentEmpty ? const SizedBox(width: 260) : _buildToCSidebar(context)),
           ],
         ),
-        // Reading Progress Bar at the top of the viewport
-        if (!isContentEmpty)
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 2.5,
-            child: FractionallySizedBox(
-              alignment: Alignment.centerLeft,
-              widthFactor: _readingProgress,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      primaryColor,
-                      const Color(0xFF36E4DA),
-                    ],
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: primaryColor.withValues(alpha: 0.6),
-                      blurRadius: 4,
-                      offset: const Offset(0, 1),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
         // Floating Back-to-Top Button (Apple-style frosted glass fab)
         Positioned(
           bottom: isMobile ? 24 : 36,
