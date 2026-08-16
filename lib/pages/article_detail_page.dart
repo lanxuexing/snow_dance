@@ -227,35 +227,55 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                 : KeyedSubtree(
                     key: ValueKey('article_content_${currentArticle.id}'),
                     child: SelectionArea(
-                      child: SingleChildScrollView(
+                      child: CustomScrollView(
                         controller: _scrollController,
                         physics: const AlwaysScrollableScrollPhysics(),
-                        child: Container(
-                          width: double.infinity,
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            constraints: const BoxConstraints(maxWidth: 900),
-                            padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 40),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 60),
-                                _buildAuthorSection(context),
-                                if (isMobile && _tocEntries.isNotEmpty) ...[
-                                  const SizedBox(height: 32),
-                                  _buildMobileToC(context),
-                                ],
-                                const SizedBox(height: 40),
-                                MarkdownViewer(
-                                  content: currentArticle.content,
-                                  headingKeys: _headingKeys,
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: Container(
+                              width: double.infinity,
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                constraints: const BoxConstraints(maxWidth: 900),
+                                padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 40),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 60),
+                                    _buildAuthorSection(context),
+                                    if (isMobile && _tocEntries.isNotEmpty) ...[
+                                      const SizedBox(height: 32),
+                                      _buildMobileToC(context),
+                                    ],
+                                    const SizedBox(height: 40),
+                                    MarkdownViewer(
+                                      content: currentArticle.content,
+                                      headingKeys: _headingKeys,
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 80),
-                                const AppFooter(),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Container(
+                              width: double.infinity,
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                constraints: const BoxConstraints(maxWidth: 900),
+                                padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 40),
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SizedBox(height: 80),
+                                    AppFooter(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
