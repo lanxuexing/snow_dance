@@ -57,7 +57,7 @@ class HomePage extends StatelessWidget {
                   ),
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 600,
-                    childAspectRatio: 2.5,
+                    mainAxisExtent: 215,
                     crossAxisSpacing: 24,
                     mainAxisSpacing: 24,
                   ),
