@@ -106,7 +106,35 @@ class _ArticleCardState extends State<ArticleCard> {
                   widget.article.excerpt,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: Colors.grey[400], fontSize: 14),
+                  style: TextStyle(
+                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    fontSize: 14,
+                    height: 1.5,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Text(
+                      'Read article',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: _isHovered ? primaryColor : (isDark ? Colors.grey[400] : Colors.grey[600]),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    AnimatedSlide(
+                      offset: _isHovered ? const Offset(0.3, 0) : Offset.zero,
+                      duration: const Duration(milliseconds: 180),
+                      curve: Curves.easeOutCubic,
+                      child: Icon(
+                        Icons.arrow_forward_rounded,
+                        size: 14,
+                        color: _isHovered ? primaryColor : (isDark ? Colors.grey[400] : Colors.grey[600]),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

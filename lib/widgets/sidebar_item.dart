@@ -19,6 +19,7 @@ class SidebarItem extends StatefulWidget {
 
 class _SidebarItemState extends State<SidebarItem> {
   bool _isHovered = false;
+  bool _isPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,35 +34,43 @@ class _SidebarItemState extends State<SidebarItem> {
       onExit: (_) => setState(() => _isHovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
+        onTapDown: (_) => setState(() => _isPressed = true),
+        onTapUp: (_) => setState(() => _isPressed = false),
+        onTapCancel: () => setState(() => _isPressed = false),
         onTap: widget.onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+        child: AnimatedScale(
+          scale: _isPressed ? 0.98 : 1.0,
+          duration: const Duration(milliseconds: 120),
           curve: Curves.easeOut,
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-          decoration: BoxDecoration(
-            color: isActive 
-                ? primaryColor.withValues(alpha: isDark ? 0.15 : 0.1) 
-                : Colors.transparent,
-            border: Border(
-              left: BorderSide(
-                color: isActive ? primaryColor : Colors.transparent,
-                width: 3,
-              ),
-            ),
-            borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
-          ),
-          child: Text(
-            widget.article.title,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 14,
-              height: 1.4,
-              fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOutCubic,
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            decoration: BoxDecoration(
               color: isActive 
-                  ? primaryColor 
-                  : (isDark ? Colors.grey[400] : Colors.grey[700]),
+                  ? primaryColor.withValues(alpha: isDark ? 0.15 : 0.08) 
+                  : Colors.transparent,
+              border: Border(
+                left: BorderSide(
+                  color: isActive ? primaryColor : Colors.transparent,
+                  width: 3,
+                ),
+              ),
+              borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
+            ),
+            child: Text(
+              widget.article.title,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 14,
+                height: 1.4,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                color: isActive 
+                    ? primaryColor 
+                    : (isDark ? Colors.grey[400] : Colors.grey[700]),
+              ),
             ),
           ),
         ),

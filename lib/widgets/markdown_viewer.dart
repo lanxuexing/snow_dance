@@ -293,21 +293,31 @@ class _CopyButtonState extends State<_CopyButton> {
       listenable: _copied,
       builder: (context, child) {
         final isCopied = _copied.value;
-        return IconButton(
-          icon: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 250),
-            transitionBuilder: (child, anim) => ScaleTransition(scale: anim, child: child),
-            child: Icon(
-              isCopied ? Icons.check_rounded : Icons.copy_rounded,
-              key: ValueKey(isCopied),
-              size: 16,
-              color: isCopied ? const Color(0xFF00DC82) : Colors.grey,
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        return Container(
+          decoration: BoxDecoration(
+            color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.06),
             ),
           ),
-          onPressed: _copy,
-          tooltip: isCopied ? 'Copied!' : 'Copy code',
-          constraints: const BoxConstraints(),
-          padding: const EdgeInsets.all(8),
+          child: IconButton(
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              transitionBuilder: (child, anim) => ScaleTransition(scale: anim, child: child),
+              child: Icon(
+                isCopied ? Icons.check_rounded : Icons.copy_rounded,
+                key: ValueKey(isCopied),
+                size: 15,
+                color: isCopied ? const Color(0xFF00DC82) : (isDark ? Colors.grey[300] : Colors.grey[700]),
+              ),
+            ),
+            onPressed: _copy,
+            tooltip: isCopied ? 'Copied!' : 'Copy code',
+            constraints: const BoxConstraints(),
+            padding: const EdgeInsets.all(7),
+          ),
         );
       },
     );

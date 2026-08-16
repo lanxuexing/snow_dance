@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -71,6 +72,15 @@ class _SearchOverlayState extends State<SearchOverlay> {
                       });
                     }
                     return KeyEventResult.handled;
+                  case LogicalKeyboardKey.enter:
+                  case LogicalKeyboardKey.numpadEnter:
+                    if (_results.isNotEmpty && _focusedIndex >= 0 && _focusedIndex < _results.length) {
+                      final article = _results[_focusedIndex];
+                      context.go('/${article.categoryPath}/${article.id}');
+                      Navigator.pop(context);
+                      return KeyEventResult.handled;
+                    }
+                    break;
                   case LogicalKeyboardKey.escape:
                     Navigator.pop(context);
                     return KeyEventResult.handled;
@@ -78,26 +88,32 @@ class _SearchOverlayState extends State<SearchOverlay> {
               }
               return KeyEventResult.ignored;
             },
-            child: Container(
-            width: 600,
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.95),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.4),
-                  blurRadius: 30,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                child: Container(
+                  width: 600,
+                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface.withValues(alpha: isDark ? 0.85 : 0.9),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: isDark 
+                          ? Colors.white.withValues(alpha: 0.1) 
+                          : Colors.black.withValues(alpha: 0.08),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.2),
+                        blurRadius: 32,
+                        offset: const Offset(0, 16),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                 // Top Search Bar
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -210,7 +226,9 @@ class _SearchOverlayState extends State<SearchOverlay> {
         ),
       ),
     ),
-  );
+  ),
+),
+);
 }
 
   Widget _buildKeyHint(BuildContext context, String key, String label) {
