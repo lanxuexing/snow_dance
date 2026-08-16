@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -27,6 +28,14 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   String? _activeHeading;
   DateTime _lastScrollCheck = DateTime.now();
   bool _showBackToTop = false;
+
+  void _forwardScroll(PointerScrollEvent event) {
+    if (_scrollController.hasClients) {
+      final newOffset = (_scrollController.offset + event.scrollDelta.dy)
+          .clamp(0.0, _scrollController.position.maxScrollExtent);
+      _scrollController.jumpTo(newOffset);
+    }
+  }
 
   @override
   void initState() {
@@ -134,49 +143,60 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     bool isInFrontmatter = false;
     int lineIndex = 0;
 
-    for (final line in lines) {
-      final trimmed = line.trim();
+    for (var line in lines) {
       lineIndex++;
-
-      // Ignore YAML frontmatter at file start
-      if (lineIndex == 1 && trimmed == '---') {
-        isInFrontmatter = true;
+      final trimmed = line.trim();
+      
+      // Toggle frontmatter boundary (---) only at the very top of file
+      if (trimmed == '---' && lineIndex <= 3) {
+        isInFrontmatter = !isInFrontmatter;
         continue;
       }
-      if (isInFrontmatter) {
-        if (trimmed == '---') {
-          isInFrontmatter = false;
-        }
-        continue;
-      }
+      if (isInFrontmatter) continue;
 
-      // Ignore contents inside code blocks
-      if (trimmed.startsWith('```') || trimmed.startsWith('~~~')) {
+      // Toggle code block
+      if (trimmed.startsWith('```')) {
         isInCodeBlock = !isInCodeBlock;
         continue;
       }
-      if (isInCodeBlock) {
-        continue;
-      }
+      if (isInCodeBlock) continue;
 
-      final match = headingRegex.firstMatch(trimmed);
+      final match = headingRegex.firstMatch(line);
       if (match != null) {
-        final hashes = match.group(1)!;
-        final title = match.group(2)!.trim();
-        final level = hashes.length;
+        final level = match.group(1)!.length;
+        if (level > 3) continue; // Only support H1, H2, H3 in ToC for clarity
 
-        final count = counts[title] = (counts[title] ?? 0) + 1;
-        final uniqueId = '${title}_$count';
+        final title = match.group(2)!.trim();
+        // Clean markdown links/formatting from title if any
+        final cleanTitle = title.replaceAll(RegExp(r'\[(.*?)\]\(.*?\)|`|\*'), r'$1');
+        
+        // Generate unique slug id
+        var id = cleanTitle
+            .toLowerCase()
+            .replaceAll(RegExp(r'[^\w\s\u4e00-\u9fa5-]'), '')
+            .replaceAll(RegExp(r'\s+'), '-');
+        if (id.isEmpty) id = 'heading-$lineIndex';
+
+        if (counts.containsKey(id)) {
+          final count = counts[id]! + 1;
+          counts[id] = count;
+          id = '$id-$count';
+        } else {
+          counts[id] = 1;
+        }
 
         final key = GlobalKey();
-        _tocEntries.add(ToCEntry(title: title, id: uniqueId, level: level, key: key));
-        _headingKeys[uniqueId] = key;
-        if (count == 1) {
-          _headingKeys[title] = key;
-        }
+        _headingKeys[id] = key;
+        _tocEntries.add(ToCEntry(
+          id: id,
+          title: cleanTitle,
+          level: level,
+          key: key,
+        ));
       }
     }
-    if (_activeHeading == null && _tocEntries.isNotEmpty) {
+
+    if (_tocEntries.isNotEmpty && _activeHeading == null) {
       _activeHeading = _tocEntries.first.id;
     }
   }
@@ -200,17 +220,10 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final provider = Provider.of<ArticleProvider>(context);
-    // Resolve the up-to-date article from provider to get loaded content
     final currentArticle = provider.findById(widget.article.id) ?? widget.article;
     final isContentEmpty = currentArticle.content.isEmpty;
 
-    // Re-parse ToC if content changed (e.g. just loaded)
-    if (!isContentEmpty && _tocEntries.isEmpty) {
-       _parseToC(currentArticle.content);
-    }
-
     if (!isContentEmpty) {
-      // Dynamic SEO update for the article detail page
       SEOHelper.updateSEO(
         title: '${currentArticle.title} - SnowDance',
         description: currentArticle.excerpt,
@@ -219,85 +232,114 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       );
     }
 
-    return Stack(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (!isMobile) _buildSidebar(context),
-            Expanded(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 250),
-                switchInCurve: Curves.easeOut,
-                switchOutCurve: Curves.easeIn,
-                child: isContentEmpty
-                    ? KeyedSubtree(
-                        key: const ValueKey('article_skeleton'),
-                        child: ArticleSkeleton(isDark: isDark),
-                      )
-                    : KeyedSubtree(
-                        key: ValueKey('article_content_${currentArticle.id}'),
-                        child: SelectionArea(
-                          child: SingleChildScrollView(
-                            controller: _scrollController,
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 60),
-                                Container(
-                                  constraints: const BoxConstraints(maxWidth: 900),
-                                  padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 40),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      _buildAuthorSection(context),
-                                      if (isMobile && _tocEntries.isNotEmpty) ...[
-                                        const SizedBox(height: 32),
-                                        _buildMobileToC(context),
-                                      ],
-                                      const SizedBox(height: 40),
-                                      MarkdownViewer(
-                                        content: currentArticle.content,
-                                        headingKeys: _headingKeys,
-                                      ),
-                                      const SizedBox(height: 80),
-                                      const AppFooter(),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+    return SelectionArea(
+      child: Stack(
+        children: [
+          // 1. Full-width, Page-level SingleChildScrollView (Scrollbar rendered at far right window edge)
+          SingleChildScrollView(
+            controller: _scrollController,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (!isMobile) const SizedBox(width: 280),
+                Expanded(
+                  child: Center(
+                    child: Container(
+                      constraints: const BoxConstraints(maxWidth: 880),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isMobile ? 16 : 36,
                       ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 60),
+                          _buildAuthorSection(context),
+                          if (isMobile && _tocEntries.isNotEmpty) ...[
+                            const SizedBox(height: 32),
+                            _buildMobileToC(context),
+                          ],
+                          const SizedBox(height: 40),
+                          AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 250),
+                            child: isContentEmpty
+                                ? ArticleSkeleton(isDark: isDark)
+                                : MarkdownViewer(
+                                    key: ValueKey('article_content_${currentArticle.id}'),
+                                    content: currentArticle.content,
+                                    headingKeys: _headingKeys,
+                                  ),
+                          ),
+                          const SizedBox(height: 80),
+                          const AppFooter(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                if (!isMobile) SizedBox(width: isContentEmpty ? 0 : 240),
+              ],
+            ),
+          ),
+
+          // 2. Fixed Left Sidebar (Sticky on the left with pointer scroll forwarding)
+          if (!isMobile)
+            Positioned(
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 280,
+              child: Listener(
+                onPointerSignal: (signal) {
+                  if (signal is PointerScrollEvent) {
+                    _forwardScroll(signal);
+                  }
+                },
+                child: _buildSidebar(context),
               ),
             ),
-            if (!isMobile) (isContentEmpty ? const SizedBox(width: 260) : _buildToCSidebar(context)),
-          ],
-        ),
-        // Floating Back-to-Top Button (Apple-style frosted glass fab)
-        Positioned(
-          bottom: isMobile ? 24 : 36,
-          right: isMobile ? 20 : 36,
-          child: AnimatedScale(
-            scale: _showBackToTop ? 1.0 : 0.0,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeOutBack,
-            child: AnimatedOpacity(
-              opacity: _showBackToTop ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 150),
-              child: _FloatingBackToTopButton(
-                onTap: () {
-                  _scrollController.animateTo(
-                    0,
-                    duration: const Duration(milliseconds: 600),
-                    curve: Curves.easeOutCubic,
-                  );
+
+          // 3. Fixed Right TOC (Sticky on the right with pointer scroll forwarding)
+          if (!isMobile && !isContentEmpty)
+            Positioned(
+              right: 0,
+              top: 0,
+              bottom: 0,
+              width: 240,
+              child: Listener(
+                onPointerSignal: (signal) {
+                  if (signal is PointerScrollEvent) {
+                    _forwardScroll(signal);
+                  }
                 },
+                child: _buildToCSidebar(context),
+              ),
+            ),
+
+          // 4. Floating Back-to-Top Button
+          Positioned(
+            bottom: isMobile ? 24 : 36,
+            right: isMobile ? 20 : 36,
+            child: AnimatedScale(
+              scale: _showBackToTop ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOutBack,
+              child: AnimatedOpacity(
+                opacity: _showBackToTop ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 150),
+                child: _FloatingBackToTopButton(
+                  onTap: () {
+                    _scrollController.animateTo(
+                      0,
+                      duration: const Duration(milliseconds: 600),
+                      curve: Curves.easeOutCubic,
+                    );
+                  },
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
