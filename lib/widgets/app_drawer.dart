@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -22,24 +21,19 @@ class _AppDrawerState extends State<AppDrawer> {
     final provider = Provider.of<ArticleProvider>(context);
     final navItems = AppConfig.navItems;
 
-    return Drawer(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+    return RepaintBoundary(
+      child: Drawer(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 16,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.horizontal(right: Radius.circular(16)),
+        ),
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.85),
-                Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.6),
-              ],
-            ),
+            color: Theme.of(context).scaffoldBackgroundColor,
             border: Border(
               right: BorderSide(
-                color: Theme.of(context).dividerColor.withValues(alpha: 0.05),
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
               ),
             ),
           ),
