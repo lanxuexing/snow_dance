@@ -1,12 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:snow_dance/widgets/responsive_layout.dart';
 import 'package:snow_dance/widgets/search_overlay.dart';
 import 'package:snow_dance/widgets/snowflake_logo.dart';
 import 'package:snow_dance/core/config/app_config.dart';
+import 'package:snow_dance/core/theme/app_theme.dart';
 import 'package:snow_dance/core/theme/theme_provider.dart';
 
 class AppHeader extends StatelessWidget implements PreferredSizeWidget {
@@ -39,121 +39,121 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             child: Center(
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 1200),
-              padding: EdgeInsets.symmetric(
-                horizontal: ResponsiveLayout.isMobile(context) ? 16 : 24,
-              ),
-              child: Row(
-                children: [
-                  if (ResponsiveLayout.isMobile(context)) ...[
-                    IconButton(
-                      icon: const Icon(Icons.menu),
-                      onPressed: () => Scaffold.of(context).openDrawer(),
-                    ),
-                    const SizedBox(width: 8),
-                  ],
-                  // Logo
-                  InkWell(
-                    onTap: () => context.go('/'),
-                    child: Row(
-                      children: [
-                        const SnowflakeLogo(size: 26),
-                        const SizedBox(width: 10),
-                        ShaderMask(
-                          shaderCallback: (bounds) => const LinearGradient(
-                            colors: [Color(0xFF00DC82), Color(0xFF36E4DA)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ).createShader(bounds),
-                          child: Text(
-                            'SnowDance',
-                            style: GoogleFonts.outfit(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w800,
-                              height: 1.0,
-                              letterSpacing: -0.5,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Spacer(),
-                  // Nav Items (Desktop)
-                  if (!ResponsiveLayout.isMobile(context)) ...[
-                    ...AppConfig.navItems.map((item) {
-                      final bool isActive = item.route == '/' 
-                          ? currentLocation == '/' 
-                          : currentLocation.startsWith(item.route);
-                      return _HeaderNavItem(
-                        title: item.title,
-                        route: item.route,
-                        isActive: isActive,
-                      );
-                    }),
-                  ],
-                  const SizedBox(width: 24),
-                  // Search Button
-                  _buildSearchButton(context),
-                  const SizedBox(width: 12),
-                  // Theme Mode Selector
-                  Consumer<ThemeProvider>(
-                    builder: (context, themeProvider, child) {
-                      final themeIcon = switch (themeProvider.themeMode) {
-                        ThemeMode.light => Icons.light_mode_outlined,
-                        ThemeMode.dark => Icons.dark_mode_outlined,
-                        ThemeMode.system => Icons.brightness_6_outlined,
-                      };
-                      return PopupMenuButton<ThemeMode>(
-                        icon: Icon(themeIcon),
-                        tooltip: 'Theme',
-                        onSelected: themeProvider.setThemeMode,
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: ThemeMode.system,
-                            child: Row(
-                              children: [
-                                const Icon(Icons.brightness_6_outlined, size: 18),
-                                const SizedBox(width: 10),
-                                Text('System', style: GoogleFonts.outfit(fontSize: 14)),
-                              ],
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: ThemeMode.dark,
-                            child: Row(
-                              children: [
-                                const Icon(Icons.dark_mode_outlined, size: 18),
-                                const SizedBox(width: 10),
-                                Text('Dark', style: GoogleFonts.outfit(fontSize: 14)),
-                              ],
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: ThemeMode.light,
-                            child: Row(
-                              children: [
-                                const Icon(Icons.light_mode_outlined, size: 18),
-                                const SizedBox(width: 10),
-                                Text('Light', style: GoogleFonts.outfit(fontSize: 14)),
-                              ],
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 1200),
+                padding: EdgeInsets.symmetric(
+                  horizontal: ResponsiveLayout.isMobile(context) ? 16 : 24,
+                ),
+                child: Row(
+                  children: [
+                    if (ResponsiveLayout.isMobile(context)) ...[
+                      IconButton(
+                        icon: const Icon(Icons.menu),
+                        onPressed: () => Scaffold.of(context).openDrawer(),
+                      ),
+                      const SizedBox(width: 8),
+                    ],
+                    // Logo
+                    InkWell(
+                      onTap: () => context.go('/'),
+                      child: Row(
+                        children: [
+                          const SnowflakeLogo(size: 26),
+                          const SizedBox(width: 10),
+                          ShaderMask(
+                            shaderCallback: (bounds) => const LinearGradient(
+                              colors: [Color(0xFF00DC82), Color(0xFF36E4DA)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ).createShader(bounds),
+                            child: Text(
+                              'SnowDance',
+                              style: AppTheme.outfit(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w800,
+                                height: 1.0,
+                                letterSpacing: -0.5,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ],
-                      );
-                    },
-                  ),
-                ],
+                      ),
+                    ),
+                    const Spacer(),
+                    // Nav Items (Desktop)
+                    if (!ResponsiveLayout.isMobile(context)) ...[
+                      ...AppConfig.navItems.map((item) {
+                        final bool isActive = item.route == '/' 
+                            ? currentLocation == '/' 
+                            : currentLocation.startsWith(item.route);
+                        return _HeaderNavItem(
+                          title: item.title,
+                          route: item.route,
+                          isActive: isActive,
+                        );
+                      }),
+                    ],
+                    const SizedBox(width: 24),
+                    // Search Button
+                    _buildSearchButton(context),
+                    const SizedBox(width: 12),
+                    // Theme Mode Selector
+                    Consumer<ThemeProvider>(
+                      builder: (context, themeProvider, child) {
+                        final themeIcon = switch (themeProvider.themeMode) {
+                          ThemeMode.light => Icons.light_mode_outlined,
+                          ThemeMode.dark => Icons.dark_mode_outlined,
+                          ThemeMode.system => Icons.brightness_6_outlined,
+                        };
+                        return PopupMenuButton<ThemeMode>(
+                          icon: Icon(themeIcon),
+                          tooltip: 'Theme',
+                          onSelected: themeProvider.setThemeMode,
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              value: ThemeMode.system,
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.brightness_6_outlined, size: 18),
+                                  const SizedBox(width: 10),
+                                  Text('System', style: AppTheme.outfit(fontSize: 14)),
+                                ],
+                              ),
+                            ),
+                            PopupMenuItem(
+                              value: ThemeMode.dark,
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.dark_mode_outlined, size: 18),
+                                  const SizedBox(width: 10),
+                                  Text('Dark', style: AppTheme.outfit(fontSize: 14)),
+                                ],
+                              ),
+                            ),
+                            PopupMenuItem(
+                              value: ThemeMode.light,
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.light_mode_outlined, size: 18),
+                                  const SizedBox(width: 10),
+                                  Text('Light', style: AppTheme.outfit(fontSize: 14)),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildSearchButton(BuildContext context) {
     final isMobile = ResponsiveLayout.isMobile(context);
@@ -181,7 +181,7 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
               const SizedBox(width: 8),
               Text(
                 'Search',
-                style: GoogleFonts.outfit(fontSize: 14),
+                style: AppTheme.outfit(fontSize: 14),
               ),
               const SizedBox(width: 16),
               const Text(
@@ -245,7 +245,7 @@ class _HeaderNavItemState extends State<_HeaderNavItem> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: AnimatedDefaultTextStyle(
                 duration: const Duration(milliseconds: 150),
-                style: GoogleFonts.outfit(
+                style: AppTheme.outfit(
                   fontSize: 15,
                   fontWeight: widget.isActive ? FontWeight.w700 : FontWeight.w500,
                   color: textColor,

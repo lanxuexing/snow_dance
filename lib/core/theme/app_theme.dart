@@ -9,6 +9,128 @@ class AppTheme {
   static const Color lightBgColor = Color(0xFFF9FAFB);
 
 
+  static const List<String> fontFallbacks = [
+    'NotoSansSC',
+    'PingFang SC',
+    'Microsoft YaHei',
+    'Hiragino Sans GB',
+    'WenQuanYi Micro Hei',
+    '-apple-system',
+    'BlinkMacSystemFont',
+    'Segoe UI',
+    'Roboto',
+    'Helvetica Neue',
+    'Helvetica',
+    'Arial',
+    'sans-serif',
+  ];
+
+  static TextStyle outfit({
+    double? fontSize,
+    FontWeight? fontWeight,
+    Color? color,
+    double? height,
+    double? letterSpacing,
+  }) {
+    return GoogleFonts.outfit(
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: color,
+      height: height,
+      letterSpacing: letterSpacing,
+    ).copyWith(fontFamilyFallback: fontFallbacks);
+  }
+
+  static TextStyle inter({
+    double? fontSize,
+    FontWeight? fontWeight,
+    Color? color,
+    double? height,
+    FontStyle? fontStyle,
+  }) {
+    return GoogleFonts.inter(
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: color,
+      height: height,
+      fontStyle: fontStyle,
+    ).copyWith(fontFamilyFallback: fontFallbacks);
+  }
+
+  static TextStyle firaCode({
+    double? fontSize,
+    FontWeight? fontWeight,
+    Color? color,
+    Color? backgroundColor,
+    double? height,
+  }) {
+    return GoogleFonts.firaCode(
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: color,
+      backgroundColor: backgroundColor,
+      height: height,
+    ).copyWith(fontFamilyFallback: fontFallbacks);
+  }
+
+  static TextTheme _buildTextTheme(Brightness brightness) {
+    final base = brightness == Brightness.dark
+        ? ThemeData.dark().textTheme
+        : ThemeData.light().textTheme;
+    final isDark = brightness == Brightness.dark;
+
+    TextStyle withFallback(TextStyle? style, {FontWeight? weight, double? size, Color? color}) {
+      return GoogleFonts.inter(
+        textStyle: style,
+        fontSize: size ?? style?.fontSize,
+        fontWeight: weight ?? style?.fontWeight,
+        color: color ?? style?.color,
+      ).copyWith(fontFamilyFallback: fontFallbacks);
+    }
+
+    return TextTheme(
+      displayLarge: GoogleFonts.outfit(
+        fontSize: 48,
+        fontWeight: FontWeight.bold,
+        color: isDark ? Colors.white : Colors.black,
+      ).copyWith(fontFamilyFallback: fontFallbacks),
+      displayMedium: GoogleFonts.outfit(
+        fontSize: 40,
+        fontWeight: FontWeight.bold,
+        color: isDark ? Colors.white : Colors.black,
+      ).copyWith(fontFamilyFallback: fontFallbacks),
+      displaySmall: GoogleFonts.outfit(
+        fontSize: 34,
+        fontWeight: FontWeight.bold,
+        color: isDark ? Colors.white : Colors.black,
+      ).copyWith(fontFamilyFallback: fontFallbacks),
+      headlineLarge: GoogleFonts.outfit(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: isDark ? Colors.white : Colors.black,
+      ).copyWith(fontFamilyFallback: fontFallbacks),
+      headlineMedium: GoogleFonts.outfit(
+        fontSize: 28,
+        fontWeight: FontWeight.bold,
+        color: isDark ? Colors.white : Colors.black,
+      ).copyWith(fontFamilyFallback: fontFallbacks),
+      headlineSmall: GoogleFonts.outfit(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: isDark ? Colors.white : Colors.black,
+      ).copyWith(fontFamilyFallback: fontFallbacks),
+      titleLarge: withFallback(base.titleLarge, size: 20, weight: FontWeight.w600),
+      titleMedium: withFallback(base.titleMedium, size: 16, weight: FontWeight.w600),
+      titleSmall: withFallback(base.titleSmall, size: 14, weight: FontWeight.w600),
+      bodyLarge: withFallback(base.bodyLarge, size: 16),
+      bodyMedium: withFallback(base.bodyMedium, size: 14),
+      bodySmall: withFallback(base.bodySmall, size: 12),
+      labelLarge: withFallback(base.labelLarge, size: 14, weight: FontWeight.w600),
+      labelMedium: withFallback(base.labelMedium, size: 12),
+      labelSmall: withFallback(base.labelSmall, size: 11),
+    );
+  }
+
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
@@ -20,18 +142,7 @@ class AppTheme {
       surfaceContainerHigh: Color(0xFF222222),
     ),
     scaffoldBackgroundColor: darkBgColor,
-    textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme).copyWith(
-      displayLarge: GoogleFonts.outfit(
-        fontSize: 48,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-      headlineMedium: GoogleFonts.outfit(
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-    ),
+    textTheme: _buildTextTheme(Brightness.dark),
     cardTheme: CardThemeData(
       color: const Color(0xFF1A1A1A),
       elevation: 0,
@@ -51,18 +162,7 @@ class AppTheme {
       surfaceContainerHigh: Color(0xFFE5E7EB),
     ),
     scaffoldBackgroundColor: lightBgColor,
-    textTheme: GoogleFonts.interTextTheme(ThemeData.light().textTheme).copyWith(
-      displayLarge: GoogleFonts.outfit(
-        fontSize: 48,
-        fontWeight: FontWeight.bold,
-        color: Colors.black,
-      ),
-      headlineMedium: GoogleFonts.outfit(
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-        color: Colors.black,
-      ),
-    ),
+    textTheme: _buildTextTheme(Brightness.light),
     cardTheme: CardThemeData(
       color: Colors.white,
       elevation: 2,

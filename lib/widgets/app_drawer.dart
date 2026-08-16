@@ -1,11 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:snow_dance/models/article.dart';
 import 'package:snow_dance/core/config/app_config.dart';
 import 'package:snow_dance/core/article_provider.dart';
+import 'package:snow_dance/core/theme/app_theme.dart';
 import 'package:snow_dance/core/theme/theme_provider.dart';
 import 'package:snow_dance/widgets/snowflake_logo.dart';
 
@@ -100,7 +100,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 ).createShader(bounds),
                 child: Text(
                   'SnowDance',
-                  style: GoogleFonts.outfit(
+                  style: AppTheme.outfit(
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.5,
@@ -147,7 +147,7 @@ class _AppDrawerState extends State<AppDrawer> {
             Expanded(
               child: Text(
                 title,
-                  style: GoogleFonts.outfit(
+                  style: AppTheme.outfit(
                     fontSize: 15,
                     fontWeight: isCategorySelected ? FontWeight.w600 : FontWeight.w500,
                     color: isCategorySelected ? Theme.of(context).colorScheme.primary : null,
@@ -175,7 +175,7 @@ class _AppDrawerState extends State<AppDrawer> {
             dense: true,
             title: Text(
               article.title,
-                style: GoogleFonts.outfit(
+                style: AppTheme.outfit(
                   fontSize: 13,
                   color: isArticleSelected 
                     ? Theme.of(context).colorScheme.primary 
@@ -219,7 +219,7 @@ class _AppDrawerState extends State<AppDrawer> {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.outfit(
+                  style: AppTheme.outfit(
                     fontSize: 15,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                     color: isSelected 
@@ -259,7 +259,7 @@ class _AppDrawerState extends State<AppDrawer> {
             children: [
               Text(
                 '主题模式',
-                style: GoogleFonts.outfit(fontSize: 14, color: Colors.grey),
+                style: AppTheme.outfit(fontSize: 14, color: Colors.grey),
               ),
               const SizedBox(height: 10),
               SizedBox(
@@ -301,7 +301,7 @@ class _AppDrawerState extends State<AppDrawer> {
           const SizedBox(height: 8),
           Text(
             '© 2026 SnowDance Engine',
-            style: GoogleFonts.outfit(
+            style: AppTheme.outfit(
               fontSize: 11,
               color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.5),
             ),

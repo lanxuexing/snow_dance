@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:flutter_highlight/themes/atom-one-dark.dart';
 import 'package:flutter_highlight/themes/atom-one-light.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
+import 'package:snow_dance/core/theme/app_theme.dart';
 import 'package:highlight/highlight.dart' show highlight, Node;
 
 String _universalClean(String text) {
@@ -94,44 +94,44 @@ class MarkdownViewer extends StatelessWidget {
             'code': CodeBlockBuilder(isDark),
           },
           styleSheet: MarkdownStyleSheet(
-            h1: GoogleFonts.outfit(
+            h1: AppTheme.outfit(
               fontSize: 32,
               fontWeight: FontWeight.bold,
               height: 1.5,
               color: isDark ? Colors.white : Colors.black,
             ),
-            h2: GoogleFonts.outfit(
+            h2: AppTheme.outfit(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               height: 1.5,
               color: isDark ? Colors.white : Colors.black,
             ),
-            h3: GoogleFonts.outfit(
+            h3: AppTheme.outfit(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               height: 1.5,
               color: isDark ? Colors.white : Colors.black,
             ),
-            h4: GoogleFonts.outfit(
+            h4: AppTheme.outfit(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               height: 1.5,
               color: isDark ? Colors.white : Colors.black,
             ),
-            p: GoogleFonts.inter(
+            p: AppTheme.inter(
               fontSize: 16,
               height: 1.8,
               color: isDark ? Colors.grey[300] : Colors.grey[800],
             ),
             pPadding: const EdgeInsets.only(bottom: 16),
-            code: GoogleFonts.firaCode(
+            code: AppTheme.firaCode(
               fontSize: 14,
               backgroundColor: Colors.transparent,
               color: isDark ? const Color(0xFF00DC82) : const Color(0xFF007A5E),
             ),
             codeblockDecoration: const BoxDecoration(),
             codeblockPadding: EdgeInsets.zero,
-            blockquote: GoogleFonts.inter(
+            blockquote: AppTheme.inter(
               fontStyle: FontStyle.italic,
               color: Colors.grey,
             ),
@@ -145,7 +145,7 @@ class MarkdownViewer extends StatelessWidget {
               ),
             ),
             blockquotePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            listBullet: GoogleFonts.inter(
+            listBullet: AppTheme.inter(
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
@@ -242,7 +242,7 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
                 language: language ?? 'plaintext',
                 theme: theme,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-                textStyle: GoogleFonts.firaCode(
+                textStyle: AppTheme.firaCode(
                   fontSize: 14,
                   height: 1.6,
                 ),
@@ -359,6 +359,24 @@ class SelectableHighlightView extends StatelessWidget {
   static const _defaultBackgroundColor = Color(0xffffffff);
   static const _defaultFontFamily = 'monospace';
 
+  static final Map<String, List<Node>> _highlightNodeCache = {};
+  static const int _maxCacheEntries = 200;
+
+  static List<Node> _getOrParse(String source, String? language) {
+    final key = '$language:$source';
+    final cached = _highlightNodeCache[key];
+    if (cached != null) {
+      return cached;
+    }
+    if (_highlightNodeCache.length >= _maxCacheEntries) {
+      _highlightNodeCache.remove(_highlightNodeCache.keys.first);
+    }
+    final parsed = highlight.parse(source, language: language);
+    final nodes = parsed.nodes ?? const [];
+    _highlightNodeCache[key] = nodes;
+    return nodes;
+  }
+
   @override
   Widget build(BuildContext context) {
     var style = TextStyle(
@@ -369,8 +387,7 @@ class SelectableHighlightView extends StatelessWidget {
       style = style.merge(textStyle);
     }
 
-    final parsedResult = highlight.parse(source, language: language);
-    final nodes = parsedResult.nodes ?? [];
+    final nodes = _getOrParse(source, language);
 
     return Container(
       color: theme[_rootKey]?.backgroundColor ?? _defaultBackgroundColor,

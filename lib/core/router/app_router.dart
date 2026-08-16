@@ -51,7 +51,7 @@ GoRoute _buildArticleRoute(String path) {
         );
       }
 
-      final article = provider.articles.where((a) => a.id == id).firstOrNull;
+      final article = provider.findById(id);
 
       if (article == null) {
         return const MainLayout(

@@ -8,7 +8,6 @@ import 'package:snow_dance/widgets/markdown_viewer.dart';
 import 'package:snow_dance/widgets/sidebar_item.dart';
 import 'package:snow_dance/widgets/article_skeleton.dart';
 import 'package:snow_dance/widgets/app_footer.dart';
-import 'package:snow_dance/widgets/premium_loader.dart';
 import 'package:snow_dance/core/config/app_config.dart';
 import 'package:snow_dance/core/utils/seo_helper.dart';
 
@@ -26,7 +25,6 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   final Map<String, GlobalKey> _headingKeys = {};
   final ScrollController _scrollController = ScrollController();
   String? _activeHeading;
-  bool _isRendering = false;
   DateTime _lastScrollCheck = DateTime.now();
 
   @override
@@ -34,15 +32,16 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     super.initState();
     
     // Check if content needs to be loaded
-    if (widget.article.content.isEmpty) {
-      _isRendering = true;
+    final provider = Provider.of<ArticleProvider>(context, listen: false);
+    final current = provider.findById(widget.article.id) ?? widget.article;
+
+    if (current.content.isEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Provider.of<ArticleProvider>(context, listen: false)
             .loadArticleContent(widget.article.id);
       });
     } else {
-      _isRendering = false;
-      _parseToC(widget.article.content);
+      _parseToC(current.content);
     }
     _scrollController.addListener(_onScroll);
   }
@@ -94,16 +93,16 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       _tocEntries.clear();
       _headingKeys.clear();
       
-      // Load content of the new article if it is empty
-      if (widget.article.content.isEmpty) {
-        _isRendering = true;
+      final provider = Provider.of<ArticleProvider>(context, listen: false);
+      final current = provider.findById(widget.article.id) ?? widget.article;
+
+      if (current.content.isEmpty) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Provider.of<ArticleProvider>(context, listen: false)
               .loadArticleContent(widget.article.id);
         });
       } else {
-        _isRendering = false;
-        _parseToC(widget.article.content);
+        _parseToC(current.content);
       }
       if (_tocEntries.isNotEmpty) {
         _activeHeading = _tocEntries.first.id;
@@ -191,69 +190,76 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final provider = Provider.of<ArticleProvider>(context);
-    // Resolve the up-to-date article from provider to get loaded content using firstOrNull
-    final currentArticle = provider.articles
-            .where((a) => a.id == widget.article.id)
-            .firstOrNull ??
-        widget.article;
-
-    if (currentArticle.content.isEmpty) {
-      return const PremiumLoader();
-    }
+    // Resolve the up-to-date article from provider to get loaded content
+    final currentArticle = provider.findById(widget.article.id) ?? widget.article;
+    final isContentEmpty = currentArticle.content.isEmpty;
 
     // Re-parse ToC if content changed (e.g. just loaded)
-    if (_tocEntries.isEmpty && currentArticle.content.isNotEmpty) {
+    if (!isContentEmpty && _tocEntries.isEmpty) {
        _parseToC(currentArticle.content);
     }
 
-    // Dynamic SEO update for the article detail page
-    SEOHelper.updateSEO(
-      title: '${currentArticle.title} - SnowDance',
-      description: currentArticle.excerpt,
-      keywords: [currentArticle.category, 'SnowDance', 'Blog', 'Docs'],
-      author: AppConfig.authorName,
-    );
+    if (!isContentEmpty) {
+      // Dynamic SEO update for the article detail page
+      SEOHelper.updateSEO(
+        title: '${currentArticle.title} - SnowDance',
+        description: currentArticle.excerpt,
+        keywords: [currentArticle.category, 'SnowDance', 'Blog', 'Docs'],
+        author: AppConfig.authorName,
+      );
+    }
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (!isMobile) _buildSidebar(context),
         Expanded(
-          child: _isRendering
-              ? ArticleSkeleton(isDark: isDark)
-              : SelectionArea(
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 60),
-                        Container(
-                          constraints: const BoxConstraints(maxWidth: 900),
-                          padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 40),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildAuthorSection(context),
-                              if (isMobile && _tocEntries.isNotEmpty) ...[
-                                const SizedBox(height: 32),
-                                _buildMobileToC(context),
-                              ],
-                              const SizedBox(height: 40),
-                              MarkdownViewer(
-                                content: currentArticle.content,
-                                headingKeys: _headingKeys,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            switchInCurve: Curves.easeOut,
+            switchOutCurve: Curves.easeIn,
+            child: isContentEmpty
+                ? KeyedSubtree(
+                    key: const ValueKey('article_skeleton'),
+                    child: ArticleSkeleton(isDark: isDark),
+                  )
+                : KeyedSubtree(
+                    key: ValueKey('article_content_${currentArticle.id}'),
+                    child: SelectionArea(
+                      child: SingleChildScrollView(
+                        controller: _scrollController,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 60),
+                            Container(
+                              constraints: const BoxConstraints(maxWidth: 900),
+                              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 40),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildAuthorSection(context),
+                                  if (isMobile && _tocEntries.isNotEmpty) ...[
+                                    const SizedBox(height: 32),
+                                    _buildMobileToC(context),
+                                  ],
+                                  const SizedBox(height: 40),
+                                  MarkdownViewer(
+                                    content: currentArticle.content,
+                                    headingKeys: _headingKeys,
+                                  ),
+                                  const SizedBox(height: 80),
+                                  const AppFooter(),
+                                ],
                               ),
-                              const SizedBox(height: 80),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        const AppFooter(),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+          ),
         ),
-        if (!isMobile) _buildToCSidebar(context),
+        if (!isMobile) (isContentEmpty ? const SizedBox(width: 260) : _buildToCSidebar(context)),
       ],
     );
   }

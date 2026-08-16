@@ -63,7 +63,11 @@
   <!-- Preconnect and Pre-fetch Google Fonts for 0ms font HTTP delay -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Early parallel preload of article index metadata during engine boot -->
+  <link rel="preload" href="assets/assets/articles/index.json" as="fetch" crossorigin>
+  <link rel="preload" href="assets/articles/index.json" as="fetch" crossorigin>
 
 
   <!-- JSON-LD Structured Data Schema -->

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:snow_dance/core/article_provider.dart';
 import 'package:snow_dance/widgets/article_card.dart';
 import 'package:snow_dance/widgets/app_footer.dart';
+import 'package:snow_dance/core/theme/app_theme.dart';
 import 'package:snow_dance/core/utils/seo_helper.dart';
 
 
@@ -128,9 +128,9 @@ class HomePage extends StatelessWidget {
                     child: const Icon(Icons.rocket_launch_rounded, size: 16, color: Colors.white),
                    ),
                    const SizedBox(width: 8),
-                   Text(
+                    Text(
                     'Introducing SnowDance v1.0',
-                    style: GoogleFonts.outfit(
+                    style: AppTheme.outfit(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).textTheme.bodyLarge?.color,
@@ -151,7 +151,7 @@ class HomePage extends StatelessWidget {
             child: Text(
               'Build Beautiful Blogs\nwith Flutter Web',
               textAlign: TextAlign.center,
-              style: GoogleFonts.outfit(
+              style: AppTheme.outfit(
                 fontSize: 56,
                 fontWeight: FontWeight.w900,
                 height: 1.1,
