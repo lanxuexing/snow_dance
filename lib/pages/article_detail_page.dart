@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -28,14 +27,6 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   String? _activeHeading;
   DateTime _lastScrollCheck = DateTime.now();
   bool _showBackToTop = false;
-
-  void _forwardScroll(PointerScrollEvent event) {
-    if (_scrollController.hasClients) {
-      final newOffset = (_scrollController.offset + event.scrollDelta.dy)
-          .clamp(0.0, _scrollController.position.maxScrollExtent);
-      _scrollController.jumpTo(newOffset);
-    }
-  }
 
   @override
   void initState() {
@@ -226,114 +217,87 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       );
     }
 
-    return SelectionArea(
-      child: Stack(
-        children: [
-          // 1. Full-width, Page-level SingleChildScrollView (Scrollbar rendered at far right window edge)
-          SingleChildScrollView(
-            controller: _scrollController,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (!isMobile) const SizedBox(width: 280),
-                Expanded(
-                  child: Center(
-                    child: Container(
-                      constraints: const BoxConstraints(maxWidth: 880),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: isMobile ? 16 : 36,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 60),
-                          _buildAuthorSection(context),
-                          if (isMobile && _tocEntries.isNotEmpty) ...[
-                            const SizedBox(height: 32),
-                            _buildMobileToC(context),
-                          ],
-                          const SizedBox(height: 40),
-                          AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 250),
-                            child: isContentEmpty
-                                ? ArticleSkeleton(isDark: isDark)
-                                : MarkdownViewer(
-                                    key: ValueKey('article_content_${currentArticle.id}'),
-                                    content: currentArticle.content,
-                                    headingKeys: _headingKeys,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (!isMobile) _buildSidebar(context),
+        Expanded(
+          child: Stack(
+            children: [
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                switchInCurve: Curves.easeOut,
+                switchOutCurve: Curves.easeIn,
+                child: isContentEmpty
+                    ? KeyedSubtree(
+                        key: const ValueKey('article_skeleton'),
+                        child: ArticleSkeleton(isDark: isDark),
+                      )
+                    : KeyedSubtree(
+                        key: ValueKey('article_content_${currentArticle.id}'),
+                        child: SelectionArea(
+                          child: SingleChildScrollView(
+                            controller: _scrollController,
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 60),
+                                Container(
+                                  constraints: const BoxConstraints(maxWidth: 900),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: isMobile ? 16 : 40,
                                   ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      _buildAuthorSection(context),
+                                      if (isMobile && _tocEntries.isNotEmpty) ...[
+                                        const SizedBox(height: 32),
+                                        _buildMobileToC(context),
+                                      ],
+                                      const SizedBox(height: 40),
+                                      MarkdownViewer(
+                                        content: currentArticle.content,
+                                        headingKeys: _headingKeys,
+                                      ),
+                                      const SizedBox(height: 80),
+                                      const AppFooter(),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 80),
-                          const AppFooter(),
-                        ],
+                        ),
                       ),
+              ),
+              // Floating Back-to-Top Button
+              Positioned(
+                bottom: isMobile ? 24 : 36,
+                right: isMobile ? 20 : 36,
+                child: AnimatedScale(
+                  scale: _showBackToTop ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOutBack,
+                  child: AnimatedOpacity(
+                    opacity: _showBackToTop ? 1.0 : 0.0,
+                    duration: const Duration(milliseconds: 150),
+                    child: _FloatingBackToTopButton(
+                      onTap: () {
+                        _scrollController.animateTo(
+                          0,
+                          duration: const Duration(milliseconds: 600),
+                          curve: Curves.easeOutCubic,
+                        );
+                      },
                     ),
                   ),
                 ),
-                if (!isMobile) const SizedBox(width: 240),
-              ],
-            ),
+              ),
+            ],
           ),
-
-          // 2. Fixed Left Sidebar (Sticky on the left with pointer scroll forwarding)
-          if (!isMobile)
-            Positioned(
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: 280,
-              child: Listener(
-                onPointerSignal: (signal) {
-                  if (signal is PointerScrollEvent) {
-                    _forwardScroll(signal);
-                  }
-                },
-                child: _buildSidebar(context),
-              ),
-            ),
-
-          // 3. Fixed Right TOC (Sticky on the right with pointer scroll forwarding)
-          if (!isMobile)
-            Positioned(
-              right: 0,
-              top: 0,
-              bottom: 0,
-              width: 240,
-              child: Listener(
-                onPointerSignal: (signal) {
-                  if (signal is PointerScrollEvent) {
-                    _forwardScroll(signal);
-                  }
-                },
-                child: isContentEmpty ? const SizedBox(width: 240) : _buildToCSidebar(context),
-              ),
-            ),
-
-          // 4. Floating Back-to-Top Button
-          Positioned(
-            bottom: isMobile ? 24 : 36,
-            right: isMobile ? 20 : 36,
-            child: AnimatedScale(
-              scale: _showBackToTop ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeOutBack,
-              child: AnimatedOpacity(
-                opacity: _showBackToTop ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 150),
-                child: _FloatingBackToTopButton(
-                  onTap: () {
-                    _scrollController.animateTo(
-                      0,
-                      duration: const Duration(milliseconds: 600),
-                      curve: Curves.easeOutCubic,
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+        if (!isMobile) (isContentEmpty ? const SizedBox(width: 240) : _buildToCSidebar(context)),
+      ],
     );
   }
 
