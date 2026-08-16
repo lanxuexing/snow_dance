@@ -269,40 +269,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 style: AppTheme.outfit(fontSize: 14, color: Colors.grey),
               ),
               const SizedBox(height: 10),
-              SizedBox(
-                width: double.infinity,
-                child: Consumer<ThemeProvider>(
-                  builder: (context, themeProvider, child) {
-                    return SegmentedButton<ThemeMode>(
-                      style: const ButtonStyle(
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      segments: const [
-                        ButtonSegment<ThemeMode>(
-                          value: ThemeMode.system,
-                          icon: Icon(Icons.brightness_6_outlined, size: 14),
-                          label: Text('System', style: TextStyle(fontSize: 11)),
-                        ),
-                        ButtonSegment<ThemeMode>(
-                          value: ThemeMode.dark,
-                          icon: Icon(Icons.dark_mode_outlined, size: 14),
-                          label: Text('Dark', style: TextStyle(fontSize: 11)),
-                        ),
-                        ButtonSegment<ThemeMode>(
-                          value: ThemeMode.light,
-                          icon: Icon(Icons.light_mode_outlined, size: 14),
-                          label: Text('Light', style: TextStyle(fontSize: 11)),
-                        ),
-                      ],
-                      selected: {themeProvider.themeMode},
-                      onSelectionChanged: (Set<ThemeMode> newSelection) {
-                        themeProvider.setThemeMode(newSelection.first);
-                      },
-                      showSelectedIcon: false,
-                    );
-                  },
-                ),
-              ),
+              const _ThemeSegmentedControl(),
             ],
           ),
           const SizedBox(height: 8),
@@ -314,6 +281,94 @@ class _AppDrawerState extends State<AppDrawer> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ThemeSegmentedControl extends StatelessWidget {
+  const _ThemeSegmentedControl();
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = Theme.of(context).colorScheme.primary;
+
+    final modes = [
+      (ThemeMode.system, Icons.brightness_auto_outlined, 'System'),
+      (ThemeMode.dark, Icons.dark_mode_outlined, 'Dark'),
+      (ThemeMode.light, Icons.light_mode_outlined, 'Light'),
+    ];
+
+    return Container(
+      height: 38,
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.04),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withValues(alpha: 0.08),
+        ),
+      ),
+      child: Row(
+        children: modes.map((item) {
+          final mode = item.$1;
+          final icon = item.$2;
+          final label = item.$3;
+          final isSelected = themeProvider.themeMode == mode;
+
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => themeProvider.setThemeMode(mode),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeOutCubic,
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? (isDark ? const Color(0xFF282828) : Colors.white)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(7),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
+                            blurRadius: 4,
+                            offset: const Offset(0, 1),
+                          ),
+                        ]
+                      : null,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      icon,
+                      size: 13,
+                      color: isSelected
+                          ? primaryColor
+                          : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.clip,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                        color: isSelected
+                            ? primaryColor
+                            : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
