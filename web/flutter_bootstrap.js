@@ -8,10 +8,14 @@ _flutter.loader.load({
   onEntrypointLoaded: async function(engineInitializer) {
     const appRunner = await engineInitializer.initializeEngine();
     
-    // Remove the HTML loader immediately when the engine is initialized and ready to run the app
+    // Remove the HTML loaders immediately when the engine is initialized and ready to run the app
     const loadingDiv = document.querySelector('.loading-container');
     if (loadingDiv) {
       loadingDiv.remove();
+    }
+    const topLoader = document.getElementById('top-loader');
+    if (topLoader) {
+      topLoader.remove();
     }
     
     await appRunner.runApp();

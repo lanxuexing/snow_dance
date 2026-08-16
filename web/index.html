@@ -170,9 +170,56 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    /* Top Loading Progress Bar - Emerald / Cyan Neon Theme */
+    .snow-top-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      z-index: 999999;
+      background: transparent;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .snow-top-loader-bar {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #00DC82 0%, #36E4DA 50%, #00BD7E 100%);
+      box-shadow: 0 0 10px rgba(0, 220, 130, 0.8), 0 0 4px rgba(54, 228, 218, 0.8);
+      animation: snowLoaderAnim 1.6s infinite cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    @keyframes snowLoaderAnim {
+      0% { left: -100%; width: 25%; }
+      50% { left: 15%; width: 75%; }
+      100% { left: 100%; width: 25%; }
+    }
+
+    /* Override Flutter default blue loading bar colors */
+    .flutter-loader,
+    .flutter-loader *,
+    .indeterminate,
+    [class*="flutter-loading"],
+    [id*="flutter-loading"],
+    .progress-bar,
+    .linear-progress-bar,
+    .loading-progress {
+      background: linear-gradient(90deg, #00DC82, #36E4DA) !important;
+      background-color: #00DC82 !important;
+      color: #00DC82 !important;
+      border-color: #00DC82 !important;
+      box-shadow: 0 0 10px rgba(0, 220, 130, 0.6) !important;
+    }
   </style>
 </head>
 <body>
+  <div id="top-loader" class="snow-top-loader">
+    <div class="snow-top-loader-bar"></div>
+  </div>
   <script type="text/javascript">
     (function() {
       try {
@@ -198,7 +245,7 @@
     <div class="loading-text">SNOWDANCE</div>
   </div>
   <script>
-    // Smoothly fade out HTML loading element when Flutter canvas mounts
+    // Smoothly fade out HTML loading elements when Flutter canvas mounts
     window.addEventListener('load', function() {
       var checkFlutter = setInterval(function() {
         var flutterView = document.querySelector('flutter-view');
@@ -210,6 +257,15 @@
             setTimeout(function() {
               if (loading && loading.parentNode) {
                 loading.parentNode.removeChild(loading);
+              }
+            }, 400);
+          }
+          var topLoader = document.getElementById('top-loader');
+          if (topLoader) {
+            topLoader.style.opacity = '0';
+            setTimeout(function() {
+              if (topLoader && topLoader.parentNode) {
+                topLoader.parentNode.removeChild(topLoader);
               }
             }, 400);
           }
