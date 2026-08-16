@@ -44,6 +44,11 @@ class ArticleProvider extends ChangeNotifier {
           _articles = indexedArticles;
           _isLoading = false;
           notifyListeners();
+
+          // Preload markdown content in background so detail navigation is 100% instantaneous
+          for (final a in indexedArticles) {
+            loadArticleContent(a.id);
+          }
           return;
         }
       } catch (e) {
