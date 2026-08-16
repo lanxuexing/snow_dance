@@ -8,6 +8,7 @@ import 'package:snow_dance/widgets/markdown_viewer.dart';
 import 'package:snow_dance/widgets/sidebar_item.dart';
 import 'package:snow_dance/widgets/article_skeleton.dart';
 import 'package:snow_dance/widgets/app_footer.dart';
+import 'package:snow_dance/widgets/responsive_layout.dart';
 import 'package:snow_dance/core/config/app_config.dart';
 import 'package:snow_dance/core/utils/seo_helper.dart';
 
@@ -186,7 +187,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.sizeOf(context).width < 1000;
+    final isMobile = ResponsiveLayout.isMobile(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final provider = Provider.of<ArticleProvider>(context);
@@ -228,31 +229,32 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                     child: SelectionArea(
                       child: SingleChildScrollView(
                         controller: _scrollController,
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 60),
-                            Container(
-                              constraints: const BoxConstraints(maxWidth: 900),
-                              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 40),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  _buildAuthorSection(context),
-                                  if (isMobile && _tocEntries.isNotEmpty) ...[
-                                    const SizedBox(height: 32),
-                                    _buildMobileToC(context),
-                                  ],
-                                  const SizedBox(height: 40),
-                                  MarkdownViewer(
-                                    content: currentArticle.content,
-                                    headingKeys: _headingKeys,
-                                  ),
-                                  const SizedBox(height: 80),
-                                  const AppFooter(),
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Container(
+                          width: double.infinity,
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            constraints: const BoxConstraints(maxWidth: 900),
+                            padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 40),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 60),
+                                _buildAuthorSection(context),
+                                if (isMobile && _tocEntries.isNotEmpty) ...[
+                                  const SizedBox(height: 32),
+                                  _buildMobileToC(context),
                                 ],
-                              ),
+                                const SizedBox(height: 40),
+                                MarkdownViewer(
+                                  content: currentArticle.content,
+                                  headingKeys: _headingKeys,
+                                ),
+                                const SizedBox(height: 80),
+                                const AppFooter(),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
