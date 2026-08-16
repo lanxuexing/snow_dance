@@ -19,14 +19,21 @@ void main() {
     await tester.pumpWidget(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => ArticleProvider()..loadArticles()),
-          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider(create: (_) => ArticleProvider()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider(initialSavedTheme: 'dark')),
         ],
         child: const MyApp(),
       ),
     );
 
+    // Allow initial frame and staggered animation delay timers to fire
+    await tester.pump(const Duration(seconds: 1));
+
     // Verify that the title 'SnowDance' is rendered.
     expect(find.text('SnowDance'), findsWidgets);
+
+    // Unmount app and pump a frame to clear all timers cleanly
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump(const Duration(seconds: 1));
   });
 }

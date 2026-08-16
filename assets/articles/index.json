@@ -2,26 +2,26 @@
   {
     "id": "angular-v22-1-announcement",
     "title": "Angular v22.1.0 重磅发布：Signal Forms 终极进化、Zoneless 零开销渲染与流式水合全景解析",
-    "excerpt": "Angular v22.1.0 正式发布！作为 v22 大版本的首个重大子版本，v22.1.0 带来了里程碑式的技术革新：Signal Forms 响应式表单体系全面成熟、Zoneless 无 Zone.js 架构实现零开销渲染与极致打包瘦身、增量水合支持 SSR 服务器流式传输，以及 CLI esbuild 编译链的深度优化。本文将为您带来最权威的技术细节与实战升级全景指南。",
+    "excerpt": "2026 年 8 月，Angular 官方团队正式发布了 Angular v22.1.0！作为 Angular v22 大版本发布后的首个重大 feature 版本，v22.1.0 不仅延续了“Angular 文艺复兴”的强劲势头，更在 Signal Forms（信号化表单）、Zoneless...",
     "date": "2026-08-03",
     "category": "Blog",
     "path": "assets/articles/blog/angular-v22-1-announcement.md"
   },
   {
-    "id": "flutter-3-44-7-8-patch-updates",
-    "title": "Flutter 3.44.7 & 3.44.8 补丁更新深度解析：Impeller 渲染稳定性、iOS 18 / SwiftPM 深度适配与 Web WASM GC 优化",
-    "excerpt": "详细拆解 Flutter 3.44.7 与 3.44.8 两个热修复补丁的核心改动：涵盖 Impeller 阴影与高斯模糊内存泄露修复、iOS 18 / Xcode 16.x 与 SwiftPM 构建链优化、Android 15 沉浸式 Edge-to-Edge 边到边布局补丁，以及 Dart 3.12 补丁级的模式匹配性能提升。",
-    "date": "2026-07-25",
-    "category": "Blog",
-    "path": "assets/articles/blog/flutter-3-44-7-8-patch-updates.md"
-  },
-  {
     "id": "flutter-recent-updates-guide",
     "title": "Flutter 近期小版本更新全景解析：语言语法、组件范式与 GPU 渲染性能调优指南",
-    "excerpt": "系统记录 Flutter 近期版本更新的核心变化与技术细节：涵盖 Dart 3.x/3.12 模式匹配与零开销 Extension Types、PopScope、ListenableBuilder 与 MediaQuery.sizeOf 细粒度监听，以及 Impeller 图层隔离与 Web WASM 构建实战。",
+    "excerpt": "系统记录 Flutter 近期版本更新的核心变化与技术细节：涵盖 Dart 3.x/3.12 模式匹配与零开销 Extension Types、PopScope、ListenableBuilder 与 MediaQuery.sizeOf 细粒度监听，以及 Impeller 图层隔离与 Web ...",
     "date": "2026-07-25",
     "category": "Blog",
     "path": "assets/articles/blog/flutter-recent-updates-guide.md"
+  },
+  {
+    "id": "flutter-3-44-7-8-patch-updates",
+    "title": "Flutter 3.44.7 & 3.44.8 补丁更新深度解析：Impeller 渲染稳定性、iOS 18 / SwiftPM 深度适配与 Web WASM GC 优化",
+    "excerpt": "详细拆解 Flutter 3.44.7 与 3.44.8 两个热修复补丁的核心改动：涵盖 Impeller 阴影与高斯模糊内存泄露修复、iOS 18 / Xcode 16.x 与 SwiftPM 构建链优化、Android 15 沉浸式 Edge-to-Edge 边到边布局补丁，以及 Dart...",
+    "date": "2026-07-25",
+    "category": "Blog",
+    "path": "assets/articles/blog/flutter-3-44-7-8-patch-updates.md"
   },
   {
     "id": "flutter-3-44-performance-rendering",
@@ -56,14 +56,6 @@
     "path": "assets/articles/blog/angular-v22-hostdirectives-dedup.md"
   },
   {
-    "id": "angular-signals-deep-dive",
-    "title": "深度剖析 Angular Signals：解密高效响应式的底层设计与 Push/Pull 算法",
-    "excerpt": "想要彻底搞懂 Angular Signals 的运作机制吗？本文将从底层设计出发，深度解密 Reactive Context（响应式上下文）、动态依赖追踪、Glitch-Free 双阶段 Push/Pull 算法，以及 Signals 如何深度融合并重塑 Angular 变革检测（Change...",
-    "date": "2026-07-11",
-    "category": "Blog",
-    "path": "assets/articles/blog/angular-signals-deep-dive.md"
-  },
-  {
     "id": "angular-seo-scully",
     "title": "Angular SEO 终极优化指南：利用 Scully 进行静态预渲染与社交网络定制",
     "excerpt": "单页应用（SPA）由于依赖客户端运行 JS 来渲染页面，天生对 SEO 和社交媒体分享不友好。本文将结合搜索引擎工作原理，详细讲解如何利用静态网站生成器 Scully 对 Angular 应用进行预渲染优化，并深度定制符合 Open Graph 协议与 Schema.org 规范的网页元数据。",
@@ -80,9 +72,17 @@
     "path": "assets/articles/blog/angular-guards-resolvers.md"
   },
   {
+    "id": "angular-signals-deep-dive",
+    "title": "深度剖析 Angular Signals：解密高效响应式的底层设计与 Push/Pull 算法",
+    "excerpt": "想要彻底搞懂 Angular Signals 的运作机制吗？本文将从底层设计出发，深度解密 Reactive Context（响应式上下文）、动态依赖追踪、Glitch-Free 双阶段 Push/Pull 算法，以及 Signals 如何深度融合并重塑 Angular 变革检测（Change...",
+    "date": "2026-07-11",
+    "category": "Blog",
+    "path": "assets/articles/blog/angular-signals-deep-dive.md"
+  },
+  {
     "id": "git-delete",
     "title": "git删除操作",
-    "excerpt": "```vim",
+    "excerpt": "git删除操作",
     "date": "2026-07-01",
     "category": "Blog",
     "path": "assets/articles/blog/git-delete.md"
@@ -104,20 +104,20 @@
     "path": "assets/articles/ecosystem/astro-markdown-component-utility.md"
   },
   {
-    "id": "getting-started",
-    "title": "Getting Started with SnowDance",
-    "excerpt": "Learn how to set up and customize your SnowDance blog engine.",
-    "date": "2026-01-01",
-    "category": "Docs",
-    "path": "assets/articles/docs/getting-started.md"
-  },
-  {
     "id": "overview",
     "title": "Ecosystem Overview",
     "excerpt": "Explore the tools and libraries in the SnowDance ecosystem.",
     "date": "2026-01-01",
     "category": "Ecosystem",
     "path": "assets/articles/ecosystem/overview.md"
+  },
+  {
+    "id": "getting-started",
+    "title": "Getting Started with SnowDance",
+    "excerpt": "Learn how to set up and customize your SnowDance blog engine.",
+    "date": "2026-01-01",
+    "category": "Docs",
+    "path": "assets/articles/docs/getting-started.md"
   },
   {
     "id": "angular-v21-announcement",
@@ -154,7 +154,7 @@
   {
     "id": "tailwind-merge",
     "title": "如何在小程序中优雅地使用 tailwind-merge",
-    "excerpt": "在传统的 Web 开发中，`tailwind-merge` 是合并组件样式的利器。但在小程序中，由于类名混淆和特殊字符转换，它往往会失效。",
+    "excerpt": "在传统的 Web 开发中，tailwind-merge 是合并组件样式的利器。但在小程序中，由于类名混淆和特殊字符转换，它往往会失效。",
     "date": "2025-01-20",
     "category": "Guide",
     "path": "assets/articles/guide/tailwind-merge.md"
@@ -210,7 +210,7 @@
   {
     "id": "rem-to-rpx",
     "title": "插件内置 rem 转 rpx 功能 (推荐)",
-    "excerpt": "在 `^3.0.0` 版本中，所有插件都内置了 `rem2rpx` 参数，默认不开启，要启用它只需将它设置成 `true` 即可。",
+    "excerpt": "在 ^3.0.0 版本中，所有插件都内置了 rem2rpx 参数，默认不开启，要启用它只需将它设置成 true 即可。",
     "date": "2024-03-20",
     "category": "Guide",
     "path": "assets/articles/guide/rem-to-rpx.md"
@@ -218,7 +218,7 @@
   {
     "id": "weapp-tailwind-v4",
     "title": "weapp-tailwindcss v4.0.0 正式发布!",
-    "excerpt": "weapp-tailwindcss v4.0 正式发布，核心亮点是兼容 `tailwindcss@4` 并引入 `tailwind-merge` 运行时整合能力。",
+    "excerpt": "weapp-tailwindcss v4.0 正式发布，核心亮点是兼容 tailwindcss@4 并引入 tailwind-merge 运行时整合能力。",
     "date": "2024-03-01",
     "category": "Blog",
     "path": "assets/articles/blog/weapp-tailwind-v4.md"
@@ -242,7 +242,7 @@
   {
     "id": "cdk",
     "title": "Angular cdk",
-    "excerpt": "- [youtube传送门](https://www.youtube.com/watch?v=kYDLlfpTLEA)",
+    "excerpt": "- $1",
     "date": "2020-06-03",
     "category": "Blog",
     "path": "assets/articles/blog/cdk.md"
@@ -282,7 +282,7 @@
   {
     "id": "ng-templates",
     "title": "angular templates模版内函数的最佳实践",
-    "excerpt": "```",
+    "excerpt": "我们理想的是：只有在传递的任何参数发生变化时才应调用我们的函数。解决方案就是：Angular纯管道！它监视不可变类型的值更改以及对象的引用更改。如果想了解更详细的pipe管道信息可以查阅官方文档",
     "date": "2020-01-11",
     "category": "Blog",
     "path": "assets/articles/blog/ng-templates.md"
@@ -296,20 +296,20 @@
     "path": "assets/articles/blog/ffmpeg.md"
   },
   {
-    "id": "ng-library",
-    "title": "如何创建一个属于自己的Angular Library并发布到npm",
-    "excerpt": "Angular CLI 7.0.0 增加了一个令人兴奋的脚手架配置项：--create-application，其中默认值是true，如果不设置，则在新工作空间的src文件夹中创建一个新的初始应用程序项目。如果为false，则创建一个没有初始应用程序的空工作区。想了解更多配置项，[动起你的小鼠...",
-    "date": "2019-10-01",
-    "category": "Blog",
-    "path": "assets/articles/blog/ng-library.md"
-  },
-  {
     "id": "ng-file-download",
     "title": "Angular文件下载",
-    "excerpt": "```typescript",
+    "excerpt": "Angular文件下载",
     "date": "2019-10-01",
     "category": "Blog",
     "path": "assets/articles/blog/ng-file-download.md"
+  },
+  {
+    "id": "ng-library",
+    "title": "如何创建一个属于自己的Angular Library并发布到npm",
+    "excerpt": "Angular CLI 7.0.0 增加了一个令人兴奋的脚手架配置项：--create-application，其中默认值是true，如果不设置，则在新工作空间的src文件夹中创建一个新的初始应用程序项目。如果为false，则创建一个没有初始应用程序的空工作区。想了解更多配置项，$1。",
+    "date": "2019-10-01",
+    "category": "Blog",
+    "path": "assets/articles/blog/ng-library.md"
   },
   {
     "id": "rxjs-take-first-takeUnitl-concatAll",
@@ -320,20 +320,20 @@
     "path": "assets/articles/blog/rxjs-take-first-takeUnitl-concatAll.md"
   },
   {
-    "id": "git-github-search",
-    "title": "Github检索方法总结",
-    "excerpt": "1. 这里的name是指仓库的名称",
-    "date": "2019-06-23",
-    "category": "Blog",
-    "path": "assets/articles/blog/git-github-search.md"
-  },
-  {
     "id": "rxjs-skip-takeLast-last-concat-startWith-merge",
     "title": "Rxjs【skip, takeLast, last, concat, startWith, merge】",
     "excerpt": "这篇文章是我的Angular Rxjs Series中的第篇四文章，在继续阅读本文之前，您至少应该熟悉系列中的第一篇基础文章：",
     "date": "2019-06-23",
     "category": "Blog",
     "path": "assets/articles/blog/rxjs-skip-takeLast-last-concat-startWith-merge.md"
+  },
+  {
+    "id": "git-github-search",
+    "title": "Github检索方法总结",
+    "excerpt": "1. 这里的name是指仓库的名称",
+    "date": "2019-06-23",
+    "category": "Blog",
+    "path": "assets/articles/blog/git-github-search.md"
   },
   {
     "id": "rxjs-version",
@@ -346,7 +346,7 @@
   {
     "id": "flutter-issues",
     "title": "Flutter 常见问题及其解决方案",
-    "excerpt": "```vim",
+    "excerpt": "Flutter 常见问题及其解决方案",
     "date": "2019-05-25",
     "category": "Blog",
     "path": "assets/articles/blog/flutter-issues.md"
@@ -362,7 +362,7 @@
   {
     "id": "mac-iTunes",
     "title": "iTunes 未能连接到此 iPhone。 无法分配资源。",
-    "excerpt": "前几天用在Mac上用同步助手給iPhone手机安装ipa应用文件，发现iTunes总是会弹出来```iTunes 未能连接到此 iPhone。 无法分配资源。```,然后一开始以为是数据线问题，然后换了3根数据线然并卵，手机显示可以充上电，但是无法连接到iTunes，同步助手也无法连接到设备。",
+    "excerpt": "前几天用在Mac上用同步助手給iPhone手机安装ipa应用文件，发现iTunes总是会弹出来iTunes 未能连接到此 iPhone。 无法分配资源。,然后一开始以为是数据线问题，然后换了3根数据线然并卵，手机显示可以充上电，但是无法连接到iTunes，同步助手也无法连接到设备。",
     "date": "2019-03-28",
     "category": "Blog",
     "path": "assets/articles/blog/mac-iTunes.md"
@@ -370,7 +370,7 @@
   {
     "id": "mac-dock",
     "title": "mac-dock",
-    "excerpt": "最近单位給配置了27寸的大屏幕，在鼠标焦点切换的时候一不小心dock被切到了大屏幕上边，然后不知道咋整，鼠标指针就在屏幕底部上一顿瞎点，神奇的就回到了Mac pro上边，然后就在想，难道没有便捷的方式，比如快捷键什么的，轻松解决我的问题吗？Google科普了下，原来是有的，就是```你把鼠标指...",
+    "excerpt": "最近单位給配置了27寸的大屏幕，在鼠标焦点切换的时候一不小心dock被切到了大屏幕上边，然后不知道咋整，鼠标指针就在屏幕底部上一顿瞎点，神奇的就回到了Mac pro上边，然后就在想，难道没有便捷的方式，比如快捷键什么的，轻松解决我的问题吗？Google科普了下，原来是有的，就是你把鼠标指针放到...",
     "date": "2019-03-26",
     "category": "Blog",
     "path": "assets/articles/blog/mac-dock.md"
@@ -378,7 +378,7 @@
   {
     "id": "git-multiple-account",
     "title": "git 多账号配置",
-    "excerpt": "有的时候我们肯那个会用到两个`github`账号，这个时候提交代码就出现了问题，第一个可以提交，但是第二个提交就出现了问题。",
+    "excerpt": "有的时候我们肯那个会用到两个github账号，这个时候提交代码就出现了问题，第一个可以提交，但是第二个提交就出现了问题。",
     "date": "2018-11-15",
     "category": "Blog",
     "path": "assets/articles/blog/git-multiple-account.md"

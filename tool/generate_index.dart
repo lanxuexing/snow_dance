@@ -105,13 +105,11 @@ Map<String, String> parseArticleMetadata(String path, String content) {
   }
 
   if (excerpt.isEmpty) {
-    final contentLines = cleanContent.split('\n');
-    for (final line in contentLines) {
-      if (line.trim().isNotEmpty && !line.startsWith('#') && !line.startsWith('---') && !line.startsWith('>')) {
-        excerpt = line.trim();
-        break;
-      }
-    }
+    excerpt = extractExcerpt(cleanContent);
+  }
+
+  if (excerpt.isEmpty) {
+    excerpt = title;
   }
 
   if (excerpt.length > 150) {
@@ -126,4 +124,44 @@ Map<String, String> parseArticleMetadata(String path, String content) {
     'category': category,
     'path': path,
   };
+}
+
+String extractExcerpt(String content) {
+  final lines = content.split('\n');
+  bool inCodeBlock = false;
+
+  for (final rawLine in lines) {
+    final line = rawLine.trim();
+    if (line.isEmpty) continue;
+
+    // Toggle code blocks
+    if (line.startsWith('```') || line.startsWith('~~~')) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+    if (inCodeBlock) continue;
+
+    // Skip headers, blockquotes, horizontal rules, images, html tags
+    if (line.startsWith('#') ||
+        line.startsWith('>') ||
+        line.startsWith('---') ||
+        line.startsWith('***') ||
+        line.startsWith('___') ||
+        line.startsWith('![') ||
+        line.startsWith('<')) {
+      continue;
+    }
+
+    // Clean inline markdown formatting
+    final cleaned = line
+        .replaceAll(RegExp(r'\[([^\]]+)\]\([^\)]+\)'), r'$1') // [text](url) -> text
+        .replaceAll(RegExp(r'[*_~`]+'), '') // strip bold/italic/code/strikethrough
+        .replaceAll(RegExp(r'<[^>]*>'), '') // strip inline html
+        .trim();
+
+    if (cleaned.isNotEmpty) {
+      return cleaned;
+    }
+  }
+  return '';
 }

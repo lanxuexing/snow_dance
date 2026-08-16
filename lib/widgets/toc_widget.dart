@@ -4,8 +4,14 @@ final class ToCEntry {
   final String title;
   final int level;
   final GlobalKey key;
+  final String id;
 
-  const ToCEntry({required this.title, required this.level, required this.key});
+  const ToCEntry({
+    required this.title,
+    required this.level,
+    required this.key,
+    String? id,
+  }) : id = id ?? title;
 }
 
 class TableOfContents extends StatelessWidget {
@@ -43,7 +49,7 @@ class TableOfContents extends StatelessWidget {
         ...entries.map((entry) => _ToCItem(
           entry: entry, 
           onTap: onTap,
-          isActive: entry.title == activeId,
+          isActive: entry.id == activeId || entry.title == activeId,
         )),
       ],
     );

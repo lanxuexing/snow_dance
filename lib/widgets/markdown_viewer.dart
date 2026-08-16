@@ -157,13 +157,17 @@ class MarkdownViewer extends StatelessWidget {
 
 class HeadingBuilder extends MarkdownElementBuilder {
   final Map<String, GlobalKey> headingKeys;
+  final Map<String, int> _visitedCounts = {};
 
   HeadingBuilder(this.headingKeys);
 
   @override
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
     final text = element.textContent.trim();
-    GlobalKey? key = headingKeys[text];
+    final count = _visitedCounts[text] = (_visitedCounts[text] ?? 0) + 1;
+    final uniqueId = '${text}_$count';
+
+    GlobalKey? key = headingKeys[uniqueId] ?? headingKeys[text];
 
     if (key == null) {
       final targetClean = _universalClean(text);
@@ -329,35 +333,25 @@ class SelectableHighlightView extends StatelessWidget {
   }) : source = input.replaceAll('\t', ' ' * tabSize);
 
   List<TextSpan> _convert(List<Node> nodes) {
-    final List<TextSpan> spans = [];
-    var currentSpans = spans;
-    final List<List<TextSpan>> stack = [];
-
-    void traverse(Node node) {
-      if (node.value != null) {
-        currentSpans.add(node.className == null
-            ? TextSpan(text: node.value)
-            : TextSpan(text: node.value, style: theme[node.className!]));
-      } else if (node.children != null) {
-        final List<TextSpan> tmp = [];
-        currentSpans.add(TextSpan(children: tmp, style: theme[node.className!]));
-        stack.add(currentSpans);
-        currentSpans = tmp;
-
-        for (final n in node.children!) {
-          traverse(n);
-          if (n == node.children!.last) {
-            currentSpans = stack.isEmpty ? spans : stack.removeLast();
-          }
+    List<TextSpan> buildSpans(List<Node> nodeList) {
+      final List<TextSpan> spans = [];
+      for (final node in nodeList) {
+        if (node.value != null) {
+          spans.add(node.className == null
+              ? TextSpan(text: node.value)
+              : TextSpan(text: node.value, style: theme[node.className!]));
+        } else if (node.children != null && node.children!.isNotEmpty) {
+          final childrenSpans = buildSpans(node.children!);
+          spans.add(TextSpan(
+            children: childrenSpans,
+            style: node.className == null ? null : theme[node.className!],
+          ));
         }
       }
+      return spans;
     }
 
-    for (final node in nodes) {
-      traverse(node);
-    }
-
-    return spans;
+    return buildSpans(nodes);
   }
 
   static const _rootKey = 'root';

@@ -1,5 +1,5 @@
-// ignore_for_file: deprecated_member_use, avoid_web_libraries_in_flutter
-import 'dart:html' as html;
+// ignore: depend_on_referenced_packages
+import 'package:web/web.dart' as web;
 
 void updateSEOImpl({
   required String title,
@@ -8,26 +8,26 @@ void updateSEOImpl({
   String? author,
 }) {
   // 1. Update document Title
-  html.document.title = title;
+  web.document.title = title;
 
   // Helper to find or create standard meta tags
   void updateMeta(String name, String content) {
-    var element = html.document.querySelector('meta[name="$name"]');
+    var element = web.document.querySelector('meta[name="$name"]');
     if (element == null) {
-      element = html.document.createElement('meta');
+      element = web.document.createElement('meta');
       element.setAttribute('name', name);
-      html.document.head?.append(element);
+      web.document.head?.append(element);
     }
     element.setAttribute('content', content);
   }
 
   // Helper to find or create Open Graph meta tags
   void updateOGMeta(String property, String content) {
-    var element = html.document.querySelector('meta[property="$property"]');
+    var element = web.document.querySelector('meta[property="$property"]');
     if (element == null) {
-      element = html.document.createElement('meta');
+      element = web.document.createElement('meta');
       element.setAttribute('property', property);
-      html.document.head?.append(element);
+      web.document.head?.append(element);
     }
     element.setAttribute('content', content);
   }

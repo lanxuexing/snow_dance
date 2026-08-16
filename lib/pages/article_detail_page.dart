@@ -26,7 +26,8 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   final Map<String, GlobalKey> _headingKeys = {};
   final ScrollController _scrollController = ScrollController();
   String? _activeHeading;
-  bool _isRendering = true;
+  bool _isRendering = false;
+  DateTime _lastScrollCheck = DateTime.now();
 
   @override
   void initState() {
@@ -34,27 +35,16 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     
     // Check if content needs to be loaded
     if (widget.article.content.isEmpty) {
+      _isRendering = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Provider.of<ArticleProvider>(context, listen: false)
             .loadArticleContent(widget.article.id);
       });
-    }
-
-    _deferRendering();
-
-    if (widget.article.content.isNotEmpty) {
+    } else {
+      _isRendering = false;
       _parseToC(widget.article.content);
     }
     _scrollController.addListener(_onScroll);
-  }
-
-  void _deferRendering() {
-    setState(() => _isRendering = true);
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (mounted) {
-        setState(() => _isRendering = false);
-      }
-    });
   }
 
   @override
@@ -65,27 +55,32 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   }
 
   void _onScroll() {
+    final now = DateTime.now();
+    if (now.difference(_lastScrollCheck).inMilliseconds < 50) return;
+    _lastScrollCheck = now;
+
     String? newActiveHeading;
 
     for (var entry in _tocEntries) {
-      final key = entry.key;
-      final context = key.currentContext;
-      if (context == null) continue;
-      
-      final RenderBox box = context.findRenderObject() as RenderBox;
-      final position = box.localToGlobal(Offset.zero);
-      final threshold = 200.0;
-      
+      final context = entry.key.currentContext;
+      if (context == null || !context.mounted) continue;
+
+      final renderObject = context.findRenderObject();
+      if (renderObject is! RenderBox) continue;
+
+      final position = renderObject.localToGlobal(Offset.zero);
+      const threshold = 200.0;
+
       if (position.dy <= threshold) {
-        newActiveHeading = entry.title;
+        newActiveHeading = entry.id;
       }
     }
-    
+
     if (newActiveHeading == null && _tocEntries.isNotEmpty) {
-      newActiveHeading = _tocEntries.first.title;
+      newActiveHeading = _tocEntries.first.id;
     }
 
-    if (newActiveHeading != _activeHeading) {
+    if (newActiveHeading != _activeHeading && mounted) {
       setState(() {
         _activeHeading = newActiveHeading;
       });
@@ -96,23 +91,22 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   void didUpdateWidget(ArticleDetailPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.article.id != widget.article.id) {
-      _deferRendering();
       _tocEntries.clear();
       _headingKeys.clear();
       
       // Load content of the new article if it is empty
       if (widget.article.content.isEmpty) {
+        _isRendering = true;
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Provider.of<ArticleProvider>(context, listen: false)
               .loadArticleContent(widget.article.id);
         });
-      }
-
-      if (widget.article.content.isNotEmpty) {
+      } else {
+        _isRendering = false;
         _parseToC(widget.article.content);
       }
       if (_tocEntries.isNotEmpty) {
-        _activeHeading = _tocEntries.first.title;
+        _activeHeading = _tocEntries.first.id;
       }
       if (_scrollController.hasClients) {
         _scrollController.jumpTo(0);
@@ -125,6 +119,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     _headingKeys.clear();
     final lines = content.split('\n');
     final headingRegex = RegExp(r'^(#{1,6})\s+(.+)$');
+    final Map<String, int> counts = {};
 
     bool isInCodeBlock = false;
     bool isInFrontmatter = false;
@@ -146,7 +141,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
         continue;
       }
 
-      // Ignore contents inside code blocks (e.g. ```bash comments starting with #)
+      // Ignore contents inside code blocks
       if (trimmed.startsWith('```') || trimmed.startsWith('~~~')) {
         isInCodeBlock = !isInCodeBlock;
         continue;
@@ -161,13 +156,19 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
         final title = match.group(2)!.trim();
         final level = hashes.length;
 
+        final count = counts[title] = (counts[title] ?? 0) + 1;
+        final uniqueId = '${title}_$count';
+
         final key = GlobalKey();
-        _tocEntries.add(ToCEntry(title: title, level: level, key: key));
-        _headingKeys[title] = key;
+        _tocEntries.add(ToCEntry(title: title, id: uniqueId, level: level, key: key));
+        _headingKeys[uniqueId] = key;
+        if (count == 1) {
+          _headingKeys[title] = key;
+        }
       }
     }
     if (_activeHeading == null && _tocEntries.isNotEmpty) {
-      _activeHeading = _tocEntries.first.title;
+      _activeHeading = _tocEntries.first.id;
     }
   }
 
@@ -180,7 +181,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
         curve: Curves.easeInOut,
         alignment: 0.1, 
       );
-      setState(() => _activeHeading = entry.title);
+      setState(() => _activeHeading = entry.id);
     }
   }
 
@@ -282,7 +283,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
             ),
           ),
           children: _tocEntries.map((entry) {
-            final isSelect = entry.title == _activeHeading;
+            final isSelect = entry.id == _activeHeading || entry.title == _activeHeading;
             return InkWell(
               onTap: () {
                 _scrollToHeading(entry);

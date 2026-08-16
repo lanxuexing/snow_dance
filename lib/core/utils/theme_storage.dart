@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snow_dance/core/utils/web_storage_stub.dart'
-    if (dart.library.html) 'package:snow_dance/core/utils/web_storage_real.dart' as web_storage;
+    if (dart.library.js_interop) 'package:snow_dance/core/utils/web_storage_real.dart' as web_storage;
 
 class ThemeStorage {
   static const String key = 'snow_dance_theme_mode';

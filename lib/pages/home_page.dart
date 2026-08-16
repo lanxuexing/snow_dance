@@ -24,7 +24,11 @@ class HomePage extends StatelessWidget {
     );
 
 
-    final isMobile = MediaQuery.sizeOf(context).width < 800;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final isMobile = screenWidth < 800;
+    final double horizontalPadding = screenWidth > 1200
+        ? (screenWidth - 1200) / 2 + 24
+        : (isMobile ? 16.0 : 24.0);
     final displayArticles = provider.articles.take(6).toList();
 
     return CustomScrollView(
@@ -33,34 +37,31 @@ class HomePage extends StatelessWidget {
         SliverToBoxAdapter(child: _buildHero(context)),
         SliverToBoxAdapter(child: const SizedBox(height: 40)),
         SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          sliver: SliverCenterConstraints(
-            maxWidth: 1200,
-            sliver: isMobile
-                ? SliverList.separated(
-                    itemCount: displayArticles.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 16),
-                    itemBuilder: (context, index) => ArticleCard(article: displayArticles[index])
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+          sliver: isMobile
+              ? SliverList.separated(
+                  itemCount: displayArticles.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 16),
+                  itemBuilder: (context, index) => ArticleCard(article: displayArticles[index])
+                      .animate(delay: (40 * index).ms)
+                      .fadeIn(duration: 300.ms, curve: Curves.easeOutCubic)
+                      .moveY(begin: 12, end: 0, curve: Curves.easeOutCubic),
+                )
+              : SliverGrid(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => ArticleCard(article: displayArticles[index])
                         .animate(delay: (40 * index).ms)
                         .fadeIn(duration: 300.ms, curve: Curves.easeOutCubic)
                         .moveY(begin: 12, end: 0, curve: Curves.easeOutCubic),
-                  )
-                : SliverGrid(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) => ArticleCard(article: displayArticles[index])
-                          .animate(delay: (40 * index).ms)
-                          .fadeIn(duration: 300.ms, curve: Curves.easeOutCubic)
-                          .moveY(begin: 12, end: 0, curve: Curves.easeOutCubic),
-                      childCount: displayArticles.length,
-                    ),
-                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 600,
-                      childAspectRatio: 2.5,
-                      crossAxisSpacing: 24,
-                      mainAxisSpacing: 24,
-                    ),
+                    childCount: displayArticles.length,
                   ),
-          ),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 600,
+                    childAspectRatio: 2.5,
+                    crossAxisSpacing: 24,
+                    mainAxisSpacing: 24,
+                  ),
+                ),
         ),
         if (provider.articles.length > 6)
           SliverToBoxAdapter(
@@ -169,34 +170,6 @@ class HomePage extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// Helper Sliver to constrain maxWidth in CustomScrollView
-class SliverCenterConstraints extends StatelessWidget {
-  final double maxWidth;
-  final Widget sliver;
-
-  const SliverCenterConstraints({
-    super.key,
-    required this.maxWidth,
-    required this.sliver,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Center(
-        child: Container(
-          constraints: BoxConstraints(maxWidth: maxWidth),
-          child: CustomScrollView(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            slivers: [sliver],
-          ),
-        ),
       ),
     );
   }

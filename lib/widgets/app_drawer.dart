@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:snow_dance/models/article.dart';
 import 'package:snow_dance/core/config/app_config.dart';
 import 'package:snow_dance/core/article_provider.dart';
 import 'package:snow_dance/core/theme/theme_provider.dart';
@@ -120,7 +121,7 @@ class _AppDrawerState extends State<AppDrawer> {
 
   final Map<String, bool> _expansionStates = {};
 
-  Widget _buildExpandableNavItem(BuildContext context, String title, String route, List categoryArticles) {
+  Widget _buildExpandableNavItem(BuildContext context, String title, String route, List<Article> categoryArticles) {
     final currentPath = GoRouterState.of(context).uri.toString();
     // Strict category segment match (e.g., /blog matches /blog/xxx but not /)
     final bool isCategorySelected = route != '/' && currentPath.startsWith(route);
@@ -167,7 +168,8 @@ class _AppDrawerState extends State<AppDrawer> {
         ),
         childrenPadding: const EdgeInsets.only(left: 12),
         children: categoryArticles.map((article) {
-          final bool isArticleSelected = currentPath.contains(article.id);
+          final articleRoute = '/${article.categoryPath}/${article.id}';
+          final bool isArticleSelected = currentPath == articleRoute;
           return ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
             dense: true,
@@ -183,7 +185,7 @@ class _AppDrawerState extends State<AppDrawer> {
             ),
             onTap: () {
               Navigator.of(context).pop();
-              context.go('/${article.categoryPath}/${article.id}');
+              context.go(articleRoute);
             },
           );
         }).toList(),

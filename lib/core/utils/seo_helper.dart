@@ -1,5 +1,5 @@
 import 'seo_helper_stub.dart'
-    if (dart.library.html) 'seo_helper_web.dart' as impl;
+    if (dart.library.js_interop) 'seo_helper_web.dart' as impl;
 
 class SEOHelper {
   static void updateSEO({
