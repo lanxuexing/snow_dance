@@ -33,9 +33,9 @@ class HomePage extends StatelessWidget {
 
     return CustomScrollView(
       slivers: [
-        const SliverToBoxAdapter(child: SizedBox(height: 120)),
-        SliverToBoxAdapter(child: _buildHero(context)),
-        SliverToBoxAdapter(child: const SizedBox(height: 40)),
+        SliverToBoxAdapter(child: SizedBox(height: isMobile ? 16 : 80)),
+        SliverToBoxAdapter(child: _buildHero(context, isMobile)),
+        SliverToBoxAdapter(child: SizedBox(height: isMobile ? 20 : 40)),
         SliverPadding(
           padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           sliver: isMobile
@@ -66,7 +66,7 @@ class HomePage extends StatelessWidget {
         if (provider.articles.length > 6)
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.only(top: 48, bottom: 40),
+              padding: EdgeInsets.only(top: isMobile ? 32 : 48, bottom: isMobile ? 24 : 40),
               child: Center(
                 child: OutlinedButton(
                   onPressed: () => context.go('/blog'),
@@ -98,9 +98,12 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildHero(BuildContext context) {
+  Widget _buildHero(BuildContext context, bool isMobile) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 16 : 24, 
+        vertical: isMobile ? 12 : 36,
+      ),
       child: Column(
         children: [
           Container(
@@ -112,7 +115,10 @@ class HomePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(50),
             ),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 12 : 16, 
+                vertical: isMobile ? 6 : 8,
+              ),
               decoration: BoxDecoration(
                 color: Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: BorderRadius.circular(50),
@@ -125,13 +131,13 @@ class HomePage extends StatelessWidget {
                     shaderCallback: (bounds) => const LinearGradient(
                       colors: [Color(0xFF42D392), Color(0xFF647EFF)],
                     ).createShader(bounds),
-                    child: const Icon(Icons.rocket_launch_rounded, size: 16, color: Colors.white),
+                    child: Icon(Icons.rocket_launch_rounded, size: isMobile ? 14 : 16, color: Colors.white),
                    ),
-                   const SizedBox(width: 8),
+                   const SizedBox(width: 6),
                     Text(
                     'Introducing SnowDance v1.0',
                     style: AppTheme.outfit(
-                      fontSize: 14,
+                      fontSize: isMobile ? 12.5 : 14,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
@@ -140,7 +146,7 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: isMobile ? 14 : 24),
           ShaderMask(
             blendMode: BlendMode.srcIn,
             shaderCallback: (bounds) => const LinearGradient(
@@ -152,20 +158,23 @@ class HomePage extends StatelessWidget {
               'Build Beautiful Blogs\nwith Flutter Web',
               textAlign: TextAlign.center,
               style: AppTheme.outfit(
-                fontSize: 56,
+                fontSize: isMobile ? 32 : 56,
                 fontWeight: FontWeight.w900,
-                height: 1.1,
-                letterSpacing: -1.5,
+                height: isMobile ? 1.15 : 1.1,
+                letterSpacing: isMobile ? -0.8 : -1.5,
                 color: Colors.white,
               ),
             ),
           ),
-          const SizedBox(height: 24),
-          const Text(
-            'A premium, high-performance blog engine with frosted glass aesthetics\nand modern technical writing features.',
+          SizedBox(height: isMobile ? 12 : 24),
+          Text(
+            isMobile
+                ? 'A premium, high-performance blog engine with frosted glass aesthetics & technical writing features.'
+                : 'A premium, high-performance blog engine with frosted glass aesthetics\nand modern technical writing features.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: isMobile ? 14 : 18,
+              height: isMobile ? 1.4 : 1.5,
               color: Colors.grey,
             ),
           ),

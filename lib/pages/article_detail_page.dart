@@ -241,7 +241,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const SizedBox(height: 60),
+                                    SizedBox(height: isMobile ? 24 : 60),
                                     _buildAuthorSection(context),
                                     if (isMobile && _tocEntries.isNotEmpty) ...[
                                       const SizedBox(height: 32),

@@ -13,10 +13,11 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
   const AppHeader({super.key});
 
   @override
-  Size get preferredSize => const Size.fromHeight(64);
+  Size get preferredSize => const Size.fromHeight(56);
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = ResponsiveLayout.isMobile(context);
     String currentLocation = '/';
     try {
       currentLocation = GoRouterState.of(context).uri.path;
@@ -29,7 +30,7 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
           child: Container(
-            height: 64,
+            height: isMobile ? 54 : 64,
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.2),
               border: Border(
@@ -42,16 +43,18 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
               child: Container(
                 constraints: const BoxConstraints(maxWidth: 1200),
                 padding: EdgeInsets.symmetric(
-                  horizontal: ResponsiveLayout.isMobile(context) ? 16 : 24,
+                  horizontal: isMobile ? 12 : 24,
                 ),
                 child: Row(
                   children: [
-                    if (ResponsiveLayout.isMobile(context)) ...[
+                    if (isMobile) ...[
                       IconButton(
-                        icon: const Icon(Icons.menu),
+                        icon: const Icon(Icons.menu, size: 22),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
                         onPressed: () => Scaffold.of(context).openDrawer(),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 10),
                     ],
                     // Logo
                     InkWell(
@@ -59,12 +62,12 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                       child: Row(
                         children: [
                           SnowflakeLogo(
-                            size: 26,
+                            size: isMobile ? 22 : 26,
                             gradientColors: Theme.of(context).brightness == Brightness.dark
                                 ? const [Color(0xFF00DC82), Color(0xFF36E4DA), Color(0xFF007A5E)]
                                 : const [Color(0xFF00BD7E), Color(0xFF36E4DA), Color(0xFF009663)],
                           ),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 8),
                           ShaderMask(
                             shaderCallback: (bounds) => LinearGradient(
                               colors: Theme.of(context).brightness == Brightness.dark
@@ -76,7 +79,7 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                             child: Text(
                               'SnowDance',
                               style: AppTheme.outfit(
-                                fontSize: 22,
+                                fontSize: isMobile ? 18 : 22,
                                 fontWeight: FontWeight.w800,
                                 height: 1.0,
                                 letterSpacing: -0.5,
@@ -89,7 +92,7 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     const Spacer(),
                     // Nav Items (Desktop)
-                    if (!ResponsiveLayout.isMobile(context)) ...[
+                    if (!isMobile) ...[
                       ...AppConfig.navItems.map((item) {
                         final bool isActive = item.route == '/' 
                             ? currentLocation == '/' 
