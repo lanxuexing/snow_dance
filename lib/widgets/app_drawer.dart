@@ -82,34 +82,36 @@ class _AppDrawerState extends State<AppDrawer> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              SnowflakeLogo(
-                size: 26,
-                gradientColors: Theme.of(context).brightness == Brightness.dark
-                    ? const [Color(0xFF00DC82), Color(0xFF36E4DA), Color(0xFF007A5E)]
-                    : const [Color(0xFF00BD7E), Color(0xFF36E4DA), Color(0xFF009663)],
-              ),
-              const SizedBox(width: 12),
-              ShaderMask(
-                shaderCallback: (bounds) => LinearGradient(
-                  colors: Theme.of(context).brightness == Brightness.dark
-                      ? const [Color(0xFF00DC82), Color(0xFF36E4DA)]
-                      : const [Color(0xFF00BD7E), Color(0xFF36E4DA)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ).createShader(bounds),
-                child: Text(
-                  'SnowDance',
-                  style: AppTheme.outfit(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.5,
-                    color: Colors.white,
+          RepaintBoundary(
+            child: Row(
+              children: [
+                SnowflakeLogo(
+                  size: 26,
+                  gradientColors: Theme.of(context).brightness == Brightness.dark
+                      ? const [Color(0xFF00DC82), Color(0xFF36E4DA), Color(0xFF007A5E)]
+                      : const [Color(0xFF00BD7E), Color(0xFF36E4DA), Color(0xFF009663)],
+                ),
+                const SizedBox(width: 12),
+                ShaderMask(
+                  shaderCallback: (bounds) => LinearGradient(
+                    colors: Theme.of(context).brightness == Brightness.dark
+                        ? const [Color(0xFF00DC82), Color(0xFF36E4DA)]
+                        : const [Color(0xFF00BD7E), Color(0xFF36E4DA)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ).createShader(bounds),
+                  child: Text(
+                    'SnowDance',
+                    style: AppTheme.outfit(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.5,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.close),

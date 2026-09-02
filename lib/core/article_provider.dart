@@ -19,6 +19,8 @@ class ArticleProvider extends ChangeNotifier {
     return _articles.where((a) => a.id == id).firstOrNull;
   }
 
+  final Set<String> _loadingIds = {};
+
   Future<void> loadArticles() async {
     _isLoading = true;
     notifyListeners();
@@ -45,10 +47,9 @@ class ArticleProvider extends ChangeNotifier {
           _isLoading = false;
           notifyListeners();
 
-          // Preload markdown content in background so detail navigation is 100% instantaneous
-          for (final a in indexedArticles) {
-            loadArticleContent(a.id);
-          }
+          // Preload markdown content in background quietly so detail navigation is
+          // instantaneous without causing rapid rebuild cascades on startup
+          Future.wait(indexedArticles.map((a) => loadArticleContent(a.id, notify: false)));
           return;
         }
       } catch (e) {
@@ -98,12 +99,14 @@ class ArticleProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> loadArticleContent(String id) async {
+  Future<void> loadArticleContent(String id, {bool notify = true}) async {
     final index = _articles.indexWhere((a) => a.id == id);
     if (index == -1) return;
 
     final article = _articles[index];
     if (article.content.isNotEmpty) return; // Already loaded
+    if (_loadingIds.contains(id)) return; // Already loading
+    _loadingIds.add(id);
 
     try {
       var path = article.path;
@@ -115,10 +118,13 @@ class ArticleProvider extends ChangeNotifier {
       final fullArticle = _parseArticle(path, content);
 
       _articles[index] = fullArticle;
-      notifyListeners();
+      if (notify) {
+        notifyListeners();
+      }
     } catch (e) {
       debugPrint('Error lazy loading article content for $id: $e');
-      notifyListeners();
+    } finally {
+      _loadingIds.remove(id);
     }
   }
 

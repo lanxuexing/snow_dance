@@ -45,13 +45,19 @@ class _SnowflakeLogoState extends State<SnowflakeLogo>
           Color(0xFF007A5E), // Teal
         ];
 
-    return RotationTransition(
-      turns: _rotationController,
-      child: SizedBox(
-        width: widget.size,
-        height: widget.size,
-        child: CustomPaint(
-          painter: SnowflakePainter(colors: colors),
+    return RepaintBoundary(
+      child: RotationTransition(
+        turns: _rotationController,
+        child: RepaintBoundary(
+          child: SizedBox(
+            width: widget.size,
+            height: widget.size,
+            child: CustomPaint(
+              isComplex: true,
+              willChange: false,
+              painter: SnowflakePainter(colors: colors),
+            ),
+          ),
         ),
       ),
     );

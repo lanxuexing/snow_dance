@@ -219,42 +219,44 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
       theme['root'] = theme['root']!.copyWith(backgroundColor: Colors.transparent);
     }
 
-    return Container(
-      width: double.infinity, // Force full width for the background
-      margin: const EdgeInsets.symmetric(vertical: 24),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.05),
+    return RepaintBoundary(
+      child: Container(
+        width: double.infinity, // Force full width for the background
+        margin: const EdgeInsets.symmetric(vertical: 24),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.05),
+          ),
         ),
-      ),
-      child: Stack(
-        children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: ConstrainedBox(
-              // Allow code to be as wide as it needs to be for horizontal scrolling, 
-              // but the container background will be double.infinity wide.
-              constraints: const BoxConstraints(minWidth: 800), 
-              child: SelectableHighlightView(
-                code.trimRight(),
-                language: language ?? 'plaintext',
-                theme: theme,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-                textStyle: AppTheme.firaCode(
-                  fontSize: 14,
-                  height: 1.6,
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: ConstrainedBox(
+                // Allow code to be as wide as it needs to be for horizontal scrolling, 
+                // but the container background will be double.infinity wide.
+                constraints: const BoxConstraints(minWidth: 800), 
+                child: SelectableHighlightView(
+                  code.trimRight(),
+                  language: language ?? 'plaintext',
+                  theme: theme,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                  textStyle: AppTheme.firaCode(
+                    fontSize: 14,
+                    height: 1.6,
+                  ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            top: 12,
-            right: 12,
-            child: _CopyButton(code: code),
-          ),
-        ],
+            Positioned(
+              top: 12,
+              right: 12,
+              child: _CopyButton(code: code),
+            ),
+          ],
+        ),
       ),
     );
   }

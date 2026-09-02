@@ -68,7 +68,17 @@ class AppScrollBehavior extends MaterialScrollBehavior {
 
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) {
-    // BouncingScrollPhysics provides momentum-based smooth feeling on modern web browsers
-    return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
+    // Adaptive silky physics: macOS/iOS gets spring momentum, while Windows/Linux/Android
+    // gets crisp clamping physics to avoid floaty mouse wheel lag.
+    switch (Theme.of(context).platform) {
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+        return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
+      case TargetPlatform.android:
+      case TargetPlatform.fuchsia:
+      case TargetPlatform.linux:
+      case TargetPlatform.windows:
+        return const ClampingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
+    }
   }
 }

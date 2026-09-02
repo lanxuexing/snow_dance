@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
@@ -27,6 +26,10 @@ class AppTheme {
     'sans-serif',
   ];
 
+  static final TextStyle _baseOutfit = GoogleFonts.outfit().copyWith(fontFamilyFallback: fontFallbacks);
+  static final TextStyle _baseInter = GoogleFonts.inter().copyWith(fontFamilyFallback: fontFallbacks);
+  static final TextStyle _baseFiraCode = GoogleFonts.firaCode().copyWith(fontFamilyFallback: fontFallbacks);
+
   static TextStyle outfit({
     double? fontSize,
     FontWeight? fontWeight,
@@ -34,13 +37,13 @@ class AppTheme {
     double? height,
     double? letterSpacing,
   }) {
-    return GoogleFonts.outfit(
+    return _baseOutfit.copyWith(
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
       height: height,
       letterSpacing: letterSpacing,
-    ).copyWith(fontFamilyFallback: fontFallbacks);
+    );
   }
 
   static TextStyle inter({
@@ -50,13 +53,13 @@ class AppTheme {
     double? height,
     FontStyle? fontStyle,
   }) {
-    return GoogleFonts.inter(
+    return _baseInter.copyWith(
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
       height: height,
       fontStyle: fontStyle,
-    ).copyWith(fontFamilyFallback: fontFallbacks);
+    );
   }
 
   static TextStyle firaCode({
@@ -66,13 +69,13 @@ class AppTheme {
     Color? backgroundColor,
     double? height,
   }) {
-    return GoogleFonts.firaCode(
+    return _baseFiraCode.copyWith(
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
       backgroundColor: backgroundColor,
       height: height,
-    ).copyWith(fontFamilyFallback: fontFallbacks);
+    );
   }
 
   static TextTheme _buildTextTheme(Brightness brightness) {

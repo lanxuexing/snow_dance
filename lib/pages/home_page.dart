@@ -5,31 +5,42 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:snow_dance/core/article_provider.dart';
 import 'package:snow_dance/widgets/article_card.dart';
 import 'package:snow_dance/widgets/app_footer.dart';
+import 'package:snow_dance/models/article.dart';
 import 'package:snow_dance/core/theme/app_theme.dart';
 import 'package:snow_dance/core/utils/seo_helper.dart';
 
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SEOHelper.updateSEO(
+        title: 'SnowDance - Premium Tech Blog Engine built with Flutter',
+        description: 'SnowDance is a premium, high-performance tech blog engine built with Flutter Web, featuring frosted glass aesthetics and modern technical writing features.',
+        keywords: ['Flutter', 'Flutter Web', 'Blog Engine', 'Tech Blog', 'SnowDance', 'Premium UI'],
+        author: 'lanxuexing',
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ArticleProvider>(context);
-
-    SEOHelper.updateSEO(
-      title: 'SnowDance - Premium Tech Blog Engine built with Flutter',
-      description: 'SnowDance is a premium, high-performance tech blog engine built with Flutter Web, featuring frosted glass aesthetics and modern technical writing features.',
-      keywords: ['Flutter', 'Flutter Web', 'Blog Engine', 'Tech Blog', 'SnowDance', 'Premium UI'],
-      author: 'lanxuexing',
-    );
-
+    final articles = context.select<ArticleProvider, List<Article>>((p) => p.articles);
 
     final screenWidth = MediaQuery.sizeOf(context).width;
     final isMobile = screenWidth < 800;
     final double horizontalPadding = screenWidth > 1200
         ? (screenWidth - 1200) / 2 + 24
         : (isMobile ? 16.0 : 24.0);
-    final displayArticles = provider.articles.take(6).toList();
+    final displayArticles = articles.take(6).toList();
 
     return CustomScrollView(
       slivers: [
@@ -42,14 +53,20 @@ class HomePage extends StatelessWidget {
               ? SliverList.separated(
                   itemCount: displayArticles.length,
                   separatorBuilder: (context, index) => const SizedBox(height: 16),
-                  itemBuilder: (context, index) => ArticleCard(article: displayArticles[index])
+                  itemBuilder: (context, index) => ArticleCard(
+                    key: ValueKey(displayArticles[index].id),
+                    article: displayArticles[index],
+                  )
                       .animate(delay: (40 * index).ms)
                       .fadeIn(duration: 300.ms, curve: Curves.easeOutCubic)
                       .moveY(begin: 12, end: 0, curve: Curves.easeOutCubic),
                 )
               : SliverGrid(
                   delegate: SliverChildBuilderDelegate(
-                    (context, index) => ArticleCard(article: displayArticles[index])
+                    (context, index) => ArticleCard(
+                      key: ValueKey(displayArticles[index].id),
+                      article: displayArticles[index],
+                    )
                         .animate(delay: (40 * index).ms)
                         .fadeIn(duration: 300.ms, curve: Curves.easeOutCubic)
                         .moveY(begin: 12, end: 0, curve: Curves.easeOutCubic),
@@ -63,7 +80,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
         ),
-        if (provider.articles.length > 6)
+        if (articles.length > 6)
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.only(top: isMobile ? 32 : 48, bottom: isMobile ? 24 : 40),
@@ -99,7 +116,8 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildHero(BuildContext context, bool isMobile) {
-    return Container(
+    return RepaintBoundary(
+      child: Container(
       padding: EdgeInsets.symmetric(
         horizontal: isMobile ? 16 : 24, 
         vertical: isMobile ? 12 : 36,
@@ -180,7 +198,8 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
 

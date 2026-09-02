@@ -20,7 +20,7 @@ class _ArticleCardState extends State<ArticleCard> {
   void _preloadArticle() {
     if (widget.article.content.isEmpty) {
       Provider.of<ArticleProvider>(context, listen: false)
-          .loadArticleContent(widget.article.id);
+          .loadArticleContent(widget.article.id, notify: false);
     }
   }
 
@@ -29,31 +29,32 @@ class _ArticleCardState extends State<ArticleCard> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = Theme.of(context).colorScheme.primary;
 
-    return MouseRegion(
-      onEnter: (_) {
-        setState(() => _isHovered = true);
-        _preloadArticle();
-      },
-      onExit: (_) => setState(() => _isHovered = false),
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTapDown: (_) {
-          setState(() => _isPressed = true);
+    return RepaintBoundary(
+      child: MouseRegion(
+        onEnter: (_) {
+          setState(() => _isHovered = true);
           _preloadArticle();
         },
-        onTapUp: (_) => setState(() => _isPressed = false),
-        onTapCancel: () => setState(() => _isPressed = false),
-        onTap: () {
-          _preloadArticle();
-          context.go('/${widget.article.categoryPath}/${widget.article.id}');
-        },
-        child: AnimatedScale(
-          scale: _isPressed ? 0.97 : 1.0,
-          duration: const Duration(milliseconds: 120),
-          curve: Curves.easeOut,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeOutCubic,
+        onExit: (_) => setState(() => _isHovered = false),
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTapDown: (_) {
+            setState(() => _isPressed = true);
+            _preloadArticle();
+          },
+          onTapUp: (_) => setState(() => _isPressed = false),
+          onTapCancel: () => setState(() => _isPressed = false),
+          onTap: () {
+            _preloadArticle();
+            context.go('/${widget.article.categoryPath}/${widget.article.id}');
+          },
+          child: AnimatedScale(
+            scale: _isPressed ? 0.97 : 1.0,
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.easeOut,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOutCubic,
           transform: Matrix4.translationValues(0.0, _isHovered ? -4.0 : 0.0, 0.0),
           decoration: BoxDecoration(
             color: Theme.of(context).cardTheme.color,
@@ -162,6 +163,7 @@ class _ArticleCardState extends State<ArticleCard> {
         ),
       ),
     ),
-  );
-}
+  ),
+);
+  }
 }

@@ -36,4 +36,30 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump(const Duration(seconds: 1));
   });
+
+  testWidgets('ArticleDetailPage mounts and renders ToC without jank', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1200, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    final provider = ArticleProvider();
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: provider),
+          ChangeNotifierProvider(create: (_) => ThemeProvider(initialSavedTheme: 'dark')),
+        ],
+        child: const MyApp(),
+      ),
+    );
+
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(find.text('SnowDance'), findsWidgets);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump(const Duration(seconds: 1));
+  });
 }

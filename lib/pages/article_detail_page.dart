@@ -25,8 +25,9 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   final List<ToCEntry> _tocEntries = [];
   final Map<String, GlobalKey> _headingKeys = {};
   final ScrollController _scrollController = ScrollController();
-  String? _activeHeading;
+  final ValueNotifier<String?> _activeHeadingNotifier = ValueNotifier<String?>(null);
   DateTime _lastScrollCheck = DateTime.now();
+  String? _lastLoadedArticleId;
 
   @override
   void initState() {
@@ -43,20 +44,36 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       });
     } else {
       _parseToC(current.content);
+      _updateSEO(current);
     }
     _scrollController.addListener(_onScroll);
+  }
+
+  void _updateSEO(Article article) {
+    if (article.content.isNotEmpty && _lastLoadedArticleId != article.id) {
+      _lastLoadedArticleId = article.id;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        SEOHelper.updateSEO(
+          title: '${article.title} - SnowDance',
+          description: article.excerpt,
+          keywords: [article.category, 'SnowDance', 'Blog', 'Docs'],
+          author: AppConfig.authorName,
+        );
+      });
+    }
   }
 
   @override
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    _activeHeadingNotifier.dispose();
     super.dispose();
   }
 
   void _onScroll() {
     final now = DateTime.now();
-    if (now.difference(_lastScrollCheck).inMilliseconds < 50) return;
+    if (now.difference(_lastScrollCheck).inMilliseconds < 35) return;
     _lastScrollCheck = now;
 
     String? newActiveHeading;
@@ -80,10 +97,8 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       newActiveHeading = _tocEntries.first.id;
     }
 
-    if (newActiveHeading != _activeHeading && mounted) {
-      setState(() {
-        _activeHeading = newActiveHeading;
-      });
+    if (newActiveHeading != _activeHeadingNotifier.value) {
+      _activeHeadingNotifier.value = newActiveHeading;
     }
   }
 
@@ -93,6 +108,8 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     if (oldWidget.article.id != widget.article.id) {
       _tocEntries.clear();
       _headingKeys.clear();
+      _activeHeadingNotifier.value = null;
+      _lastLoadedArticleId = null;
       
       final provider = Provider.of<ArticleProvider>(context, listen: false);
       final current = provider.findById(widget.article.id) ?? widget.article;
@@ -104,9 +121,10 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
         });
       } else {
         _parseToC(current.content);
+        _updateSEO(current);
       }
       if (_tocEntries.isNotEmpty) {
-        _activeHeading = _tocEntries.first.id;
+        _activeHeadingNotifier.value = _tocEntries.first.id;
       }
       if (_scrollController.hasClients) {
         _scrollController.jumpTo(0);
@@ -167,8 +185,8 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
         }
       }
     }
-    if (_activeHeading == null && _tocEntries.isNotEmpty) {
-      _activeHeading = _tocEntries.first.id;
+    if (_activeHeadingNotifier.value == null && _tocEntries.isNotEmpty) {
+      _activeHeadingNotifier.value = _tocEntries.first.id;
     }
   }
 
@@ -181,7 +199,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
         curve: Curves.easeInOut,
         alignment: 0.1, 
       );
-      setState(() => _activeHeading = entry.id);
+      _activeHeadingNotifier.value = entry.id;
     }
   }
 
@@ -198,16 +216,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     // Re-parse ToC if content changed (e.g. just loaded)
     if (!isContentEmpty && _tocEntries.isEmpty) {
        _parseToC(currentArticle.content);
-    }
-
-    if (!isContentEmpty) {
-      // Dynamic SEO update for the article detail page
-      SEOHelper.updateSEO(
-        title: '${currentArticle.title} - SnowDance',
-        description: currentArticle.excerpt,
-        keywords: [currentArticle.category, 'SnowDance', 'Blog', 'Docs'],
-        author: AppConfig.authorName,
-      );
+       _updateSEO(currentArticle);
     }
 
     return Row(
@@ -300,34 +309,43 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
               color: Theme.of(context).textTheme.bodyLarge?.color,
             ),
           ),
-          children: _tocEntries.map((entry) {
-            final isSelect = entry.id == _activeHeading || entry.title == _activeHeading;
-            return InkWell(
-              onTap: () {
-                _scrollToHeading(entry);
+          children: [
+            ValueListenableBuilder<String?>(
+              valueListenable: _activeHeadingNotifier,
+              builder: (context, activeHeading, child) {
+                return Column(
+                  children: _tocEntries.map((entry) {
+                    final isSelect = entry.id == activeHeading || entry.title == activeHeading;
+                    return InkWell(
+                      onTap: () {
+                        _scrollToHeading(entry);
+                      },
+                      child: Container(
+                         width: double.infinity,
+                         padding: EdgeInsets.only(
+                           left: 16.0 + (entry.level - 1) * 12,
+                           right: 16,
+                           top: 10,
+                           bottom: 10,
+                         ),
+                         child: Text(
+                           entry.title,
+                           style: TextStyle(
+                             fontSize: 14,
+                             height: 1.4,
+                             color: isSelect 
+                                 ? Theme.of(context).colorScheme.primary 
+                                 : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                             fontWeight: isSelect ? FontWeight.w600 : FontWeight.normal,
+                           ),
+                         ),
+                      ),
+                    );
+                  }).toList(),
+                );
               },
-              child: Container(
-                 width: double.infinity,
-                 padding: EdgeInsets.only(
-                   left: 16.0 + (entry.level - 1) * 12,
-                   right: 16,
-                   top: 10,
-                   bottom: 10
-                 ),
-                 child: Text(
-                   entry.title,
-                   style: TextStyle(
-                     fontSize: 14,
-                     height: 1.4,
-                     color: isSelect 
-                         ? Theme.of(context).colorScheme.primary 
-                         : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
-                     fontWeight: isSelect ? FontWeight.w600 : FontWeight.normal,
-                   ),
-                 ),
-              ),
-            );
-          }).toList(),
+            ),
+          ],
         ),
       ),
     );
@@ -435,10 +453,15 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TableOfContents(
-              entries: _tocEntries,
-              onTap: _scrollToHeading,
-              activeId: _activeHeading,
+            ValueListenableBuilder<String?>(
+              valueListenable: _activeHeadingNotifier,
+              builder: (context, activeHeading, child) {
+                return TableOfContents(
+                  entries: _tocEntries,
+                  onTap: _scrollToHeading,
+                  activeId: activeHeading,
+                );
+              },
             ),
             if (_tocEntries.isNotEmpty) ...[
               const SizedBox(height: 24),
