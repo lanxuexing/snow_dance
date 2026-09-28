@@ -153,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                    ),
                    const SizedBox(width: 6),
                     Text(
-                    'Introducing SnowDance v1.2.2',
+                    'Introducing SnowDance v1.2.3',
                     style: AppTheme.outfit(
                       fontSize: isMobile ? 12.5 : 14,
                       fontWeight: FontWeight.w600,
