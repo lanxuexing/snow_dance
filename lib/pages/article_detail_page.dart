@@ -29,6 +29,12 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   DateTime _lastScrollCheck = DateTime.now();
   String? _lastLoadedArticleId;
 
+  // Memoization cache for sidebar article grouping
+  List<Article>? _cachedArticles;
+  String? _cachedCategory;
+  Map<String, List<Article>> _cachedGroupedArticles = {};
+  List<String> _cachedSortedYears = [];
+
   @override
   void initState() {
     super.initState();
@@ -39,14 +45,27 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
 
     if (current.content.isEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Provider.of<ArticleProvider>(context, listen: false)
-            .loadArticleContent(widget.article.id);
+        if (mounted) {
+          Provider.of<ArticleProvider>(context, listen: false)
+              .loadArticleContent(widget.article.id);
+        }
       });
     } else {
       _parseToC(current.content);
       _updateSEO(current);
     }
     _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final provider = Provider.of<ArticleProvider>(context);
+    final current = provider.findById(widget.article.id) ?? widget.article;
+    if (current.content.isNotEmpty && (_tocEntries.isEmpty || _lastLoadedArticleId != current.id)) {
+      _parseToC(current.content);
+      _updateSEO(current);
+    }
   }
 
   void _updateSEO(Article article) {
@@ -212,12 +231,6 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     // Resolve the up-to-date article from provider to get loaded content
     final currentArticle = provider.findById(widget.article.id) ?? widget.article;
     final isContentEmpty = currentArticle.content.isEmpty;
-
-    // Re-parse ToC if content changed (e.g. just loaded)
-    if (!isContentEmpty && _tocEntries.isEmpty) {
-       _parseToC(currentArticle.content);
-       _updateSEO(currentArticle);
-    }
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -392,18 +405,26 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   Widget _buildSidebar(BuildContext context) {
     final provider = Provider.of<ArticleProvider>(context);
     
-    // Filter articles by category
-    final categoryArticles = provider.articles
-        .where((a) => a.category == widget.article.category)
-        .toList();
-    
-    // Group articles by year
-    final Map<String, List<Article>> groupedArticles = {};
-    for (var article in categoryArticles) {
-      final year = article.date.split('-').first;
-      groupedArticles.putIfAbsent(year, () => []).add(article);
+    // Group articles with cache to avoid expensive string split & sort on every frame
+    if (!identical(_cachedArticles, provider.articles) || _cachedCategory != widget.article.category) {
+      _cachedArticles = provider.articles;
+      _cachedCategory = widget.article.category;
+
+      final categoryArticles = provider.articles
+          .where((a) => a.category == widget.article.category)
+          .toList();
+      
+      final Map<String, List<Article>> grouped = {};
+      for (var article in categoryArticles) {
+        final year = article.date.split('-').first;
+        grouped.putIfAbsent(year, () => []).add(article);
+      }
+      _cachedGroupedArticles = grouped;
+      _cachedSortedYears = grouped.keys.toList()..sort((a, b) => b.compareTo(a));
     }
-    final sortedYears = groupedArticles.keys.toList()..sort((a, b) => b.compareTo(a));
+
+    final groupedArticles = _cachedGroupedArticles;
+    final sortedYears = _cachedSortedYears;
 
     return Container(
       width: 280,

@@ -29,7 +29,7 @@ void main() async {
   articleList.sort((a, b) => b['date']!.compareTo(a['date']!));
 
   final outputFile = File('assets/articles/index.json');
-  final jsonEncoder = JsonEncoder.withIndent('  ');
+  const jsonEncoder = JsonEncoder.withIndent('  ');
   await outputFile.writeAsString(jsonEncoder.convert(articleList));
 
   print('Successfully generated index.json with ${articleList.length} articles!');

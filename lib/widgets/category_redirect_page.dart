@@ -14,6 +14,8 @@ class CategoryRedirectPage extends StatefulWidget {
 }
 
 class _CategoryRedirectPageState extends State<CategoryRedirectPage> {
+  bool _hasRedirected = false;
+
   @override
   void initState() {
     super.initState();
@@ -23,6 +25,7 @@ class _CategoryRedirectPageState extends State<CategoryRedirectPage> {
   }
 
   void _checkAndRedirect() {
+    if (_hasRedirected) return;
     final provider = Provider.of<ArticleProvider>(context, listen: false);
     if (!provider.isLoading) {
       _performRedirect(provider);
@@ -30,19 +33,18 @@ class _CategoryRedirectPageState extends State<CategoryRedirectPage> {
   }
 
   void _performRedirect(ArticleProvider provider) {
+    if (_hasRedirected || !mounted) return;
+    _hasRedirected = true;
+
     final categoryArticles = provider.articles.where((a) =>
       a.category.toLowerCase() == widget.category.toLowerCase()
     ).toList();
 
     if (categoryArticles.isNotEmpty) {
       final latest = categoryArticles.first;
-      if (mounted) {
-        context.go('/${widget.category.toLowerCase()}/${latest.id}');
-      }
+      context.go('/${widget.category.toLowerCase()}/${latest.id}');
     } else {
-      if (mounted) {
-        context.go('/');
-      }
+      context.go('/');
     }
   }
 
@@ -51,7 +53,7 @@ class _CategoryRedirectPageState extends State<CategoryRedirectPage> {
     final provider = Provider.of<ArticleProvider>(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    if (!provider.isLoading) {
+    if (!provider.isLoading && !_hasRedirected) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _performRedirect(provider);
       });

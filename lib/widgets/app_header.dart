@@ -30,7 +30,7 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
           child: Container(
-            height: isMobile ? 54 : 64,
+            height: isMobile ? 56 : 64,
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.2),
               border: Border(

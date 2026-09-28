@@ -1,7 +1,7 @@
 import 'package:snow_dance/models/nav_item.dart';
 
 class AppConfig {
-  static final List<NavItem> navItems = [
+  static const List<NavItem> navItems = [
     NavItem(title: 'Docs', route: '/docs'),
     NavItem(title: 'Guide', route: '/guide'),
     NavItem(title: 'Ecosystem', route: '/ecosystem'),

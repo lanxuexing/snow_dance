@@ -93,7 +93,10 @@ class _SearchOverlayState extends State<SearchOverlay> {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                 child: Container(
-                  width: 600,
+                  constraints: BoxConstraints(
+                    maxWidth: 600,
+                    maxHeight: MediaQuery.sizeOf(context).height * 0.8,
+                  ),
                   margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.surface.withValues(alpha: isDark ? 0.85 : 0.9),
@@ -150,10 +153,8 @@ class _SearchOverlayState extends State<SearchOverlay> {
                 // Results List
                 if (_results.isNotEmpty) ...[
                   const Divider(height: 1),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxHeight: 400),
+                  Flexible(
                     child: ListView.builder(
-                      shrinkWrap: true,
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       itemCount: _results.length,
                       itemBuilder: (context, index) {

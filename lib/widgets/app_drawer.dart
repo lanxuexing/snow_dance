@@ -19,7 +19,7 @@ class _AppDrawerState extends State<AppDrawer> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ArticleProvider>(context);
-    final navItems = AppConfig.navItems;
+    const navItems = AppConfig.navItems;
 
     return RepaintBoundary(
       child: Drawer(

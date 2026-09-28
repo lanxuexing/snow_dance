@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -49,7 +50,7 @@ class ArticleProvider extends ChangeNotifier {
 
           // Preload markdown content in background quietly so detail navigation is
           // instantaneous without causing rapid rebuild cascades on startup
-          Future.wait(indexedArticles.map((a) => loadArticleContent(a.id, notify: false)));
+          unawaited(Future.wait(indexedArticles.map((a) => loadArticleContent(a.id, notify: false))));
           return;
         }
       } catch (e) {
