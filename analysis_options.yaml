@@ -16,6 +16,9 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
+  errors:
+    # 兼容 Flutter 3.50+ 官方对 package:flutter/material.dart 与 cupertino.dart 架构解耦的过渡期提示
+    deprecated_member_use: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:
